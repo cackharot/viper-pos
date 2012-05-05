@@ -1,0 +1,18 @@
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+from openpos.models.alchemyModel import Base
+
+class Customer(Base):
+	__tablename__ = 'Customer'
+	Id = Column(Integer, primary_key=True)
+	FirstName = Column(String)
+	LastName = Column(String)
+	#Address = Column(String)
+	
+	def __init__(self, firstname, lastname):
+		self.FirstName = firstname
+		self.LastName = lastname
+
+	def __repr__(self):
+		return u"Customer(%s, %s)" % (self.Id, self.FirstName)
+	pass
+

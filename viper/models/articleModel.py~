@@ -1,0 +1,8 @@
+from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+from . import Base
+
+class Article(models.Model):
+    Name = models.CharField(max_length=30)
+    Description = models.CharField(max_length=100)
+    Price = models.IntField()
+

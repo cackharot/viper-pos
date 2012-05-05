@@ -1,0 +1,40 @@
+from sqlalchemy import (
+	Table, 
+	Column, 
+	Boolean, 
+	DateTime, 
+	Integer, 
+	Float, 
+	String, 
+	MetaData, 
+	ForeignKey,
+	)
+from datetime import datetime 	
+from . import Base
+from ..library.vuid import id_column, UUID
+
+class OrderPayment(Base):
+	__tablename__ = 'OrderPayments'
+	Id = id_column()
+	OrderId = Column(UUID(), nullable=False)
+	PaymentDate = Column(DateTime, nullable=True)
+	PaymentType = Column(String,default='Cash')
+	PaidAmount = Column(Float,default=0.0)
+	CreatedBy = Column(String)
+	CreatedOn = Column(DateTime)
+	UpdatedBy = Column(String, nullable=True)
+	UpdatedOn = Column(DateTime, nullable=True)
+	Status = Column(Boolean, default=True)		
+	
+	def __init__(self):
+		self.Id = self.OrderId = None
+		self.PaidAmount = 0.0
+		self.PaymentType = 'Cash'
+		d = datetime.utcnow()
+		self.PaymentDate = d
+		pass
+
+	def __repr__(self):
+		return u"Order(%s, %s)" % (self.Id, self.OrderNo)
+	pass
+

@@ -1,0 +1,94 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-products">
+	<div class="page-header">
+		<h1>Manage Products
+			 <small class="pull-right">
+			  	<a href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
+			  		<i class="icon-plus icon-white"></i> Add Item
+			  	</a>
+			 </small>
+		 </h1>
+	</div> 	
+	<div class="row-fluid">
+		<div class="span12">&nbsp;</div>
+	</div>
+    {% if model != None and (model | count) > 0 %} 
+	<table id="prdTable" class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th><i class="icon-barcode"></i> Barcode</th>
+				<th>Name</th>
+				<th>MRP</th>
+				<th>BuyPrice</th>
+				<th>SellPrice</th>
+				<th>Discount</th>
+				<th>Action</th>
+				<!--<th><i class="icon-pencil"></i> Edit</th>
+				<th><i class="icon-list-alt"></i> Audits</th>
+				<th><i class="icon-remove"></i> Delete</th>-->
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in model %}
+				<tr>
+					<td>
+						{{item.Barcode}}
+					</td>
+					<td>
+						{{item.Name}}
+					</td>
+					<td>
+						{{item.MRP}}
+					</td>
+					<td>
+						{{item.BuyPrice}}
+					</td>
+					<td>
+						{{item.SellPrice}}
+					</td>
+					<td>
+						{{item.Discount}}
+					</td>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								Action <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{{'editproduct' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
+								</li>
+								<li>
+									<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-remove"></i> Delete</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+					<!--<td>
+						<a href="{{'editproduct' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
+					</td>
+					<td>
+						<a href="#"><i class="icon-list-alt"></i> Audits</a>
+					</td>
+					<td>
+						<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-remove"></i> Delete</a>
+					</td>-->
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+		<div class="info">
+			No records found!
+		</div>
+	{% endif %}
+</section>      
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		//$('#prdTable').dataTable();
+	});
+</script>
+{% endblock %}

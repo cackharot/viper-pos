@@ -1,0 +1,81 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-customers">
+	 <div class="page-header">
+       <h1> {% if model.Id == None %}
+       			Add Customer
+       		{% else %}
+       			Edit Customer
+       		{% endif %}
+		 <small class="pull-right">
+		  	<a href="{{'customers'|route_url}}" title="Back to Customer listing!" class="btn btn-primary">
+		  		<i class="icon-arrow-left icon-white"></i> Back
+		  	</a>
+		 </small></h1>
+     </div> 	
+     <div class="row">
+     	<div class="span12">&nbsp;</div>
+     </div>
+     <div class="span8">
+     <form action="{{'savecustomer'|route_url}}" method="post" class="form-horizontal">
+		<fieldset>
+			{% if model.SSN != None and model.SSN > 0 %}
+			<div class="control-group">
+				<label class="control-label" for="SSN">Customer Number</label>
+				<div class="controls">
+					<input name="SSN" id="SSN" class="input-xlarge disabled" disabled="" type="text" value="{{model.SSN}}"/>
+				</div>
+			</div>
+			{% endif %}
+			<div class="control-group">
+				<label class="control-label" for="FirstName">First Name</label>
+				<div class="controls">
+					<input name="FirstName" id="FirstName" class="input-xlarge" type="text" value="{{model.FirstName}}"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="LastName">LastName</label>
+				<div class="controls">
+					<input name="LastName" id="LastName" class="input-xlarge" type="text" value="{{model.LastName|d('',True)}}"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="TaxCategoryId">Email</label>
+				<div class="controls">
+					<input name="Email" id="Email" class="input-xlarge" type="text" value="{{model.Email|d('',True)}}"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="Phone">Phone</label>
+				<div class="controls">
+					<input name="Phone" id="Phone" class="input-xlarge" type="text" value="{{model.Phone|d('',True)}}"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="Mobile">Mobile</label>
+				<div class="controls">
+					<input name="Mobile" id="Mobile" class="input-xlarge" type="text" value="{{model.Mobile|d('',True)}}"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="Address">Address</label>
+				<div class="controls">
+					<input name="Address" id="Address" class="input-xlarge" type="text" value="{{model.Address|d('',True)}}"/>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label" for="City">City</label>
+				<div class="controls">
+					<input name="City" id="City" class="input-xlarge" type="text" value="{{model.City|d('',True)}}"/>
+				</div>
+			</div>
+		</fieldset>
+		<div class="form-actions">
+			<input type="hidden" name="Id" value="{{model.Id|d('',True)}}"/>
+			<input type="submit" class="btn btn-primary" value="Save"/>
+			<input type="reset" class="btn" value="Reset"/>
+		</div>
+     </form>
+     </div>
+</section>      
+{% endblock %}

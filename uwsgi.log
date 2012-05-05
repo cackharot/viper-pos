@@ -1,0 +1,980 @@
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:33:16 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+writing pidfile to ./pid_5000.pid
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 bound to UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x14090e0
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x14090e0 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26622, cores: 1)
+spawned uWSGI worker 2 (pid: 26623, cores: 1)
+spawned uWSGI worker 3 (pid: 26624, cores: 1)
+spawned uWSGI worker 4 (pid: 26625, cores: 1)
+[pid: 26622|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:18 2012] GET / => generated 53547 bytes in 129 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26624|app: 0|req: 1/2] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 2/4] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 3/5] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 2/6] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 1/7] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 2/8] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 4/9] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 3/10] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/css/toolbar.css?0.4509164308107585 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 3/12] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 5/12] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 2/13] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:18 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 2 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 6/14] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/source?frm=46029776&token=9c5a78f1a68b81dbc93e => generated 221 bytes in 1 msecs (HTTP/1.1 400) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 26622|app: 0|req: 3/15] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:30 2012] GET / => generated 53443 bytes in 21 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26622|app: 0|req: 4/18] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 7/18] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 4/18] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 8/19] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 9/22] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 5/22] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 4/22] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 6/23] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 5/24] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/css/toolbar.css?0.1941228553502361 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 7/26] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 10/26] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 8/27] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:30 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 5/28] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:31 2012] GET / => generated 53546 bytes in 129 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26622|app: 0|req: 6/30] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:31 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 11/30] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:31 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 6/31] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:31 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 7/32] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:31 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 7/34] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 9/34] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 8/34] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 8/35] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 9/36] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/css/toolbar.css?0.9524708509350823 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 9/37] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 12/38] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 13/39] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 14/41] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:32 2012] GET / => generated 53546 bytes in 127 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26622|app: 0|req: 10/43] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 10/43] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 10/43] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 11/44] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 15/46] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 12/46] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 11/46] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 12/47] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 13/48] 127.0.0.1 () {44 vars in 707 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/css/toolbar.css?0.013687356238690662 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 13/49] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 11/50] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 14/51] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:32 2012] GET / => generated 53428 bytes in 18 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26622|app: 0|req: 15/53] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 14/53] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 15/54] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 16/55] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 16/58] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 16/58] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 17/58] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26623|app: 0|req: 17/59] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 12/60] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/css/toolbar.css?0.07391461604325811 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26625|app: 0|req: 17/61] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26622|app: 0|req: 18/62] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26624|app: 0|req: 13/63] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:33:32 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 2 (pid: 26623)...
+Gracefully killing worker 3 (pid: 26624)...
+Gracefully killing worker 4 (pid: 26625)...
+Gracefully killing worker 1 (pid: 26622)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:33:35 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x19bda60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x19bda60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26642, cores: 1)
+spawned uWSGI worker 2 (pid: 26643, cores: 1)
+spawned uWSGI worker 3 (pid: 26644, cores: 1)
+spawned uWSGI worker 4 (pid: 26645, cores: 1)
+SIGPIPE: writing to a closed pipe/socket/fd (probably the client disconnected) on request //_debug_toolbar/source?frm=47893264&token=9c5a78f1a68b81dbc93e (ip 127.0.0.1) !!!
+Mon Apr 30 09:33:36 2012 - writev(): Broken pipe [proto/uwsgi.c line 120] during GET //_debug_toolbar/source?frm=47893264&token=9c5a78f1a68b81dbc93e (127.0.0.1)
+SIGPIPE: writing to a closed pipe/socket/fd (probably the client disconnected) on request //_debug_toolbar/source?frm=47893264&token=9c5a78f1a68b81dbc93e (ip 127.0.0.1) !!!
+Mon Apr 30 09:33:36 2012 - write(): Broken pipe [proto/uwsgi.c line 138] during GET //_debug_toolbar/source?frm=47893264&token=9c5a78f1a68b81dbc93e (127.0.0.1)
+[pid: 26642|app: 0|req: 1/1] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/source?frm=47893264&token=9c5a78f1a68b81dbc93e => generated 0 bytes in 4 msecs (HTTP/1.1 400) 2 headers in 0 bytes (1 switches on core 0)
+[pid: 26643|app: 0|req: 1/2] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:36 2012] GET / => generated 53545 bytes in 127 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26642|app: 0|req: 2/3] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 2 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 3/4] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 2/5] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 1/6] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 4 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 4/8] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 3/8] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 1/9] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 2/10] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 4/11] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/css/toolbar.css?0.6258523347689676 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 3/13] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 5/13] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 4/14] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 5/15] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:36 2012] GET / => generated 53545 bytes in 138 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26645|app: 0|req: 6/17] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 5/17] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 2/18] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 7/19] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 8/20] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 6/21] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 6/22] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 3/23] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 7/24] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/css/toolbar.css?0.1654183728268549 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 9/25] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 8/26] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 9/27] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:36 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 10/28] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:37 2012] GET / => generated 53545 bytes in 126 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26643|app: 0|req: 7/30] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 11/30] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 12/32] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 8/32] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 10/34] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 13/34] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 4/35] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 9/36] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 14/37] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/css/toolbar.css?0.5889350941815932 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 15/38] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 16/39] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 11/40] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 12/41] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:37 2012] GET / => generated 53443 bytes in 22 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26645|app: 0|req: 13/43] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 10/43] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 14/44] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 17/45] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:37 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 11/47] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 18/47] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 12/48] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 5/49] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 6/50] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static/css/toolbar.css?0.4925820080702773 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 13/52] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 15/52] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 19/53] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:38 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 16/54] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/source?frm=54240016&token=e3afdfe352adbe572b81 => generated 184486 bytes in 23 msecs (HTTP/1.1 200) 2 headers in 83 bytes (1 switches on core 0)
+[pid: 26645|app: 0|req: 17/55] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:51 2012] GET / => generated 53433 bytes in 16 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26642|app: 0|req: 20/57] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 18/57] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 21/58] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 19/59] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 7/61] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 20/61] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 22/61] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 8/62] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 23/63] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/css/toolbar.css?0.19429306755322628 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 24/65] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 21/65] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 22/66] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:33:51 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 25/68] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:52 2012] GET / => generated 53443 bytes in 21 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26642|app: 0|req: 26/69] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 14/70] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 23/71] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 27/72] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 24/75] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 28/75] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 15/75] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 25/76] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 9/77] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/css/toolbar.css?0.07032570727082244 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 29/79] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 16/79] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 30/80] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 31/81] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:52 2012] GET / => generated 53427 bytes in 20 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26645|app: 0|req: 26/83] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 17/83] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 27/84] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 10/85] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 28/88] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 11/88] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26643|app: 0|req: 18/88] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 29/89] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26644|app: 0|req: 12/90] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/css/toolbar.css?0.1531684552782805 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26642|app: 0|req: 32/92] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 30/92] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26645|app: 0|req: 31/93] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:52 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 2 (pid: 26643)...
+Gracefully killing worker 4 (pid: 26645)...
+Gracefully killing worker 1 (pid: 26642)...
+Gracefully killing worker 3 (pid: 26644)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:33:55 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x1dd2a60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x1dd2a60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26665, cores: 1)
+spawned uWSGI worker 2 (pid: 26666, cores: 1)
+spawned uWSGI worker 3 (pid: 26667, cores: 1)
+spawned uWSGI worker 4 (pid: 26668, cores: 1)
+SIGPIPE: writing to a closed pipe/socket/fd (probably the client disconnected) on request //_debug_toolbar/source?frm=29250512&token=e3afdfe352adbe572b81 (ip 127.0.0.1) !!!
+Mon Apr 30 09:33:55 2012 - writev(): Broken pipe [proto/uwsgi.c line 120] during GET //_debug_toolbar/source?frm=29250512&token=e3afdfe352adbe572b81 (127.0.0.1)
+SIGPIPE: writing to a closed pipe/socket/fd (probably the client disconnected) on request //_debug_toolbar/source?frm=29250512&token=e3afdfe352adbe572b81 (ip 127.0.0.1) !!!
+Mon Apr 30 09:33:55 2012 - write(): Broken pipe [proto/uwsgi.c line 138] during GET //_debug_toolbar/source?frm=29250512&token=e3afdfe352adbe572b81 (127.0.0.1)
+[pid: 26665|app: 0|req: 1/1] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/source?frm=29250512&token=e3afdfe352adbe572b81 => generated 0 bytes in 4 msecs (HTTP/1.1 400) 2 headers in 0 bytes (1 switches on core 0)
+[pid: 26666|app: 0|req: 1/2] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:55 2012] GET / => generated 53367 bytes in 134 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26665|app: 0|req: 2/3] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 3/4] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26667|app: 0|req: 1/6] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 5 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 1/6] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 5 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 4/8] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26667|app: 0|req: 2/8] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 2/9] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 3/10] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:55 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26667|app: 0|req: 3/11] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 2/12] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 4/13] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:56 2012] GET / => generated 53261 bytes in 17 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26665|app: 0|req: 5/15] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 5/15] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 6/16] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 6/17] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 7/19] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 3/19] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26667|app: 0|req: 4/19] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 8/20] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 7/21] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/css/toolbar.css?0.3601238363135638 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 8/22] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 4/23] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 5/24] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:33:56 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 9/26] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:33:57 2012] GET / => generated 53369 bytes in 131 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26667|app: 0|req: 5/29] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:57 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 10/29] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:33:57 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 9/29] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:33:57 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 6/30] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:33:57 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26666|app: 0|req: 10/32] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26665|app: 0|req: 11/32] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26667|app: 0|req: 6/33] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 7/34] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 8/35] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static/css/toolbar.css?0.47364955784248475 => generated 9602 bytes in 1 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26667|app: 0|req: 7/36] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 9/37] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26668|app: 0|req: 10/38] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:33:58 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 3 (pid: 26667)...
+Gracefully killing worker 2 (pid: 26666)...
+Gracefully killing worker 1 (pid: 26665)...
+Gracefully killing worker 4 (pid: 26668)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:34:06 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0xf7da60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0xf7da60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26678, cores: 1)
+spawned uWSGI worker 2 (pid: 26679, cores: 1)
+spawned uWSGI worker 3 (pid: 26680, cores: 1)
+spawned uWSGI worker 4 (pid: 26681, cores: 1)
+[pid: 26678|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:34:07 2012] GET / => generated 58597 bytes in 249 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26678|app: 0|req: 2/2] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26681|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 3/4] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26681|app: 0|req: 2/5] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 4/6] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26680|app: 0|req: 1/8] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 4 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26679|app: 0|req: 1/8] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 4 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 5/9] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 6/10] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/css/toolbar.css?0.20799712748624777 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 7/12] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26679|app: 0|req: 2/12] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26681|app: 0|req: 3/13] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:34:07 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26680|app: 0|req: 2/14] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:35:46 2012] GET / => generated 58597 bytes in 222 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26681|app: 0|req: 4/15] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26679|app: 0|req: 3/16] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26681|app: 0|req: 5/17] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26679|app: 0|req: 4/18] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26679|app: 0|req: 5/20] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 8/20] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26679|app: 0|req: 6/21] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 9/22] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 10/23] 127.0.0.1 () {44 vars in 709 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/css/toolbar.css?0.0036108416391765763 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 11/25] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26681|app: 0|req: 6/25] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26678|app: 0|req: 12/26] 127.0.0.1 () {48 vars in 839 bytes} [Mon Apr 30 09:35:47 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 4 (pid: 26681)...
+Gracefully killing worker 2 (pid: 26679)...
+Gracefully killing worker 1 (pid: 26678)...
+Gracefully killing worker 3 (pid: 26680)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:35:50 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x2067a60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x2067a60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26711, cores: 1)
+spawned uWSGI worker 2 (pid: 26712, cores: 1)
+spawned uWSGI worker 3 (pid: 26713, cores: 1)
+spawned uWSGI worker 4 (pid: 26714, cores: 1)
+[pid: 26711|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:35:51 2012] GET / => generated 58595 bytes in 219 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26711|app: 0|req: 2/2] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 1/4] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 2 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 2/5] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 3/7] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 2/7] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 4/8] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 1/9] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26711|app: 0|req: 3/10] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/css/toolbar.css?0.34722905675856686 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 3/12] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 5/12] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 6/13] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:35:51 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26711|app: 0|req: 4/14] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:35:52 2012] GET / => generated 58468 bytes in 20 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26714|app: 0|req: 2/17] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 4/17] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26711|app: 0|req: 5/17] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 3/18] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 5/20] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 4/20] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 6/22] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 5/22] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 6/23] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/css/toolbar.css?0.08068837355886382 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 7/25] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 7/25] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 8/26] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:35:52 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 8/27] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:36:16 2012] GET / => generated 58596 bytes in 219 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26714|app: 0|req: 9/28] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 7/29] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26711|app: 0|req: 6/30] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 8/31] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26711|app: 0|req: 7/33] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 9/33] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26711|app: 0|req: 8/34] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 10/35] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26713|app: 0|req: 11/36] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/css/toolbar.css?0.12398515395757126 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26712|app: 0|req: 9/38] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 10/38] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26714|app: 0|req: 11/39] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:36:17 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 3 (pid: 26713)...
+Gracefully killing worker 4 (pid: 26714)...
+Gracefully killing worker 1 (pid: 26711)...
+Gracefully killing worker 2 (pid: 26712)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:36:19 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x21bca60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x21bca60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26728, cores: 1)
+spawned uWSGI worker 2 (pid: 26729, cores: 1)
+spawned uWSGI worker 3 (pid: 26730, cores: 1)
+spawned uWSGI worker 4 (pid: 26731, cores: 1)
+[pid: 26728|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:36:20 2012] GET / => generated 48802 bytes in 129 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 26729|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26730|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26731|app: 0|req: 1/4] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26728|app: 0|req: 2/5] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 5 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26729|app: 0|req: 2/7] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26728|app: 0|req: 3/7] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26728|app: 0|req: 4/8] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26729|app: 0|req: 3/9] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26729|app: 0|req: 4/10] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/css/toolbar.css?0.8819900157762591 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26730|app: 0|req: 2/12] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26731|app: 0|req: 2/12] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26729|app: 0|req: 5/13] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:36:20 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26729|app: 0|req: 6/14] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 09:36:31 2012] GET //_debug_toolbar/source?frm=60408336&token=4c6a3b1ee2deedc7cf3c => generated 221 bytes in 1 msecs (HTTP/1.1 400) 2 headers in 89 bytes (1 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 3 (pid: 26730)...
+Gracefully killing worker 2 (pid: 26729)...
+Gracefully killing worker 4 (pid: 26731)...
+Gracefully killing worker 1 (pid: 26728)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 09:36:47 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x1826a60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 1 seconds on interpreter 0x1826a60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 26744, cores: 1)
+spawned uWSGI worker 2 (pid: 26745, cores: 1)
+spawned uWSGI worker 3 (pid: 26746, cores: 1)
+spawned uWSGI worker 4 (pid: 26747, cores: 1)
+[pid: 26745|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:36:48 2012] GET / => generated 44810 bytes in 210 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26744|app: 0|req: 1/2] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:36:48 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 5 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:36:48 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 5 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 2/4] 127.0.0.1 () {48 vars in 712 bytes} [Mon Apr 30 09:36:48 2012] GET //static/pylons.css => generated 0 bytes in 16 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 1/5] 127.0.0.1 () {48 vars in 729 bytes} [Mon Apr 30 09:36:48 2012] GET //static/pyramid.png => generated 0 bytes in 12 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 2/6] 127.0.0.1 () {48 vars in 749 bytes} [Mon Apr 30 09:36:48 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 2/7] 127.0.0.1 () {48 vars in 749 bytes} [Mon Apr 30 09:36:48 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 2/8] 127.0.0.1 () {48 vars in 749 bytes} [Mon Apr 30 09:36:48 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 3/9] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:36:48 2012] GET //_debug_toolbar/static/css/toolbar.css?0.2727181943306024 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 4/10] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:36:48 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 3/11] 127.0.0.1 () {48 vars in 826 bytes} [Mon Apr 30 09:36:55 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 4/12] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:37:01 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 3/13] 127.0.0.1 () {42 vars in 718 bytes} [Mon Apr 30 09:37:01 2012] GET //_debug_toolbar/static/img/indicator.png => generated 607 bytes in 19 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 5/14] 127.0.0.1 () {42 vars in 710 bytes} [Mon Apr 30 09:37:01 2012] GET //_debug_toolbar/static/img/close.png => generated 1045 bytes in 18 msecs via sendfile() (HTTP/1.1 200) 3 headers in 127 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 5/15] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:09 2012] GET / => generated 44396 bytes in 214 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26746|app: 0|req: 3/17] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:09 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 6/17] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:09 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 6/18] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:09 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 4/19] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:09 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 7/22] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:09 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 7/22] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:09 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 4/22] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:09 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 8/23] 127.0.0.1 () {42 vars in 679 bytes} [Mon Apr 30 09:37:09 2012] GET //_debug_toolbar/static/css/toolbar.css?0.6928471431144372 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 5/24] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:37:09 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 6/25] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:10 2012] GET / => generated 44386 bytes in 205 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26747|app: 0|req: 7/27] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:10 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 8/27] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:10 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 5/28] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:10 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 6/29] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:10 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 9/31] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:10 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 7/31] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:10 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 9/31] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:10 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 10/32] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:10 2012] GET / => generated 44257 bytes in 9 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26744|app: 0|req: 10/34] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:10 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 8/34] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:10 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 11/35] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:10 2012] GET //static/pylons.css => generated 0 bytes in 2 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 8/36] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:10 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 12/38] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:10 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 11/38] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:10 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 13/39] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:10 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 9/40] 127.0.0.1 () {42 vars in 679 bytes} [Mon Apr 30 09:37:10 2012] GET //_debug_toolbar/static/css/toolbar.css?0.4523481948118364 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 12/41] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:37:10 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 14/43] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:11 2012] GET / => generated 44257 bytes in 19 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26746|app: 0|req: 9/45] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:11 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 10/45] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:11 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 15/46] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:11 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 16/47] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:11 2012] GET //static/pyramid.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 13/49] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:11 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 10/49] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:11 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 11/49] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:11 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 11/50] 127.0.0.1 () {42 vars in 679 bytes} [Mon Apr 30 09:37:11 2012] GET //_debug_toolbar/static/css/toolbar.css?0.1510893963614005 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 12/51] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:37:11 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 17/53] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:12 2012] GET / => generated 44255 bytes in 14 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26747|app: 0|req: 13/54] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:12 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 18/55] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:12 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 12/56] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:12 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 13/57] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:12 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 14/59] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:12 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 19/59] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:12 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 14/59] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:12 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 15/60] 127.0.0.1 () {42 vars in 679 bytes} [Mon Apr 30 09:37:12 2012] GET //_debug_toolbar/static/css/toolbar.css?0.7932843202738223 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 15/61] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:37:12 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 20/63] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:13 2012] GET / => generated 44256 bytes in 13 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26746|app: 0|req: 14/64] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 16/65] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:13 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 15/66] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 17/67] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:13 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 16/69] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 21/69] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 16/70] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 18/71] 127.0.0.1 () {42 vars in 679 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/css/toolbar.css?0.2623763367792834 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 22/72] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 17/73] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:13 2012] GET / => generated 44386 bytes in 204 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26746|app: 0|req: 18/74] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 23/75] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:13 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 19/76] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 24/77] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:13 2012] GET //static/pyramid.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 19/79] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 17/79] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 25/80] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 26/81] 127.0.0.1 () {42 vars in 681 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/css/toolbar.css?0.41241324607570184 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 20/82] 127.0.0.1 () {46 vars in 803 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 27/83] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:13 2012] GET / => generated 44257 bytes in 9 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26744|app: 0|req: 21/85] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 18/85] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:13 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 28/86] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:13 2012] GET //static/pylons.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 22/87] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:13 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 29/89] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 19/89] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 30/90] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:13 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 31/91] 127.0.0.1 () {42 vars in 675 bytes} [Mon Apr 30 09:37:14 2012] GET //_debug_toolbar/static/css/toolbar.css?0.77021832216328 => generated 9602 bytes in 1 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 20/92] 127.0.0.1 () {46 vars in 800 bytes} [Mon Apr 30 09:37:14 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 21/93] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:37:14 2012] GET / => generated 44257 bytes in 15 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26746|app: 0|req: 20/95] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:37:14 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 32/95] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:37:14 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 22/96] 127.0.0.1 () {46 vars in 688 bytes} [Mon Apr 30 09:37:14 2012] GET //static/pylons.css => generated 0 bytes in 2 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 23/97] 127.0.0.1 () {46 vars in 705 bytes} [Mon Apr 30 09:37:14 2012] GET //static/pyramid.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 24/99] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:14 2012] GET //static/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 33/99] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:14 2012] GET //static/footerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 23/99] 127.0.0.1 () {46 vars in 725 bytes} [Mon Apr 30 09:37:14 2012] GET //static/middlebg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 24/100] 127.0.0.1 () {42 vars in 681 bytes} [Mon Apr 30 09:37:14 2012] GET //_debug_toolbar/static/css/toolbar.css?0.35604484345757603 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 34/101] 127.0.0.1 () {46 vars in 803 bytes} [Mon Apr 30 09:37:14 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 35/103] 127.0.0.1 () {46 vars in 813 bytes} [Mon Apr 30 09:37:18 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 25/104] 199.203.176.72 () {34 vars in 451 bytes} [Mon Apr 30 09:39:33 2012] HEAD /manager/status => generated 0 bytes in 1 msecs (HTTP/1.1 404) 2 headers in 87 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 36/105] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:46:45 2012] GET / => generated 44279 bytes in 128 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26746|app: 0|req: 21/106] 127.0.0.1 () {44 vars in 640 bytes} [Mon Apr 30 09:46:45 2012] GET //static/css/bootstrap.css => generated 98995 bytes in 1 msecs via sendfile() (HTTP/1.1 200) 5 headers in 196 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 22/107] 127.0.0.1 () {44 vars in 662 bytes} [Mon Apr 30 09:46:45 2012] GET //static/css/bootstrap-responsive.css => generated 14308 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 5 headers in 196 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 25/108] 127.0.0.1 () {44 vars in 615 bytes} [Mon Apr 30 09:46:45 2012] GET //static/js/jquery.js => generated 93867 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 5 headers in 210 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 23/109] 127.0.0.1 () {44 vars in 645 bytes} [Mon Apr 30 09:46:45 2012] GET //static/js/jquery.dataTables.min.js => generated 70745 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 5 headers in 210 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 37/110] 127.0.0.1 () {44 vars in 629 bytes} [Mon Apr 30 09:46:45 2012] GET //static/js/bootstrap.min.js => generated 22323 bytes in 1 msecs via sendfile() (HTTP/1.1 200) 5 headers in 210 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 26/111] 127.0.0.1 () {44 vars in 613 bytes} [Mon Apr 30 09:46:45 2012] GET //static/js/json2.js => generated 17521 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 5 headers in 210 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 26/112] 127.0.0.1 () {44 vars in 623 bytes} [Mon Apr 30 09:46:45 2012] GET //static/js/underscore.js => generated 37390 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 5 headers in 210 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 27/113] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:46:45 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 38/114] 127.0.0.1 () {44 vars in 619 bytes} [Mon Apr 30 09:46:45 2012] GET //static/js/backbone.js => generated 53155 bytes in 1 msecs via sendfile() (HTTP/1.1 200) 5 headers in 210 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 24/115] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:46:45 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 25/116] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 09:46:45 2012] GET //_debug_toolbar/static/css/toolbar.css?0.23831474168133793 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 27/117] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 09:46:45 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 26/118] 127.0.0.1 () {48 vars in 827 bytes} [Mon Apr 30 09:46:55 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 28/119] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:51:25 2012] GET / => generated 44450 bytes in 132 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26747|app: 0|req: 29/122] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 09:51:25 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 27/122] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 09:51:25 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 39/122] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 09:51:25 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 30/123] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 09:51:25 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 40/124] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 09:51:25 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 28/125] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 09:51:25 2012] GET //static/js/json2.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 28/126] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 09:51:25 2012] GET //static/js/underscore.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 31/127] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:51:25 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 29/128] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:51:25 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 41/129] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 09:51:25 2012] GET //static/js/backbone.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 32/130] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:51:25 2012] GET //_debug_toolbar/static/css/toolbar.css?0.1395644306828845 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 42/131] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:51:25 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 43/132] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 09:51:49 2012] GET / => generated 44450 bytes in 132 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26744|app: 0|req: 29/134] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 09:51:50 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 33/134] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 09:51:50 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 30/135] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 09:51:50 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 34/136] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 09:51:50 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 31/137] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 09:51:50 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 35/138] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 09:51:50 2012] GET //static/js/json2.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 36/139] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 09:51:50 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 30/140] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 09:51:50 2012] GET //static/js/underscore.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 32/141] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 09:51:50 2012] GET //static/js/backbone.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 37/142] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 09:51:50 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 33/143] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 09:51:50 2012] GET //_debug_toolbar/static/css/toolbar.css?0.9785279944104186 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 34/144] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 09:51:50 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 44/145] 127.0.0.1 () {48 vars in 826 bytes} [Mon Apr 30 09:51:55 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 45/146] 127.0.0.1 () {42 vars in 608 bytes} [Mon Apr 30 09:51:58 2012] GET / => generated 44015 bytes in 9 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26745|app: 0|req: 46/149] 127.0.0.1 () {46 vars in 677 bytes} [Mon Apr 30 09:51:58 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 38/149] 127.0.0.1 () {46 vars in 724 bytes} [Mon Apr 30 09:51:58 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 35/149] 127.0.0.1 () {46 vars in 691 bytes} [Mon Apr 30 09:51:58 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 31/149] 127.0.0.1 () {46 vars in 702 bytes} [Mon Apr 30 09:51:58 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 39/150] 127.0.0.1 () {46 vars in 707 bytes} [Mon Apr 30 09:51:58 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 36/150] 127.0.0.1 () {46 vars in 675 bytes} [Mon Apr 30 09:51:58 2012] GET //static/js/json2.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 37/151] 127.0.0.1 () {46 vars in 727 bytes} [Mon Apr 30 09:51:58 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 40/152] 127.0.0.1 () {46 vars in 685 bytes} [Mon Apr 30 09:51:58 2012] GET //static/js/underscore.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 32/153] 127.0.0.1 () {46 vars in 681 bytes} [Mon Apr 30 09:51:58 2012] GET //static/js/backbone.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 38/154] 127.0.0.1 () {46 vars in 709 bytes} [Mon Apr 30 09:51:58 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 33/155] 127.0.0.1 () {42 vars in 679 bytes} [Mon Apr 30 09:51:58 2012] GET //_debug_toolbar/static/css/toolbar.css?0.7672489200859791 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 41/156] 127.0.0.1 () {46 vars in 802 bytes} [Mon Apr 30 09:51:58 2012] GET //_debug_toolbar/static/img/tick-red.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 42/159] 127.0.0.1 () {46 vars in 812 bytes} [Mon Apr 30 09:52:00 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 34/160] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:01:19 2012] GET / => generated 44461 bytes in 134 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 26747|app: 0|req: 43/162] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:01:20 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 35/162] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:01:20 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 44/164] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:01:20 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 36/164] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:01:20 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 45/165] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:01:20 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 39/166] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:01:20 2012] GET //static/js/json2.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26745|app: 0|req: 47/167] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:01:20 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 40/168] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:01:20 2012] GET //static/js/underscore.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26746|app: 0|req: 37/169] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:01:20 2012] GET //static/js/backbone.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 26747|app: 0|req: 46/170] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:01:20 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 41/171] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:01:20 2012] GET //_debug_toolbar/static/css/toolbar.css?0.5903583224016147 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 26744|app: 0|req: 42/172] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:01:20 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 2 (pid: 26745)...
+Gracefully killing worker 3 (pid: 26746)...
+Gracefully killing worker 1 (pid: 26744)...
+Gracefully killing worker 4 (pid: 26747)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 10:09:51 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x22a0a60
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x22a0a60 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 27306, cores: 1)
+spawned uWSGI worker 2 (pid: 27307, cores: 1)
+spawned uWSGI worker 3 (pid: 27308, cores: 1)
+spawned uWSGI worker 4 (pid: 27309, cores: 1)
+[pid: 27306|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:09:56 2012] GET / => generated 45630 bytes in 240 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27307|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:09:56 2012] GET //static/css/bootstrap.css => generated 0 bytes in 4 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27308|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:09:56 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 4 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27307|app: 0|req: 2/5] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:09:56 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27308|app: 0|req: 2/5] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:09:56 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27308|app: 0|req: 3/7] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:09:56 2012] GET //static/js/underscore.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27307|app: 0|req: 3/7] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:09:56 2012] GET //static/js/json2.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27308|app: 0|req: 4/8] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:09:56 2012] GET //static/js/backbone.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27309|app: 0|req: 1/9] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:09:56 2012] GET //static/js/jquery.js => generated 0 bytes in 6 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27308|app: 0|req: 5/10] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:09:56 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27309|app: 0|req: 2/11] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:09:56 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27307|app: 0|req: 4/12] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:09:56 2012] GET //_debug_toolbar/static/css/toolbar.css?0.8817022826195167 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27309|app: 0|req: 3/13] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:09:56 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 3 (pid: 27308)...
+Gracefully killing worker 4 (pid: 27309)...
+Gracefully killing worker 2 (pid: 27307)...
+Gracefully killing worker 1 (pid: 27306)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 10:12:57 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0xd59470
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0xd59470 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 27385, cores: 1)
+spawned uWSGI worker 2 (pid: 27386, cores: 1)
+spawned uWSGI worker 3 (pid: 27387, cores: 1)
+spawned uWSGI worker 4 (pid: 27388, cores: 1)
+[pid: 27386|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:12:59 2012] GET / => generated 45729 bytes in 237 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27386|app: 0|req: 2/2] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:13:00 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 1/3] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:13:00 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 4 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 2/4] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:13:00 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 3/5] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:13:00 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 1/6] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:13:00 2012] GET //static/js/jquery.js => generated 0 bytes in 4 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 4/8] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:13:00 2012] GET //static/js/underscore.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 2/8] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:13:00 2012] GET //static/js/json2.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 3/9] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:13:00 2012] GET //static/js/backbone.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 4/10] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:13:00 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 1/11] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:13:00 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 3/12] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:13:00 2012] GET //_debug_toolbar/static/css/toolbar.css?0.6981734890184798 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 4/13] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:13:00 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 2/14] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:13:01 2012] GET / => generated 45730 bytes in 242 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27388|app: 0|req: 3/16] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:13:01 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 5/16] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:13:01 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 5/16] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:13:01 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 4/17] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:13:01 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 6/18] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:13:01 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 5/19] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:13:01 2012] GET //static/js/json2.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 7/20] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:13:01 2012] GET //static/js/underscore.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 6/21] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:13:01 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 6/22] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:13:01 2012] GET //static/js/backbone.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 5/23] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:13:01 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 7/25] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:13:01 2012] GET //_debug_toolbar/static/css/toolbar.css?0.1909484401421443 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 8/26] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:13:02 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 8/27] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:13:02 2012] GET / => generated 45602 bytes in 20 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27387|app: 0|req: 9/30] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:13:02 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 9/30] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:13:02 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 10/31] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:13:02 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 10/32] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:13:02 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 6/33] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:13:02 2012] GET //static/js/json2.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 11/34] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:13:02 2012] GET //static/js/underscore.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 11/35] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:13:02 2012] GET //static/js/backbone.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 7/30] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:13:02 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 7/36] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:13:02 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 12/37] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:13:02 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 12/38] 127.0.0.1 () {44 vars in 699 bytes} [Mon Apr 30 10:13:02 2012] GET //_debug_toolbar/static/css/toolbar.css?0.11885017900494 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 13/39] 127.0.0.1 () {48 vars in 834 bytes} [Mon Apr 30 10:13:02 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 8/40] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:14:41 2012] GET / => generated 248 bytes in 125 msecs (HTTP/1.1 200) 2 headers in 80 bytes (1 switches on core 0)
+[pid: 27385|app: 0|req: 9/41] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:15:48 2012] GET / => generated 56504 bytes in 30 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 27387|app: 0|req: 14/43] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27388|app: 0|req: 13/43] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 15/44] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 8/45] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27387|app: 0|req: 16/46] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 9/47] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 10/48] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 10/49] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 11/50] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/css/toolbar.css?0.9671151830192076 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 12/52] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27386|app: 0|req: 11/52] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27385|app: 0|req: 13/53] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:15:48 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 4 (pid: 27388)...
+Gracefully killing worker 2 (pid: 27386)...
+Gracefully killing worker 3 (pid: 27387)...
+Gracefully killing worker 1 (pid: 27385)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 10:15:55 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x22df470
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x22df470 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 27462, cores: 1)
+spawned uWSGI worker 2 (pid: 27463, cores: 1)
+spawned uWSGI worker 3 (pid: 27464, cores: 1)
+spawned uWSGI worker 4 (pid: 27465, cores: 1)
+[pid: 27462|app: 0|req: 1/1] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:15:55 2012] GET / => generated 57151 bytes in 134 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 27462|app: 0|req: 2/2] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 2 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27462|app: 0|req: 3/3] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 1/5] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 4 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27464|app: 0|req: 1/5] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 4 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 2/7] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27464|app: 0|req: 2/7] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 3/8] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27465|app: 0|req: 1/9] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 10:15:55 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 3 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 4/10] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:15:56 2012] GET //_debug_toolbar/static/css/toolbar.css?0.7899138399448933 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 5/11] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 10:15:56 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27464|app: 0|req: 3/12] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 10:15:56 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27465|app: 0|req: 2/13] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:15:56 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27465|app: 0|req: 3/14] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:16:50 2012] GET / => generated 57150 bytes in 134 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 27464|app: 0|req: 4/16] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 6/16] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27462|app: 0|req: 4/17] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27464|app: 0|req: 5/18] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27462|app: 0|req: 5/21] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 7/21] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27464|app: 0|req: 6/21] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27465|app: 0|req: 4/22] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27462|app: 0|req: 6/23] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/css/toolbar.css?0.09220135988709421 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27465|app: 0|req: 5/25] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27462|app: 0|req: 7/25] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27463|app: 0|req: 8/26] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 10:16:50 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+...gracefully killing workers...
+Gracefully killing worker 2 (pid: 27463)...
+Gracefully killing worker 4 (pid: 27465)...
+Gracefully killing worker 3 (pid: 27464)...
+Gracefully killing worker 1 (pid: 27462)...
+binary reloading uWSGI...
+chdir() to /home/cackharot/Projects/Web/env/viper
+closing all non-uwsgi socket fds > 2 (max_fd = 1024)...
+found fd 4 mapped to socket 0 (/tmp/uwsgi.sock)
+running /home/cackharot/Projects/Web/env/bin/uwsgi
+[uWSGI] getting INI configuration from development.ini
+*** Starting uWSGI 1.1.2 (64bit) on [Mon Apr 30 10:16:53 2012] ***
+compiled with version: 4.6.3 on 30 April 2012 07:04:43
+current working directory: /home/cackharot/Projects/Web/env/viper
+detected binary path: /home/cackharot/Projects/Web/env/bin/uwsgi
+your memory page size is 4096 bytes
+detected max file descriptor number: 1024
+lock engine: pthread mutexes
+uwsgi socket 0 inherited UNIX address /tmp/uwsgi.sock fd 4
+Python version: 2.7.3 (default, Apr 20 2012, 23:04:22)  [GCC 4.6.3]
+Set PythonHome to /home/cackharot/Projects/Web/env
+Python main interpreter initialized at 0x766470
+your server socket listen backlog is limited to 256 connections
+*** Operational MODE: preforking ***
+Loading paste environment: config:/home/cackharot/Projects/Web/env/viper/development.ini
+ImportError: No module named script.util.logging_config
+WSGI app 0 (mountpoint='') ready in 0 seconds on interpreter 0x766470 pid: 26619 (default app)
+*** uWSGI is running in multiple interpreter mode ***
+gracefully (RE)spawned uWSGI master process (pid: 26619)
+spawned uWSGI worker 1 (pid: 27487, cores: 1)
+spawned uWSGI worker 2 (pid: 27488, cores: 1)
+spawned uWSGI worker 3 (pid: 27489, cores: 1)
+spawned uWSGI worker 4 (pid: 27490, cores: 1)
+[pid: 27487|app: 0|req: 1/1] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 10:16:53 2012] GET //_debug_toolbar/source?frm=62892496&token=5827f69c38a4fc396622 => generated 241 bytes in 4 msecs (HTTP/1.1 400) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 1/2] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:16:53 2012] GET / => generated 55290 bytes in 189 msecs (HTTP/1.1 500) 2 headers in 101 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 2/3] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 2 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 1/4] 127.0.0.1 () {48 vars in 754 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/css/debugger.css => generated 0 bytes in 5 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 3/5] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27489|app: 0|req: 1/6] 127.0.0.1 () {48 vars in 735 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/js/debugger.js => generated 0 bytes in 4 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 4/7] 127.0.0.1 () {48 vars in 767 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 2/8] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 2/9] 127.0.0.1 () {48 vars in 765 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/img/source.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 3/10] 127.0.0.1 () {48 vars in 808 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/img/headerbg.png => generated 0 bytes in 1 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 4/11] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/css/toolbar.css?0.7385938690789523 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 5/13] 127.0.0.1 () {48 vars in 768 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static//img/console.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 3/13] 127.0.0.1 () {48 vars in 766 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static//img/source.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27489|app: 0|req: 2/14] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:16:54 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 5/15] 127.0.0.1 () {46 vars in 737 bytes} [Mon Apr 30 10:17:06 2012] GET //_debug_toolbar/source?frm=34152400&token=b219210056c999b1827a => generated 20420 bytes in 10 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 4/16] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:17:07 2012] GET / => generated 45740 bytes in 130 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 5/17] 127.0.0.1 () {44 vars in 684 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/jquery.js%27)%7D => generated 38729 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 6/18] 127.0.0.1 () {44 vars in 714 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/jquery.dataTables.min.js%27)%7D => generated 38789 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 6/19] 127.0.0.1 () {44 vars in 709 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/css/bootstrap.css%27)%7D => generated 38779 bytes in 16 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 7/20] 127.0.0.1 () {44 vars in 682 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/json2.js%27)%7D => generated 38725 bytes in 8 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 8/21] 127.0.0.1 () {44 vars in 688 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/backbone.js%27)%7D => generated 38737 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 9/22] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:17:07 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 10/23] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:17:07 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 7/24] 127.0.0.1 () {44 vars in 692 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/underscore.js%27)%7D => generated 38745 bytes in 19 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 11/25] 127.0.0.1 () {42 vars in 677 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/favicon.ico%27)%7D => generated 38584 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27488|app: 0|req: 6/26] 127.0.0.1 () {44 vars in 731 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/css/bootstrap-responsive.css%27)%7D => generated 38942 bytes in 74 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27489|app: 0|req: 3/27] 127.0.0.1 () {44 vars in 698 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/bootstrap.min.js%27)%7D => generated 38875 bytes in 92 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 8/28] 127.0.0.1 () {42 vars in 707 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/favicon.ico%27)%7D => generated 38644 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 9/29] 127.0.0.1 () {46 vars in 745 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/jquery.dataTables.min.js%27)%7D => generated 38971 bytes in 8 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 10/30] 127.0.0.1 () {46 vars in 713 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/json2.js%27)%7D => generated 38907 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27488|app: 0|req: 7/31] 127.0.0.1 () {46 vars in 723 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/underscore.js%27)%7D => generated 38927 bytes in 14 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27488|app: 0|req: 8/32] 127.0.0.1 () {46 vars in 719 bytes} [Mon Apr 30 10:17:07 2012] GET /$%7Brequest.static_url(%27viper:static/js/backbone.js%27)%7D => generated 38919 bytes in 14 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 11/33] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:17:08 2012] GET //_debug_toolbar/static/css/toolbar.css?0.3794449054203377 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 12/34] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:17:08 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 13/35] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:17:38 2012] GET / => generated 45607 bytes in 17 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 14/37] 127.0.0.1 () {46 vars in 740 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/css/bootstrap.css%27)%7D => generated 38961 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27489|app: 0|req: 4/37] 127.0.0.1 () {46 vars in 762 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/css/bootstrap-responsive.css%27)%7D => generated 39020 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 12/38] 127.0.0.1 () {46 vars in 729 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/bootstrap.min.js%27)%7D => generated 38939 bytes in 7 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27489|app: 0|req: 5/39] 127.0.0.1 () {46 vars in 745 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/jquery.dataTables.min.js%27)%7D => generated 38971 bytes in 10 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 15/40] 127.0.0.1 () {46 vars in 723 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/underscore.js%27)%7D => generated 38927 bytes in 8 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 16/41] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:17:38 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 17/42] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:17:38 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 9/43] 127.0.0.1 () {46 vars in 715 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/jquery.js%27)%7D => generated 38911 bytes in 30 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 13/44] 127.0.0.1 () {46 vars in 713 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/json2.js%27)%7D => generated 38907 bytes in 20 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27489|app: 0|req: 6/45] 127.0.0.1 () {46 vars in 719 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/backbone.js%27)%7D => generated 38919 bytes in 29 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 14/46] 127.0.0.1 () {46 vars in 729 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/bootstrap.min.js%27)%7D => generated 38939 bytes in 10 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27487|app: 0|req: 18/47] 127.0.0.1 () {46 vars in 745 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/jquery.dataTables.min.js%27)%7D => generated 38971 bytes in 15 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 15/48] 127.0.0.1 () {46 vars in 713 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/json2.js%27)%7D => generated 38907 bytes in 9 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 16/49] 127.0.0.1 () {46 vars in 723 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/underscore.js%27)%7D => generated 38927 bytes in 8 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27489|app: 0|req: 7/50] 127.0.0.1 () {46 vars in 719 bytes} [Mon Apr 30 10:17:38 2012] GET /$%7Brequest.static_url(%27viper:static/js/backbone.js%27)%7D => generated 38919 bytes in 14 msecs (HTTP/1.1 404) 2 headers in 89 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 17/51] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 10:17:38 2012] GET //_debug_toolbar/static/css/toolbar.css?0.22075742703305112 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 18/52] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 10:17:38 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 19/53] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:18:33 2012] GET / => generated 45530 bytes in 20 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27490|app: 0|req: 20/54] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:18:33 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 19/55] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:18:33 2012] GET //static/js/jquery.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 21/56] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:18:33 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 20/57] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:18:33 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 22/58] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:18:33 2012] GET //static/js/json2.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 21/59] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:18:33 2012] GET //static/js/underscore.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 23/60] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:18:33 2012] GET //static/js/backbone.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 24/61] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:18:33 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 22/62] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:18:33 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 10/63] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:18:33 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 5 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 25/64] 127.0.0.1 () {44 vars in 705 bytes} [Mon Apr 30 10:18:34 2012] GET //_debug_toolbar/static/css/toolbar.css?0.14004003941426946 => generated 9602 bytes in 0 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27489|app: 0|req: 8/65] 127.0.0.1 () {48 vars in 837 bytes} [Mon Apr 30 10:18:34 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27489|app: 0|req: 9/66] 127.0.0.1 () {44 vars in 632 bytes} [Mon Apr 30 10:19:22 2012] GET / => generated 45534 bytes in 54 msecs (HTTP/1.1 200) 2 headers in 82 bytes (1 switches on core 0)
+[pid: 27489|app: 0|req: 10/68] 127.0.0.1 () {48 vars in 726 bytes} [Mon Apr 30 10:19:23 2012] GET //static/css/bootstrap.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 23/68] 127.0.0.1 () {48 vars in 748 bytes} [Mon Apr 30 10:19:23 2012] GET //static/css/bootstrap-responsive.css => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27489|app: 0|req: 11/70] 127.0.0.1 () {48 vars in 701 bytes} [Mon Apr 30 10:19:23 2012] GET //static/js/jquery.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 24/70] 127.0.0.1 () {48 vars in 715 bytes} [Mon Apr 30 10:19:23 2012] GET //static/js/bootstrap.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 26/71] 127.0.0.1 () {48 vars in 731 bytes} [Mon Apr 30 10:19:23 2012] GET //static/js/jquery.dataTables.min.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 27/72] 127.0.0.1 () {48 vars in 699 bytes} [Mon Apr 30 10:19:23 2012] GET //static/js/json2.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 25/73] 127.0.0.1 () {48 vars in 705 bytes} [Mon Apr 30 10:19:23 2012] GET //static/js/backbone.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27488|app: 0|req: 11/74] 127.0.0.1 () {48 vars in 709 bytes} [Mon Apr 30 10:19:23 2012] GET //static/js/underscore.js => generated 0 bytes in 1 msecs (HTTP/1.1 304) 3 headers in 144 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 28/75] 127.0.0.1 () {48 vars in 751 bytes} [Mon Apr 30 10:19:23 2012] GET //_debug_toolbar/static/js/jquery-1.6.4.min.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27487|app: 0|req: 26/76] 127.0.0.1 () {48 vars in 733 bytes} [Mon Apr 30 10:19:23 2012] GET //_debug_toolbar/static/js/toolbar.js => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+[pid: 27490|app: 0|req: 29/77] 127.0.0.1 () {44 vars in 703 bytes} [Mon Apr 30 10:19:23 2012] GET //_debug_toolbar/static/css/toolbar.css?0.7455347624140682 => generated 9602 bytes in 1 msecs via sendfile() (HTTP/1.1 200) 3 headers in 126 bytes (0 switches on core 0)
+[pid: 27489|app: 0|req: 12/78] 127.0.0.1 () {48 vars in 836 bytes} [Mon Apr 30 10:19:23 2012] GET //_debug_toolbar/static/img/djdt_vertical.png => generated 0 bytes in 0 msecs (HTTP/1.1 304) 1 headers in 75 bytes (0 switches on core 0)
+SIGINT/SIGQUIT received...killing workers...
+goodbye to uWSGI.

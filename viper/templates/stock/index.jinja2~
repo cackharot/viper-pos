@@ -1,0 +1,16 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manager-products">
+	 <div class="page-header">
+      <h1>Stock Management</h1>
+     </div> 
+      <div class="row">
+        <ul>
+            <li><a href="#">Manage Purchases</a></li>
+            <li><a href="{{'products'|route_url}}">Manage Products</a></li>
+            <li><a href="#">Manage Categories</a></li>
+            <li><a href="#">Manage Tax Categories</a></li>
+        </ul>
+      </div>
+</section>      
+{% endblock %}

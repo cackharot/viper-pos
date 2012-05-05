@@ -1,0 +1,117 @@
+{% extends "templates/layout.jinja2" %}
+{% block head %}
+<style type="text/css">
+#tblSalesFooter	{
+}
+#tblSalesFooter	h3{
+	/*text-align: right;*/
+}
+</style>
+{% endblock %}
+{% block content %}
+<section id="sales-page">
+	 <div class="page-header">
+      <h1>Sales
+      	<div class="span7 pull-right"> 
+      		<button id="new-order" class="btn btn-primary">New (F2)</button>
+      		<button id="cancel-order" class="btn btn-warning">Cancel (F4)</button>
+      		<button id="checkout-order" class="btn btn-success">Checkout (F5)</button>
+      		<button id="print-order" class="btn btn-primary">Print (F11)</button>
+      		<button id="preview-order" class="btn btn-primary">Preview (F12)</button>
+      	</div>
+      </h1>
+     </div> 
+      <div class="row-fluid">
+      	<div class="clear"/>
+		<div class="span3">
+			<h3>Today Orders</h3>
+			<table class="table" id="tblTodayOrders">
+				<thead>
+					<tr>
+						<td>Order No</td>
+						<td>Customer</td>
+						<td>Amount</td>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<div class="span9">
+			<div class="span12">
+		  		<div class="span6">Order Number: <span id="orderNumber">0</span></div>
+		  		<div class="span6">Date: <span id="orderDate"></span></div>
+			  	</div>
+			<table class="table">
+				<thead>
+					<tr>
+						<td>Barcode:</td>
+						<td>Item Name:</td>
+						<td>Quantity:</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><input type="text" name="barcode"/></td>
+						<td><input type="text" name="itemName"/></td>
+						<td><input type="text" name="quantity" value="1"/></td>
+						<td><button id="add-item" class="btn btn-primary">Add Item</button></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="min-height:450px;overflow-y:auto;overflow-x:auto;display:block;">
+				<table class="table" id="tblCurrentOrder">
+					<thead>
+						<tr>
+							<td>Sl.No</td>
+							<td>Barcode</td>
+							<td>Item Name</td>
+							<td>MRP</td>
+							<td>Price</td>
+							<td>Discount</td>
+							<td>Quantity</td>
+							<td>Gross</td>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<table class="table" id="tblSalesFooter">
+				<tbody>
+					<tr>
+						<td>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></td>
+						<td></td>
+						<td><h3>Total Amount:</h3></td>
+						<td><h3 id="totalAmount">0.0</h3></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><h3>Paid Amount:</h3></td>
+						<td><h3 id="paidAmount">0.0</h3></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td><h3 id="lblBalanceAmount">Balance/Change Amount:</h3></td>
+						<td><h3 id="blanceAmount">0.0</h3></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+      </div>
+</section>      
+{% endblock content %}
+{% block footerscript %}
+<script src="{{request.static_url('viper:static/js/salesapp/salesmodels.js')}}"></script>
+<script src="{{request.static_url('viper:static/js/salesapp/salesapp.js')}}"></script>
+<script>
+	$(function(){
+	});
+</script>
+
+{% endblock %}
+
+
