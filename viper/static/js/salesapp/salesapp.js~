@@ -273,29 +273,26 @@
 					var model = this.model;
 					var lstOrders = this.lstOrders;
 					remote.searchItem(barcode, function (data) {
+						if (typeof (data) == "string") data = eval('(' + data + ')');
 						if (data) {
 							if(data.length > 1){
-								var compl = _.template($('#tpl-selectitem'));
+								var compl = _.template($('#tpl-selectitem').html());
 								var tr = compl({'items':data});
 								$('#tblSelectItem tbody').html(tr);
-								
+								var _addtoui = this.addItemToUI;
 								$('#tblSelectItem tbody td button').click(function(){
 									var id = $(this).data('id')	;
 									if(id)
-										addItemToUI(data[parseInt(id)],model,lstOrders);		
+										_addtoui(data[parseInt(id)],model,lstOrders);		
 								});
 								
 								// show pop to select the item
-								$('#selectItemModal').modal({
-									backdrop: 'static',
-									keyboard: true,
-									show: true
-								});
+								$('#selectItemModal').modal('show');
 							}else{
 								addItemToUI(data[0],model,lstOrders);
 							}
 						}else{
-							var ediv = '<div class="alert alert-warning fadein">';
+							var ediv = '<div class="alert alert-warning fade in">';
 							ediv += 'Oops! There are no items with barcode <b>"'+barcode+'"</b>.';
 							ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
 							ediv += '</div>';
