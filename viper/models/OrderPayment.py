@@ -34,7 +34,12 @@ class OrderPayment(Base):
 		self.PaymentDate = d
 		self.CreatedOn = d
 		pass
-
+		
+	def toDict(self):
+		serialized = dict((column_name, getattr(self, column_name))
+                          for column_name in self.__table__.c.keys())
+		return serialized
+		
 	def __repr__(self):
 		return u"Order(%s, %s)" % (self.Id, self.OrderNo)
 	pass

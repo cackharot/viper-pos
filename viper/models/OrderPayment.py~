@@ -20,9 +20,9 @@ class OrderPayment(Base):
 	PaymentDate = Column(DateTime, nullable=True)
 	PaymentType = Column(String(10),default='Cash')
 	PaidAmount = Column(Float,default=0.0)
-	CreatedBy = Column(String)
+	CreatedBy = Column(String(50))
 	CreatedOn = Column(DateTime)
-	UpdatedBy = Column(String, nullable=True)
+	UpdatedBy = Column(String(50), nullable=True)
 	UpdatedOn = Column(DateTime, nullable=True)
 	Status = Column(Boolean, default=True)		
 	

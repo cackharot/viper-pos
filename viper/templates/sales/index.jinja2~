@@ -29,7 +29,7 @@
 				<thead>
 					<tr>
 						<th>Order No#</th>
-						<th>Customer</th>
+						<th>Time</th>
 						<th>Amount</th>
 					</tr>
 				</thead>
@@ -148,8 +148,75 @@
 		<a href="#" data-dismiss="modal" class="btn">Close</a>
 	  </div>
 	</div>
+	<div class="modal fade" id="checkoutOrderModel">
+	  <div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Checkout</h3>
+	  </div>
+	  <div class="modal-body">
+		<table class="table table-striped">
+			<tbody>				
+			</tbody>
+		</table>
+	  </div>
+	  <div class="modal-footer">
+		<a href="#" data-dismiss="modal" class="btn"><i class="icon-remove"></i> Close</a>
+		<a href="#" class="btn btn-primary" id="btnPayOrder"> $ Pay</a>		
+	  </div>
+	</div>
 </section>
 <section id="templates" style="display:none">
+	<script type="text/template" id="tpl-chkoutorder">
+		<tr>
+			<th>Order No#</th>
+			<td>
+				<b><%= item.get('orderno')%></b>
+			</td>
+		</tr>
+		<tr>
+			<th>Total Amount:</th>
+			<td>
+				<h3 style="color:red"><%= item.get('orderamount').toFixed(2)%></h3>
+			</td>
+		</tr>
+		<tr>
+			<th>Customer:</th>
+			<td>
+				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..." required />
+				<input type="hidden" name="customerid" />
+				<div class="controls">
+					<fieldset>
+						<label class="radio inline">
+							<input type="radio" name="searchfield" value="mobile" checked="checked"/> Mobile
+						</label>
+						<label class="radio inline">
+							<input type="radio" name="searchfield" value="name"/> Name
+						</label>
+						<label class="radio inline">
+							<input type="radio" name="searchfield" value="customerno"/> Customer No
+						</label>
+					</fieldset>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<th>Payment Type</th>
+			<td>
+				<select class="dropdown" name="paymenttype">
+					<option>Cash</option>
+					<option>Credit</option>
+					<option>Card</option>
+					<option>Cheque</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<th>Paid Amount:</th>
+			<td>
+				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('orderamount').toFixed(2)%>" required autofocus="autofocus"/>
+			</td>
+		</tr>
+	</script>
 	<script type="text/template" id="tpl-selectitem">
 		<% 	var cnt=0;
 			_.each(items, function(item) { %>
@@ -159,7 +226,7 @@
 			<td class="tright"><%= item.MRP.toFixed(2) %></td>
 			<td class="tright"><%= item.SellPrice.toFixed(2) %></td>
 			<td><%= item.CreatedOn %></td>
-			<td><button class="btn btn-mini btn-info tcenter" data-id="<%= cnt++ %>">Select</button></td>
+			<td class="tcenter"><button class="btn btn-mini btn-info" data-id="<%= cnt++ %>">Select</button></td>
 		</tr>
 		<% }); %>
 	</script>
@@ -178,7 +245,7 @@
 	<script type="text/template" id="tpl-todayorderitem">
 		<tr data-orderid="<%= item.get('orderid') %>">
 			<td class="o"><a href="#" title="Click to edit!"><%= item.get('orderno') %></a></td>
-			<td class="c"><%= item.get('customername') %></td>
+			<td class="c"><%= $.format.date(ToLocalDate(item.get('orderdate')),'dd/MM h:mm a') %></td>
 			<td class="a tright" style="font-weight:bold;"><%= item.get('orderamount').toFixed(2) %></td>
 		</tr>
 	</script>	
@@ -191,6 +258,13 @@
 	$(function(){
 		$('input[name=barcode]').focus();
 	});
+	function ToLocalDate (inDate) {
+		if(_.isString(inDate))
+			inDate = new Date(inDate);
+	    var date = new Date();
+    	date.setTime(inDate.valueOf() - 60000 * inDate.getTimezoneOffset());
+	    return date;
+	}	
 </script>
 
 {% endblock %}

@@ -104,6 +104,8 @@
 			$('#totalAmount').text(0.0);
 			$('#savingsAmount').text(0.0);
 			$('#totalItemsQuantity').text('0/0');
+			$('#paidAmount').text(0.0);
+			$('#balanceAmount').text(0.0);
 		},
 		hideUI: function (callback) {
 			$('#tblOrderLineItems tbody').fadeOut('slow', function (e) {
@@ -185,13 +187,15 @@
 			});
 			if (item) {
 				var orderno = item.get('orderno');
-				var cname = item.get('customername');
+				var odate = item.get('orderdate');
 				var amt = item.getOrderAmount();
+				
+				item.set({'orderamount':amt});
 
 				var $tr = $('tr[data-orderid="' + orderid + '"]', $('#tblTodayOrders tbody'));
 				if ($tr.length > 0) {
 					$('.o', $tr).text(orderno);
-					$('.c', $tr).text(cname);
+					$('.c', $tr).text(ToLocalDate(odate));
 					$('.a', $tr).text(Math.ceil(amt).toFixed(2));
 				}
 			}
@@ -236,9 +240,15 @@
 		},
 		render: function () {
 			var item = this.model;
-			var odate = new Date(item.get('orderdate'));
-			$('#orderDate').html(odate.toString('dd/mm/yyyy HH:MM tt'));
+			var odate = $.format.date(ToLocalDate(item.get('orderdate')),'dd-MM-yyyy hh:mm a')
+			var pamt = item.get('paidamount');
+			var tamt = item.get('orderamount');
+			var balance = tamt - pamt;
+			$('#orderDate').html(odate);
 			$('#orderNumber').html(item.get('orderno'));
+			
+			$('#paidAmount').text(pamt);
+			$('#balanceAmount').text(Math.abs(balance));
 		},
 		events: {
 			"click #add-item": "addLineItem",
@@ -249,6 +259,7 @@
 			"click #cancel-order": "cancelOrder",
 			"click #checkout-order": "checkOutOrder",
 			"click #refresh-orders": "refreshOrders",
+			"click #btnPayOrder": "payOrder",
 		},
 		addLineItem: function () {
 			if (!this.model) this.newOrder();
@@ -289,6 +300,7 @@
 										data[id].Quanitity = quantity;
 										_addtoui(data[id],model,lstOrders);		
 										$('#selectItemModal').modal('hide');
+										$txtBarcode[0].select(0, barcode.length);
 									});
 								});
 								
@@ -299,12 +311,7 @@
 								_addtoui(data[0],model,lstOrders);
 							}
 						}else{
-							var ediv = '<div class="alert alert-warning fade in">';
-							ediv += 'Oops! There are no items with barcode <b>"'+barcode+'"</b>.';
-							ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
-							ediv += '</div>';
-							$('#statusMessage').html(ediv);
-							$(ediv).alert();
+							showMsg('warn','Oops! There are no items with barcode <b>"'+barcode+'"</b>.');
 						}
 					});
 				}
@@ -342,8 +349,10 @@
 		},
 		newOrder: function () {
 			if (this.model) {
+				this.model.get('payments').reset();
 				var items = this.model.get('lineItems');
 				items.hideUI(function () {
+					items.reset();
 					items.resetRecords();
 					items.showUI();
 				});
@@ -393,6 +402,7 @@
 			var lstorders = this.lstOrders;
 			var currentOrder = this.model;
 			
+			this.model.get('payments').reset();
 			var items = this.model.get('lineItems');
 			items.hideUI(function(){  
 				items.reset();
@@ -402,6 +412,7 @@
 					if (typeof (data) == "string") data = eval('(' + data + ')');
 					if (data) {
 						var o = data.order;
+						var orderid = o.Id;
 						var lineitems = data.lineitems;
 						var payments = data.payments;
 
@@ -409,11 +420,13 @@
 							'id': o.Id,
 							'orderid': o.Id,
 							'customerid': o.CustomerId,
+							'customername': o.CustomerName,
 							'orderno': o.OrderNo,
 							'orderdate': o.OrderDate,
 							'paidamount': o.PaidAmount,
 							'orderamount': o.OrderAmount
 						});
+						
 						currentOrder.get('lineItems').orderid = o.Id;
 						currentOrder.get('payments').orderid = o.Id;
 
@@ -435,6 +448,25 @@
 								currentOrder.get('lineItems').add(item);
 							}
 						}
+						
+						if(payments) {
+							for (var i = 0; i < payments.length; i++) {
+								var no = i + 1;
+								var item = new OrderPayment({
+									slno: no,
+									orderid: orderid,
+									paidamount: payments[i].PaidAmount,
+									paymenttype: payments[i].PaymentType,
+									paymentdate: payments[i].PaymentDate,
+								});
+								currentOrder.get('payments').add(item);
+							}
+						}
+						
+						currentOrder.set({
+							'paidamount': currentOrder.getPaidAmount(),
+							'orderamount': currentOrder.getOrderAmount(),
+						});
 					}
 					items.showUI();
 				});
@@ -448,10 +480,96 @@
 			}
 		},
 		checkOutOrder: function () {
+			if(!this.model || this.model.get('lineItems').length<1){
+				showMsg('warn','<strong>Oops!</strong> Order contains no items. Cannot checkout!');
+				return;
+			}			
+		
 			this.model.set({
-				'orderamount': this.model.get('lineItems').getQAS().totalAmount,
+				'orderamount': this.model.getOrderAmount(),
 			});
-			this.model.save();
+			
+			var cmpl = _.template($('#tpl-chkoutorder').html());
+			
+			var html = cmpl({'item':this.model});
+			
+			$('#checkoutOrderModel table tbody').html(html);
+			
+			$('#checkoutOrderModel').modal('show');
+						
+			$('input[name=customername]',$('#checkoutOrderModel')).typeahead({
+				ajax: {
+					url: "/customers/search",
+					timeout: 500,
+					displayField: "name",
+					triggerLength: 1,
+					method: 'post',
+					dataType: 'json',
+					loadingClass: "loading-circle",
+					preDispatch: function (query) {
+						//showLoadingMask(true);
+						var fieldName = $('input[type=radio][name=searchfield]:checked').val();
+						this.displayField = fieldName;
+						return {
+						    search: query,
+						    field: fieldName || 'name'
+						}
+					},
+					preProcess: function (data) {
+						//showLoadingMask(false);
+						if(!data || !data.mylist) return false;
+						if (data.success === false) {
+						    // Hide the list, there was some error
+						    return false;
+						}
+						if (typeof (data.mylist) == "string") data.mylist = eval('(' + data.mylist + ')');
+						// We good!
+						return data.mylist;
+					}
+				},
+				updater: function(item) {
+					if(this.ajax.matchItem) {
+						var id = this.ajax.matchItem.id;
+  					    $('input[name=customerid]').val(id);
+  				    }
+					return item;
+				}
+			});
+			
+			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder);
+		},
+		payOrder: function() {
+			//console.log(salesappview.model);
+			$(this).unbind('click', salesappview.payOrder);
+			
+			var customerid = $('input[name=customerid]', $('#checkoutOrderModel')).val();
+			
+			if(customerid) {
+				var orderid = salesappview.model.get('orderid');
+				var paidamount = parseFloat($('input[name=paidamount]', $('#checkoutOrderModel')).val());
+				var customername = $('input[name=customername]', $('#checkoutOrderModel')).val();
+				var paymenttype = $('select[name=paymenttype] option:selected', $('#checkoutOrderModel')).val();
+			
+				salesappview.model.set({
+					'paidamount': paidamount,
+					'customerid': customerid,
+					'customername': customername,
+				});
+			
+				var payment = new OrderPayment({
+					'orderid': orderid,
+					'paidamount': paidamount,
+					'paymenttype': paymenttype,
+					'paymentdate': new Date().toUTCString(),
+				});
+			
+				salesappview.model.get('payments').add(payment);
+				salesappview.model.save();
+				showMsg('success','<bHooray!</b> Order saved successfully.');
+			}else{
+				showMsg('error','<bOops!</b> Please enter a valid customer to save this order.');
+			}
+			$('#checkoutOrderModel').modal('hide');
 		},
 		printOrder: function () {
 
@@ -490,8 +608,7 @@
 					};
 				}
 			}).fail(function(){
-				var ediv = '<div class="alert alert-warning">Oops! Error in loading todays order details.</div>';
-				$('#statusMessage').html(ediv);
+				showMsg('warn','Oops! Error in loading todays order details.');
 			});
 		}
 	});
@@ -503,6 +620,31 @@
 		if (orderid) salesappview.editOrder(orderid);
 		return false;
 	});
+	
+	function showMsg(type, message) {
+		var ediv = '<div class="alert ';
+		if(type == "error"){
+			ediv += 'alert-error';
+		} else if(type=="info") {
+			ediv += 'alert-info';
+		} else if(type=="success") {
+			ediv += 'alert-success';	
+		} else if(type=="warn"){
+			ediv += 'alert-warning';
+		}else{
+			ediv += '';	
+		}
+		ediv +=' fade in">';
+		ediv += message;
+		ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
+		ediv += '</div>';
+		$('#statusMessage').html(ediv);
+		$('.alert',$('#statusMessage')).alert();
+		
+		setTimeout(function(){ 
+			$('.alert',$('#statusMessage')).alert('close'); 
+		},8000);
+	}
 	
 	String.prototype.startsWith = function(needle)
 	{

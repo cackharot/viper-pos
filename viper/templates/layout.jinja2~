@@ -6,7 +6,7 @@
     <title>Viper POS From Viper Suits Inc</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A Versatile Point of Sales System Software. Delivering simplicity, trust, relaiablity..">
+    <meta name="description" content="A Versatile Point of Sales System Software. Delivering simplicity, trust, relaiablity...">
     <meta name="author" content="cackharot@gmail.com">
     <link rel="shortcut icon" href="{{request.static_url('viper:static/favicon.ico')}}" />
 
@@ -53,6 +53,7 @@
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" id="admin-menu">
+						<li></li>
 						<li><a href="/sales/listorders">Manage Orders</a></li>
 						<li class="divider"></li>
 						<li><a href="/tenant">Manage Tenants</a></li>
@@ -90,6 +91,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{request.static_url('viper:static/js/jquery.js')}}"></script>
+    <script src="{{request.static_url('viper:static/js/jquery.dateFormat-1.0.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/bootstrap.min.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/json2.js')}}"></script>

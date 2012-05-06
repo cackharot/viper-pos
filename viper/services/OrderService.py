@@ -65,23 +65,28 @@ class OrderService(object):
 				if o:
 					o.CustomerId = order["customerid"]
 					o.OrderAmount = order["orderamount"]
+					o.PaidAmount = order["paidamount"]
 					o.IpAddress = UserIdentity.IpAddress
 					o.UpdatedBy = UserIdentity.UserId
 					o.UpdatedOn = datetime.utcnow()
 					
 					lineitems = order["lineItems"]
 					if lineitems:
+						DBSession.query(LineItem).filter(LineItem.OrderId==orderid).delete()
 						self.SaveOrderLineItems(o.Id,lineitems)
 					else:
 						DBSession.query(LineItem).filter(LineItem.OrderId==orderid).delete()
+						
+					payments = order["payments"]
+					if payments:
+						DBSession.query(OrderPayment).filter(OrderPayment.OrderId==orderid).delete()
+						self.SaveOrderPayments(o.Id,payments)
+					else:
+						DBSession.query(OrderPayment).filter(OrderPayment.OrderId==orderid).delete()
 		pass
 	
 	def SaveOrderLineItems(self,orderid,lineitems):
 		if orderid and lineitems:
-			items = DBSession.query(LineItem).filter(LineItem.OrderId==orderid).all()
-			if items:
-				for x in items:
-					DBSession.delete(x) 
 			for x in lineitems:
 				item = LineItem()
 				item.OrderId = orderid
@@ -93,6 +98,19 @@ class OrderService(object):
 				item.Quantity = x["quantity"]
 				DBSession.add(item)
 				
+		pass
+	
+	def SaveOrderPayments(self,orderid,payments):
+		if orderid and payments:
+			for x in payments:
+				item = OrderPayment()
+				item.OrderId = orderid
+				item.PaidAmount = x["paidamount"]
+				item.PaymentType = x["paymenttype"]
+				item.PaymentDate = datetime.utcnow()
+				item.CreatedBy = UserIdentity.UserId
+				item.CreatedOn = datetime.utcnow()
+				DBSession.add(item)				
 		pass
 		
 	def DeleteOrder(self, order):
@@ -203,7 +221,7 @@ class OrderService(object):
 						if order.LineItems:
 							order.OrderAmount = sum([x.Amount for x in order.LineItems])
 						#fetch the payment details
-						#order.Payments = DBSession.query(OrderPayment).filter(OrderPayment.OrderId==order.Id, OrderPayment.Status==True).all()
+						order.Payments = DBSession.query(OrderPayment).filter(OrderPayment.OrderId==order.Id, OrderPayment.Status==True).all()
 			
 			return orders
 		return None
