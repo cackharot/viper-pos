@@ -19,23 +19,25 @@
 		initialize: function (model, options) {
 			this.bind("change", this.updateUI);
 		},
-		updateUI: function(){
+		updateUI: function () {
 			var barcode = this.get('barcode');
 			var name = this.get('name');
 			var quantity = this.get('quantity');
 			var mrp = this.get('mrp');
 			var price = this.get('price');
-			var subtotal = Math.ceil(price*quantity);
-			
-			this.set({'subtotal':subtotal})
-			
-			var $tr = $('tr[data-barcode='+barcode+']',$('#tblOrderLineItems tbody'));
-			
-			if($tr.length>0){
-				$('.n',$tr).text(name);
-				$('.p',$tr).text(price);
-				$('.q',$tr).text(quantity);
-				$('.st',$tr).text(subtotal);
+			var subtotal = Math.ceil(price * quantity);
+
+			this.set({
+				'subtotal': subtotal
+			})
+
+			var $tr = $('tr[data-barcode=' + barcode + ']', $('#tblOrderLineItems tbody'));
+
+			if ($tr.length > 0) {
+				$('.n', $tr).text(name);
+				$('.p', $tr).text(price);
+				$('.q', $tr).text(quantity);
+				$('.st', $tr).text(subtotal);
 			}
 		}
 	});
@@ -50,52 +52,66 @@
 		},
 		addLineItemRecord: function (item) {
 			var compiled = _.template($('#tpl-lineitem').html());
-			var tr = compiled({'item':item});
-			
+			var tr = compiled({
+				'item': item
+			});
 			$('#tblOrderLineItems tbody').prepend(tr);
 			this.updateTotal();
 		},
-		updateTotal: function() {
-			var qas = this.getQAS();				
-			
+		updateTotal: function () {
+			var qas = this.getQAS();
 			$('#totalAmount').text(qas.totalAmount);
 			$('#savingsAmount').text(qas.savings);
-			$('#totalItemsQuantity').text(this.length + '/' + qas.totalQuantity);
+			$('#totalItemsQuantity').text(qas.totalItems + '/' + qas.totalQuantity);
 		},
-		getQAS: function(){
-			var tq = 0;
-			var amt = 0;
-			var savings = 0;
+		getQAS: function () {
+			var totalItems = 0,
+				totalQuantity = 0,
+				amt = 0,
+				savings = 0;
+
 			for (i = 0; i < this.length; i++) {
-				var q = this.at(i).get('quantity');
+				var barcode = this.at(i).get('barcode');
+				var price = this.at(i).get('price');
+				var quantity = this.at(i).get('quantity');
 				var mrp = this.at(i).get('mrp');
 				var sbt = this.at(i).get('subtotal');
+				//var sbt = Math.ceil(price*quantity);
+				if (!barcode.startsWith('.')) {
+					totalQuantity += quantity;
+					totalItems++;
+				}
+
 				amt += sbt;
-				tq += q;
-				savings += ((mrp * q) - sbt);
+				savings += ((mrp * quantity) - sbt);
 			}
 
-			tq = tq.toFixed(2);
+			totalQuantity = totalQuantity.toFixed(2);
 			amt = Math.ceil(amt);
 			savings = Math.ceil(savings);
-			return {totalQuantity:tq,totalAmount:amt,savings:savings};
+			return {
+				totalItems: totalItems,
+				totalQuantity: totalQuantity,
+				totalAmount: amt,
+				savings: savings
+			};
 		},
 		resetRecords: function () {
 			$('#tblOrderLineItems tbody tr').each(function () {
-						$(this).remove();
+				$(this).remove();
 			});
 			$('#totalAmount').text(0.0);
 			$('#savingsAmount').text(0.0);
 			$('#totalItemsQuantity').text('0/0');
 		},
-		hideUI: function(callback){
-			$('#tblOrderLineItems tbody').fadeOut('slow',function(e){
-				if(callback) callback();
+		hideUI: function (callback) {
+			$('#tblOrderLineItems tbody').fadeOut('slow', function (e) {
+				if (callback) callback();
 			});
 		},
-		showUI: function(callback){
-			$('#tblOrderLineItems tbody').fadeIn('slow',function(){
-				if(callback) callback();
+		showUI: function (callback) {
+			$('#tblOrderLineItems tbody').fadeIn('slow', function () {
+				if (callback) callback();
 			});
 		}
 	});
@@ -127,11 +143,15 @@
 			payments: new OrderPaymentsCollection(),
 			isprinted: false
 		},
-		getOrderAmount: function(){
-			return this.get('lineItems').reduce(function(m,x){return m+x.get('subtotal');},0);
+		getOrderAmount: function () {
+			return this.get('lineItems').reduce(function (m, x) {
+				return m + x.get('subtotal');
+			}, 0);
 		},
-		getPaidAmount: function(){
-			return this.get('payments').reduce(function(m,x){return m+x.get('paidamount');},0);
+		getPaidAmount: function () {
+			return this.get('payments').reduce(function (m, x) {
+				return m + x.get('paidamount');
+			}, 0);
 		}
 	});
 
@@ -140,39 +160,42 @@
 		initialize: function (models, options) {
 			this.bind("add", this.addorderitem);
 			this.bind("remove", this.removeorderitem);
-			this.bind("change", this.updateorderitem);			
+			this.bind("change", this.updateorderitem);
 		},
 		addorderitem: function (item) {
-			if(!item) return;
+			if (!item) return;
 			var compiled = _.template($('#tpl-todayorderitem').html());
-			var tr = compiled({'item':item});
-			
+			var tr = compiled({
+				'item': item
+			});
+
 			$('#tblTodayOrders tbody').prepend(tr);
 		},
-		removeorderitem: function(item){
-			if(!item) return;
+		removeorderitem: function (item) {
+			if (!item) return;
 			var orderid = item.get('orderid');
-			var $tr = $('tr[data-orderid='+orderid+']', $('#tblTodayOrders tbody'));
-			if($tr.length>0)
-				$tr.remove();
+			var $tr = $('tr[data-orderid=' + orderid + ']', $('#tblTodayOrders tbody'));
+			if ($tr.length > 0) $tr.remove();
 		},
-		updateorderitem: function(orderid){
-			if(!orderid) return;
-			var item = this.find(function(x){return x.get('orderid')==orderid;});
-			if(item) {
+		updateorderitem: function (orderid) {
+			if (!orderid) return;
+			var item = this.find(function (x) {
+				return x.get('orderid') == orderid;
+			});
+			if (item) {
 				var orderno = item.get('orderno');
 				var cname = item.get('customername');
 				var amt = item.getOrderAmount();
-			
-				var $tr = $('tr[data-orderid="'+orderid+'"]', $('#tblTodayOrders tbody'));
-				if($tr.length>0) {
-					$('.o',$tr).text(orderno);
-					$('.c',$tr).text(cname);
-					$('.a',$tr).text(Math.ceil(amt).toFixed(2));
+
+				var $tr = $('tr[data-orderid="' + orderid + '"]', $('#tblTodayOrders tbody'));
+				if ($tr.length > 0) {
+					$('.o', $tr).text(orderno);
+					$('.c', $tr).text(cname);
+					$('.a', $tr).text(Math.ceil(amt).toFixed(2));
 				}
 			}
 		},
-		resetUI: function(){
+		resetUI: function () {
 			$('#tblTodayOrders tbody tr').each(function () {
 				$(this).remove();
 			});
@@ -193,7 +216,9 @@
 				return order;
 			},
 			searchItem: function (barcode, callback) {
-				$.post(searchitemurl, {'barcode':barcode}, function (data) {
+				$.post(searchitemurl, {
+					'barcode': barcode
+				}, function (data) {
 					if (typeof (data) == "string") data = eval('(' + data + ')');
 					if (callback) callback(data);
 				}, 'json');
@@ -225,9 +250,8 @@
 			"click #refresh-orders": "refreshOrders",
 		},
 		addLineItem: function () {
-			if(!this.model)
-				this.newOrder();
-		
+			if (!this.model) this.newOrder();
+
 			var $txtBarcode = $('input[name=barcode]');
 			var barcode = $txtBarcode.val();
 			var tmp = $('input[name=quantity]').val();
@@ -235,59 +259,90 @@
 			if (tmp && tmp.length > 0) quantity = parseFloat(tmp);
 
 			if (barcode && barcode.length > 1 && quantity > 0) {
-				var item = this.model.get('lineItems').find(function(x){ 
-						return x.get('barcode') == barcode;							 
-					});
-				
-				if(item){
+				var item = this.model.get('lineItems').find(function (x) {
+					return x.get('barcode') == barcode;
+				});
+
+				if (item) {
 					var q = item.get('quantity');
-					item.set({'quantity':q+quantity});
+					item.set({
+						'quantity': q + quantity
+					});
 					this.lstOrders.updateorderitem(this.model.get('orderid'));
-				}else{				
+				} else {
 					var model = this.model;
 					var lstOrders = this.lstOrders;
-					remote.searchItem(barcode,function(data) {
-						if(data && data.Name) {
-							var itemName = data.Name;
-							var price = data.SellPrice;
-							var discount = data.Discount;
-							var mrp = data.MRP;
-				
-							var item = new LineItem({
-								orderid: model.get('orderid'),
-								slno: model.get('lineItems').length + 1,
-								name: itemName,
-								barcode: barcode,
-								mrp: mrp,
-								quantity: quantity,
-								price: price,
-								discount: discount,
-								subtotal: price * quantity
-							});
-					
-							model.get('lineItems').add(item);
-							lstOrders.updateorderitem(model.get('orderid'));
+					remote.searchItem(barcode, function (data) {
+						if (data) {
+							if(data.length > 1){
+								var compl = _.template($('#tpl-selectitem'));
+								var tr = compl({'items':data});
+								$('#tblSelectItem tbody').html(tr);
+								
+								$('#tblSelectItem tbody td button').click(function(){
+									var id = $(this).data('id')	;
+									if(id)
+										addItemToUI(data[parseInt(id)],model,lstOrders);		
+								});
+								
+								// show pop to select the item
+								$('#selectItemModal').modal({
+									backdrop: 'static',
+									keyboard: true,
+									show: true
+								});
+							}else{
+								addItemToUI(data[0],model,lstOrders);
+							}
+						}else{
+							var ediv = '<div class="alert alert-warning fadein">';
+							ediv += 'Oops! There are no items with barcode <b>"'+barcode+'"</b>.';
+							ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
+							ediv += '</div>';
+							$('#statusMessage').html(ediv);
+							$(ediv).alert();
 						}
 					});
 				}
-				
+
 				$txtBarcode[0].select(0, barcode.length);
 			} else {
 				$txtBarcode[0].focus();
 			}
 		},
+		addItemToUI: function(data,model,lstOrders) {
+			var itemName = data.Name;
+			var price = data.SellPrice;
+			var discount = data.Discount;
+			var mrp = data.MRP;
+
+			var item = new LineItem({
+				orderid: model.get('orderid'),
+				slno: model.get('lineItems').length + 1,
+				name: itemName,
+				barcode: barcode,
+				mrp: mrp,
+				quantity: quantity,
+				price: price,
+				discount: discount,
+				subtotal: price * quantity
+			});
+
+			model.get('lineItems').add(item);
+			lstOrders.updateorderitem(model.get('orderid'));
+		},
 		deleteLineItem: function () {
 
 		},
 		newOrder: function () {
-			if(this.model){
+			if (this.model) {
 				var items = this.model.get('lineItems');
-				items.hideUI(function(){
+				items.hideUI(function () {
 					items.resetRecords();
 					items.showUI();
 				});
 			}
-			
+
 			this.model = new Order;
 			this.model.set({
 				'lineItems': new LineItemCollection(null, {
@@ -299,12 +354,12 @@
 					view: this
 				})
 			});
-			
+
 			this.model.bind("change", this.render, this);
-			
+
 			var lstorders = this.lstOrders;
 			var currentOrder = this.model;
-			
+
 			remote.newOrder(function (data) {
 				if (data) {
 					currentOrder.set({
@@ -322,29 +377,28 @@
 				}
 			});
 		},
-		editOrder: function(orderid){
-			if(!orderid) return;
-			if(!this.model) { 
+		editOrder: function (orderid) {
+			if (!orderid) return;
+			if (!this.model) {
 				this.model = new Order;
 				this.model.bind("change", this.render, this);
 			}
-			
+
 			var items = this.model.get('lineItems');
-			items.hideUI(function(){
-				items.reset();
-				items.resetRecords();
-			});
-							
+			items.hideUI();
+			items.reset();
+			items.resetRecords();
+
 			var lstorders = this.lstOrders;
 			var currentOrder = this.model;
-			
-			$.post('/sales/getorder/'+orderid,null,function(data){
+
+			$.post('/sales/getorder/' + orderid, null, function (data) {
 				if (typeof (data) == "string") data = eval('(' + data + ')');
-				if(data){
+				if (data) {
 					var o = data.order;
 					var lineitems = data.lineitems;
 					var payments = data.payments;
-					
+
 					currentOrder.set({
 						'id': o.Id,
 						'orderid': o.Id,
@@ -356,22 +410,22 @@
 					});
 					currentOrder.get('lineItems').orderid = o.Id;
 					currentOrder.get('payments').orderid = o.Id;
-					
-					if(lineitems){
-						for(var i=0; i < lineitems.length; i++) {
+
+					if (lineitems) {
+						for (var i = 0; i < lineitems.length; i++) {
 							var price = lineitems[i].SellPrice;
 							var quantity = lineitems[i].Quantity;
-							var no = i+1;
+							var no = i + 1;
 							var item = new LineItem({
-									slno: no,
-									name: lineitems[i].Name,
-									barcode: lineitems[i].Barcode,
-									mrp: lineitems[i].MRP,
-									quantity: quantity,
-									price: price,
-									discount: lineitems[i].Discount,
-									subtotal: Math.ceil(price * quantity)
-								});
+								slno: no,
+								name: lineitems[i].Name,
+								barcode: lineitems[i].Barcode,
+								mrp: lineitems[i].MRP,
+								quantity: quantity,
+								price: price,
+								discount: lineitems[i].Discount,
+								subtotal: Math.ceil(price * quantity)
+							});
 							currentOrder.get('lineItems').add(item);
 						}
 					}
@@ -380,7 +434,7 @@
 			});
 		},
 		cancelOrder: function () {
-			if(this.model){
+			if (this.model) {
 				var items = this.model.get('lineItems');
 				items.reset();
 				this.lstOrders.updateorderitem(this.model.get('orderid'));
@@ -405,14 +459,14 @@
 				url: '/sales/todayorders',
 				accepts: 'application/json',
 				contentType: 'application/json',
-				data: null,			
+				data: null,
 				dataType: 'json',
 				type: 'POST'
-			}).done(function(data,textStatus,xhr){
+			}).done(function (data, textStatus, xhr) {
 				if (typeof (data) == "string") data = eval('(' + data + ')');
-				if(data && data.length>0){
-					for(item=data.length-1; item>=0 ; --item) {
-						if(data[item] && data[item].Id){
+				if (data && data.length > 0) {
+					for (var item = data.length - 1; item >= 0; --item) {
+						if (data[item] && data[item].Id) {
 							var o = new Order();
 							o.set({
 								'orderid': data[item].Id,
@@ -428,14 +482,18 @@
 						}
 					};
 				}
+			}).fail(function(){
+				var ediv = '<div class="alert alert-warning">Oops! Error in loading todays order details.</div>';
+				$('#statusMessage').html(ediv);
 			});
 		}
 	});
-	var salesappview = new SalesAppView;
 	
-	$('#tblTodayOrders tbody tr td a').live('click',function(e){
+	var salesappview = new SalesAppView;
+
+	$('#tblTodayOrders tbody tr td a').live('click', function (e) {
 		var orderid = $(this).parent().parent().data('orderid');
-		if(orderid)
-			salesappview.editOrder(orderid);
+		if (orderid) salesappview.editOrder(orderid);
+		return false;
 	});
 })(jQuery);

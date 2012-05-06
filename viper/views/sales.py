@@ -121,7 +121,8 @@ def deleteLineItem(request):
 def searchItem(request):
 	barcode = request.params.get('barcode')
 	if barcode:
-		item = DBSession.query(Product).filter_by(Barcode=barcode).first()
-		if item:
-			return item.toJSON()
+		items = DBSession.query(Product).filter_by(Barcode=barcode).all()
+		if items and len(items) > 0:
+			result = [x.toDict() for x in items]
+			return json.dumps(result,default=jsonHandler)
 	return None

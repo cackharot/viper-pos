@@ -50,6 +50,11 @@ class Product(Base):
 		from ..library.helpers import jsonHandler
 		return json.dumps(serialized,default=jsonHandler)
 
+	def toDict(self):
+		serialized = dict((column_name, getattr(self, column_name))
+                          for column_name in self.__table__.c.keys())
+		return serialized
+		
 	def __repr__(self):
 		return u"Product(%s, %s)" % (self.Id, self.Barcode)
 	pass
