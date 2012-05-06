@@ -18,8 +18,8 @@ class LineItem(Base):
 	Id = id_column()
 	OrderId = Column(UUID(), nullable=False)
 	ProductId = Column(UUID(), nullable=True)
-	Barcode = Column(String, nullable=False)
-	Name = Column(String, nullable=False)
+	Barcode = Column(String(20), nullable=False)
+	Name = Column(String(50), nullable=False)
 	MRP = Column(Float, default=0.0)
 	Discount = Column(Float, default=0.0)
 	SellPrice = Column(Float, default=0.0)
@@ -33,13 +33,14 @@ class LineItem(Base):
 		pass
 		
 	@property
-	def Price(self):
-		return round(self.MRP - (self.MRP * self.Discount))
-
-	@property
 	def Amount(self):
-		return self.Price * self.Quantity
+		return round(self.SellPrice * self.Quantity)
 
+	def toDict(self):
+		serialized = dict((column_name, getattr(self, column_name))
+                          for column_name in self.__table__.c.keys())
+		return serialized
+		
 	def __repr__(self):
 		return u"LineItem(%s, %s)" % (self.Id, self.Name)
 	pass

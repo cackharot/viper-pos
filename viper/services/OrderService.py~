@@ -1,9 +1,10 @@
 import json
 import uuid
 import random
-from datetime import datetime 
+from datetime import datetime,date
 
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy import desc,func,cast,Date
 
 from ..models import DBSession
 from ..models.Product import Product
@@ -27,10 +28,12 @@ class OrderService(object):
 			Returns Order Object if found else None
 		"""
 		if orderid:
-			order = DBSession.query(Order).filter_by(Id=orderid, TenantId=UserIdentity.TenantId,Status=True).first()
+			order = DBSession.query(Order).filter(Order.Id==orderid, Order.TenantId==UserIdentity.TenantId, Order.Status==True).first()
 			if order:
-				order.LineItems = None #fetch the line items here
-				order.Payments = None #fetch the payment details
+				#fetch the line items here
+				order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
+				#fetch the payment details
+				order.Payments = DBSession.query(OrderPayment).filter(OrderPayment.OrderId==order.Id, OrderPayment.Status==True).all()
 				return order
 		return None
 	
@@ -39,9 +42,11 @@ class OrderService(object):
 			Creates new order in db and returns it
 		"""
 		o = Order()
+		o.Id = uuid.uuid4()
 		o.TenantId = UserIdentity.TenantId
 		#o.CustomerId = DefaultCustomerId
 		o.OrderNo = self.GenerateOrderNo() #generate unique order no
+		o.OrderDate = datetime.utcnow()
 		o.IpAddress = UserIdentity.IpAddress
 		o.CreatedBy = UserIdentity.UserId
 		o.CreatedOn = o.OrderDate = datetime.utcnow()
@@ -54,26 +59,40 @@ class OrderService(object):
 			Saves the order details in db
 		"""
 		if order:
-			if order.Id:
-				o = self.GetOrderById(order.Id)
+			if order["orderid"]:
+				orderid = order["orderid"]
+				o = self.GetOrderById(orderid)
 				if o:
+					o.CustomerId = order["customerid"]
+					o.OrderAmount = order["orderamount"]
 					o.IpAddress = UserIdentity.IpAddress
 					o.UpdatedBy = UserIdentity.UserId
 					o.UpdatedOn = datetime.utcnow()
-			else:
-				order.TenantId = UserIdentity.TenantId
-				order.IpAddress = UserIdentity.IpAddress
-				order.CreatedBy = UserIdentity.UserId
-				order.CreatedOn = datetime.utcnow()
-				DBSession.add(order) #saves to db
-				
-			if order.LineItems and len(order.LineItems):
-				for i in order.LineItems:
-					DBSession.add(i)
 					
-			if order.Payments and len(order.Payments):
-				for p in order.Payments:
-					DBSession.add(p)
+					lineitems = order["lineItems"]
+					if lineitems:
+						self.SaveOrderLineItems(o.Id,lineitems)
+					else:
+						DBSession.query(LineItem).filter(LineItem.OrderId==orderid).delete()
+		pass
+	
+	def SaveOrderLineItems(self,orderid,lineitems):
+		if orderid and lineitems:
+			items = DBSession.query(LineItem).filter(LineItem.OrderId==orderid).all()
+			if items:
+				for x in items:
+					DBSession.delete(x) 
+			for x in lineitems:
+				item = LineItem()
+				item.OrderId = orderid
+				item.Name = x["name"]
+				item.Barcode = x["barcode"]
+				item.MRP = x["mrp"]
+				item.Discount = x["discount"]
+				item.SellPrice = x["price"]
+				item.Quantity = x["quantity"]
+				DBSession.add(item)
+				
 		pass
 		
 	def DeleteOrder(self, order):
@@ -83,7 +102,7 @@ class OrderService(object):
 		if order and order.Id:
 			o = DBSession.query(Order).filter_by(OrderId=order.Id,TenantId=UserIdentity.TenantId).first()
 			if o:
-				DBSession.remove(o)
+				DBSession.delete(o)
 		pass
 		
 	def SaveOrderPayment(self, orderid, orderpayment):
@@ -111,14 +130,14 @@ class OrderService(object):
 		if orderpaymentid:
 			o = DBSession.query(OrderPayment).get(orderpaymentid)
 			if o:
-				DBSession.remove(o)			
+				DBSession.delete(o)			
 		pass
 	
 	def SearchOrders(self,searchParam):
 		"""
 			Searchs the order from the given parameters
 			Searchable Params:
-				TenantId (Mandatory)
+				TenantId (default=UserIdentity.TenantId)
 				UserId
 				IpAddress
 				OrderNo
@@ -131,37 +150,40 @@ class OrderService(object):
 				PageNo (default=0)
 				PageSize (default=50)
 		"""
-		if searchParam and searchParam.TenantId:
+		if searchParam:
 			query = DBSession.query(Order)
 			
-			#if searchParam.TenantId:
-			query = query.filter_by(TenantId=searchParam.TenantId,Status=True)
+			if not searchParam.TenantId:
+				searchParam.TenantId = UserIdentity.TenantId
+			
+			query = query.filter(Order.TenantId==searchParam.TenantId)
+			query = query.filter(Order.Status==True)
 			
 			if searchParam.UserId:
-				query = query.filter_by(CreatedBy=searchParam.UserId, \
-										   UpdatedBy=searchParam.UserId)
+				query = query.filter(Order.CreatedBy==searchParam.UserId, \
+										   Order.UpdatedBy==searchParam.UserId)
 			if searchParam.OrderNo:
-				query = query.filter_by(OrderNo=searchParam.OrderNo)
+				query = query.filter(Order.OrderNo==searchParam.OrderNo)
 			if searchParam.CustomerId:
-				query = query.filter_by(CustomerId=searchParam.CustomerId)
+				query = query.filter(Order.CustomerId==searchParam.CustomerId)
 			if searchParam.IpAddress:
-				query = query.filter_by(IpAddress=searchParam.IpAddress)
+				query = query.filter(Order.IpAddress==searchParam.IpAddress)
 				
 			if searchParam.FromOrderDate and not searchParam.ToOrderDate:
-				query = query.filter_by(OrderDate>=searchParam.FromOrderDate)
+				query = query.filter(cast(Order.OrderDate,Date) > searchParam.FromOrderDate)
 			if not searchParam.FromOrderDate and searchParam.ToOrderDate:
-				query = query.filter_by(OrderDate<=searchParam.ToOrderDate)
+				query = query.filter(cast(Order.OrderDate,Date) < searchParam.ToOrderDate)
 			if searchParam.FromOrderDate and searchParam.ToOrderDate:
-				query = query.filter_by(OrderDate>=searchParam.FromOrderDate, \
-										OrderDate<=searchParam.ToOrderDate)
+				query = query.filter(cast(Order.OrderDate,Date) > searchParam.FromOrderDate, \
+										cast(Order.OrderDate,Date) <= searchParam.ToOrderDate)
 										
 			if searchParam.MinAmount and not searchParam.MaxAmount:
-				query = query.filter_by(OrderAmount>=searchParam.MinAmount)
+				query = query.filter(Order.OrderAmount >= searchParam.MinAmount)
 			if not searchParam.MinAmount and searchParam.MaxAmount:
-				query = query.filter_by(OrderAmount<=searchParam.MaxAmount)
+				query = query.filter(Order.OrderAmount <= searchParam.MaxAmount)
 			if searchParam.MinAmount and searchParam.MaxAmount:
-				query = query.filter_by(OrderAmount>=searchParam.MinAmount, \
-										OrderAmount<=searchParam.MaxAmount)
+				query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
+										Order.OrderAmount <= searchParam.MaxAmount)
 			
 			if not searchParam.PageNo:
 				searchParam.PageNo = 0
@@ -169,13 +191,27 @@ class OrderService(object):
 			if not searchParam.PageSize and searchParam.PageSize <=0:
 				searchParam.PageSize = 50
 				
+			query = query.order_by(desc(Order.OrderDate))
 			query = query.limit(searchParam.PageSize).offset(searchParam.PageNo)
-			return query.all()
+			orders = query.all()
+			
+			if orders:
+				for order in orders:
+					if order:
+						#fetch the line items here
+						order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
+						#fetch the payment details
+						#order.Payments = DBSession.query(OrderPayment).filter(OrderPayment.OrderId==order.Id, OrderPayment.Status==True).all()
+			
+			return orders
 		return None
 		
 	def GenerateOrderNo(self):
 		import sys
-		return random.randint(0, sys.maxint)
+		#return random.randint(0, sys.maxint)
+		tmp = DBSession.query(func.max(Order.OrderNo)).scalar()
+		if tmp != None: return int(tmp)+1 
+		else: return 1
 		
 	pass
 

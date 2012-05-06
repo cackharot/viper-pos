@@ -8,6 +8,7 @@ from sqlalchemy import (
 	String, 
 	MetaData, 
 	ForeignKey,
+	Unicode
 	)
 from . import Base
 
@@ -17,22 +18,21 @@ from ..library.vuid import id_column, UUID
 class Customer(Base):
 	__tablename__ = 'Customers'
 	Id = id_column()
-	TenantId = Column(UUID(), nullable=False)
-	SSN = Column(String, nullable=False)
-	FirstName = Column(String)
-	LastName = Column(String, nullable=True)
-	Email = Column(String, nullable=True)
-	Phone = Column(String, nullable=True)
-	Mobile = Column(String, nullable=True)
-	Address = Column(String, nullable=True)
-	Address2 = Column(String, nullable=True)
-	City = Column(String, nullable=True)
-	Country = Column(String, nullable=True)
-	Zipcode = Column(String, nullable=True)
-	Picture = Column(String, nullable=True)
-	CreatedBy = Column(String)
+	TenantId = Column(UUID(), nullable=False,index=True)
+	FirstName = Column(Unicode(50),index=True)
+	LastName = Column(Unicode(50), nullable=True)
+	Email = Column(String(255), nullable=True,index=True)
+	Phone = Column(String(20), nullable=True)
+	Mobile = Column(String(15), nullable=True)
+	Address = Column(Unicode(250), nullable=True)
+	Address2 = Column(Unicode(255), nullable=True)
+	City = Column(Unicode(80), nullable=True)
+	Country = Column(Unicode(80), nullable=True)
+	Zipcode = Column(String(10), nullable=True)
+	Picture = Column(String(255), nullable=True)
+	CreatedBy = Column(String(50))
 	CreatedOn = Column(DateTime)
-	UpdatedBy = Column(String, nullable=True)
+	UpdatedBy = Column(String(50), nullable=True)
 	UpdatedOn = Column(DateTime, nullable=True)
 	Status = Column(Boolean, default=True)
 	
@@ -49,6 +49,6 @@ class Customer(Base):
 		pass
 
 	def __repr__(self):
-		return u"Customer(%s, %s, %s)" % (self.Id, self.SSN, self.FirstName)
+		return u"Customer(%s, %s)" % (self.Id, self.FirstName)
 	pass
 

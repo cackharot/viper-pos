@@ -18,7 +18,7 @@ class OrderPayment(Base):
 	Id = id_column()
 	OrderId = Column(UUID(), nullable=False)
 	PaymentDate = Column(DateTime, nullable=True)
-	PaymentType = Column(String,default='Cash')
+	PaymentType = Column(String(10),default='Cash')
 	PaidAmount = Column(Float,default=0.0)
 	CreatedBy = Column(String)
 	CreatedOn = Column(DateTime)
@@ -32,6 +32,7 @@ class OrderPayment(Base):
 		self.PaymentType = 'Cash'
 		d = datetime.utcnow()
 		self.PaymentDate = d
+		self.CreatedOn = d
 		pass
 
 	def __repr__(self):
