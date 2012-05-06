@@ -40,10 +40,14 @@
 			<div class="span11">
 				<h3>Special Items</h3>
 				<table class="table table-striped table-bordered table-condensed">
-					<tr><td>Plastic Bag `1</td><td><button class="btn btn-mini btn-info">Add</button></td></tr>
-					<tr><td>Plastic Bag `2</td><td><button class="btn btn-mini btn-info">Add</button></td></tr>
-					<tr><td>Plastic Bag `3</td><td><button class="btn btn-mini btn-info">Add</button></td></tr>
-					<tr><td>Idly Paste</td><td><button class="btn btn-mini btn-info">Add</button></td></tr>
+					<tr><td>Plastic Bag `1</td>
+					<td class="tcenter"><button class="btn btn-mini btn-info">Add</button></td></tr>
+					<tr><td>Plastic Bag `2</td>
+					<td class="tcenter"><button class="btn btn-mini btn-info">Add</button></td></tr>
+					<tr><td>Plastic Bag `3</td>
+					<td class="tcenter"><button class="btn btn-mini btn-info">Add</button></td></tr>
+					<tr><td>Idly Paste</td>
+					<td class="tcenter"><button class="btn btn-mini btn-info">Add</button></td></tr>
 				</table>
 			</div>
 		</div>
@@ -152,10 +156,10 @@
 		<tr>
 			<td><%= item.Barcode %></td>
 			<td><%= item.Name %></td>
-			<td style="text-align:right;"><%= item.MRP %></td>
-			<td style="text-align:right;"><%= item.SellPrice %></td>
+			<td class="tright"><%= item.MRP.toFixed(2) %></td>
+			<td class="tright"><%= item.SellPrice.toFixed(2) %></td>
 			<td><%= item.CreatedOn %></td>
-			<td><button class="btn btn-mini btn-info" data-id="<%= cnt++ %>">Select</button></td>
+			<td><button class="btn btn-mini btn-info tcenter" data-id="<%= cnt++ %>">Select</button></td>
 		</tr>
 		<% }); %>
 	</script>
@@ -164,18 +168,18 @@
 			<td class="sl"><%= item.get('slno') %></td>
 			<td class="b"><%= item.get('barcode') %></td>
 			<td class="n"><%= item.get('name') %></td>
-			<td class="m" style="text-align:right;"><%= item.get('mrp') %></td>
-			<td class="p" style="text-align:right;"><%= item.get('price') %></td>
-			<td class="d" style="text-align:right;"><%= item.get('discount') %></td>
-			<td class="q" style="text-align:right;"><%= item.get('quantity') %></td>
-			<td class="st" style="text-align:right;font-weight:bold;"><%= item.get('subtotal').toFixed(2) %></td>
+			<td class="m tright"><%= item.get('mrp') %></td>
+			<td class="p tright"><%= item.get('price') %></td>
+			<td class="d tright"><%= item.get('discount') %></td>
+			<td class="q tright"><%= item.get('quantity') %></td>
+			<td class="st tright" style="font-weight:bold;"><%= item.get('subtotal').toFixed(2) %></td>
 		</tr>
 	</script>
 	<script type="text/template" id="tpl-todayorderitem">
 		<tr data-orderid="<%= item.get('orderid') %>">
 			<td class="o"><a href="#" title="Click to edit!"><%= item.get('orderno') %></a></td>
 			<td class="c"><%= item.get('customername') %></td>
-			<td class="a" style="text-align:right;font-weight:bold;"><%= item.get('orderamount').toFixed(2) %></td>
+			<td class="a tright" style="font-weight:bold;"><%= item.get('orderamount').toFixed(2) %></td>
 		</tr>
 	</script>	
 </section>

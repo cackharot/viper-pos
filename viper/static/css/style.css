@@ -6,3 +6,15 @@ tbody.scroll {
 	display: block;
 	overflow: auto;
 }
+
+.tcenter{
+	text-align:center !important;
+}
+
+.tleft{
+	text-align:left !important;
+}
+
+.tright{
+	text-align:right !important;
+}

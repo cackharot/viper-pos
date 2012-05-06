@@ -77,6 +77,7 @@
 				var mrp = this.at(i).get('mrp');
 				var sbt = this.at(i).get('subtotal');
 				//var sbt = Math.ceil(price*quantity);
+				
 				if (!barcode.startsWith('.')) {
 					totalQuantity += quantity;
 					totalItems++;
@@ -281,16 +282,21 @@
 								var compl = _.template($('#tpl-selectitem').html());
 								var tr = compl({'items':data});
 								$('#tblSelectItem tbody').html(tr);
-								$('#tblSelectItem tbody td button').click(function(){
-									var id = $(this).data('id')	;
-									if(id)
-										_addtoui(data[parseInt(id)],model,lstOrders);		
+								
+								$('#tblSelectItem tbody td button').each(function(){
+									$(this).click(function() {
+										var id = parseInt($(this).data('id'));
+										data[id].Quanitity = quantity;
+										_addtoui(data[id],model,lstOrders);		
+										$('#selectItemModal').modal('hide');
+									});
 								});
 								
 								// show pop to select the item
 								$('#selectItemModal').modal('show');
 							}else{
-								addItemToUI(data[0],model,lstOrders);
+								data[0].Quanitity = quantity;
+								_addtoui(data[0],model,lstOrders);
 							}
 						}else{
 							var ediv = '<div class="alert alert-warning fade in">';
@@ -309,10 +315,12 @@
 			}
 		},
 		addItemToUI: function(data,model,lstOrders) {
+			var barcode = data.Barcode;
 			var itemName = data.Name;
 			var price = data.SellPrice;
 			var discount = data.Discount;
 			var mrp = data.MRP;
+			var quantity = data.Quanitity;
 
 			var item = new LineItem({
 				orderid: model.get('orderid'),
@@ -323,7 +331,7 @@
 				quantity: quantity,
 				price: price,
 				discount: discount,
-				subtotal: price * quantity
+				subtotal: Math.ceil(price * quantity)
 			});
 
 			model.get('lineItems').add(item);
@@ -381,54 +389,55 @@
 				this.model = new Order;
 				this.model.bind("change", this.render, this);
 			}
-
-			var items = this.model.get('lineItems');
-			items.hideUI();
-			items.reset();
-			items.resetRecords();
-
+			
 			var lstorders = this.lstOrders;
 			var currentOrder = this.model;
+			
+			var items = this.model.get('lineItems');
+			items.hideUI(function(){  
+				items.reset();
+				items.resetRecords();
 
-			$.post('/sales/getorder/' + orderid, null, function (data) {
-				if (typeof (data) == "string") data = eval('(' + data + ')');
-				if (data) {
-					var o = data.order;
-					var lineitems = data.lineitems;
-					var payments = data.payments;
+				$.post('/sales/getorder/' + orderid, null, function (data) {
+					if (typeof (data) == "string") data = eval('(' + data + ')');
+					if (data) {
+						var o = data.order;
+						var lineitems = data.lineitems;
+						var payments = data.payments;
 
-					currentOrder.set({
-						'id': o.Id,
-						'orderid': o.Id,
-						'customerid': o.CustomerId,
-						'orderno': o.OrderNo,
-						'orderdate': o.OrderDate,
-						'paidamount': o.PaidAmount,
-						'orderamount': o.OrderAmount
-					});
-					currentOrder.get('lineItems').orderid = o.Id;
-					currentOrder.get('payments').orderid = o.Id;
+						currentOrder.set({
+							'id': o.Id,
+							'orderid': o.Id,
+							'customerid': o.CustomerId,
+							'orderno': o.OrderNo,
+							'orderdate': o.OrderDate,
+							'paidamount': o.PaidAmount,
+							'orderamount': o.OrderAmount
+						});
+						currentOrder.get('lineItems').orderid = o.Id;
+						currentOrder.get('payments').orderid = o.Id;
 
-					if (lineitems) {
-						for (var i = 0; i < lineitems.length; i++) {
-							var price = lineitems[i].SellPrice;
-							var quantity = lineitems[i].Quantity;
-							var no = i + 1;
-							var item = new LineItem({
-								slno: no,
-								name: lineitems[i].Name,
-								barcode: lineitems[i].Barcode,
-								mrp: lineitems[i].MRP,
-								quantity: quantity,
-								price: price,
-								discount: lineitems[i].Discount,
-								subtotal: Math.ceil(price * quantity)
-							});
-							currentOrder.get('lineItems').add(item);
+						if (lineitems) {
+							for (var i = 0; i < lineitems.length; i++) {
+								var price = lineitems[i].SellPrice;
+								var quantity = lineitems[i].Quantity;
+								var no = i + 1;
+								var item = new LineItem({
+									slno: no,
+									name: lineitems[i].Name,
+									barcode: lineitems[i].Barcode,
+									mrp: lineitems[i].MRP,
+									quantity: quantity,
+									price: price,
+									discount: lineitems[i].Discount,
+									subtotal: Math.ceil(price * quantity)
+								});
+								currentOrder.get('lineItems').add(item);
+							}
 						}
 					}
-				}
-				items.showUI();
+					items.showUI();
+				});
 			});
 		},
 		cancelOrder: function () {
@@ -494,4 +503,10 @@
 		if (orderid) salesappview.editOrder(orderid);
 		return false;
 	});
+	
+	String.prototype.startsWith = function(needle)
+	{
+    	return(this.indexOf(needle) == 0);
+	};
+
 })(jQuery);
