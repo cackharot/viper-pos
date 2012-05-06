@@ -1,0 +1,84 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-orders">
+	<div class="page-header">
+		<h1>Manage Orders
+			 <small class="pull-right">
+			 </small>
+		 </h1>
+	</div> 	
+	<div class="row-fluid">
+		<div class="span12">&nbsp;</div>
+	</div>
+    {% if model != None and (model | count) > 0 %} 
+	<table id="prdTable" class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>Order No#</th>
+				<th>Order Date</th>
+				<th>Customer Name</th>
+				<th>Total Items</th>
+				<th>Order Amount</th>
+				<th>Paid Amount</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in model %}
+				<tr>
+					<td>
+						{{item.OrderNo}}
+					</td>
+					<td>
+						{{item.OrderDate | datetimeformat}}
+					</td>
+					<td>
+						{{item.CustomerId}}
+					</td>
+					<td>
+						{%if item.LineItems is not none%}
+						 	{{item.LineItems|count}}
+						{%else%}
+							0
+						{% endif %}
+					</td>
+					<td>
+						{{item.OrderAmount}}
+					</td>
+					<td>
+						{{item.PaidAmount}}
+					</td>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								Action <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{{'sales' | route_url(orderid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
+								</li>
+								<li>
+									<a href="{{'deleteorder' | route_url(orderid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+		<div class="alert alert-info">
+			No records found!
+		</div>
+	{% endif %}
+</section>      
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		$('.alert').alert();
+		//$('#prdTable').dataTable();
+	});
+</script>
+{% endblock %}

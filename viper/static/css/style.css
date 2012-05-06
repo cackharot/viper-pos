@@ -1,0 +1,8 @@
+thead.fixed {
+	display:block;
+}
+
+tbody.scroll {
+	display: block;
+	overflow: auto;
+}
