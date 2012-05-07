@@ -193,7 +193,7 @@
 				if ($tr.length > 0) {
 					$('.o', $tr).text(orderno);
 					$('.c', $tr).text(ToLocalDate(odate));
-					$('.a', $tr).text(amt);
+					$('.a', $tr).text(amt.toFixed(2));
 				}
 			}
 		},
@@ -256,6 +256,11 @@
 			"click #cancel-order": "cancelOrder",
 			"click #checkout-order": "checkOutOrder",
 			"click #refresh-orders": "refreshOrders",
+			"keyup input[name=barcode]": "key_addlineitem",
+		},
+		key_addlineitem: function(e){
+			if(e.keyCode == 13)
+				this.addLineItem();
 		},
 		addLineItem: function () {
 			if (!this.model) {
@@ -466,11 +471,13 @@
 				this.model.get('payments').reset();
 				this.lstOrders.updateorderitem(this.model.get('orderid'));
 				this.render();
+				var $txtBarcode = $('input[name=barcode]');
+				$txtBarcode[0].select(0, $txtBarcode.val().length);
 			}
 		},
 		checkOutOrder: function () {
 			if(!this.model || this.model.get('lineItems').length<1){
-				showMsg('warn','<strong>Oops!</strong> Order contains no items. Cannot <span class="lable label-info">checkout</span>.',false);
+				showMsg('warn','<strong>Oops!</strong> Order contains no items. Cannot <span class="label label-info">checkout</span>.',false);
 				return;
 			}			
 		
@@ -645,5 +652,37 @@
 	{
     	return(this.indexOf(needle) == 0);
 	};
-
+	
+	function listen(e) {
+		//console.log(e.type)
+		//console.log(e.keyCode)
+		var isHandled = false;
+		switch(e.keyCode){
+			case 114: //new order
+				isHandled=true
+				$('#new-order').trigger('click');
+				break;
+			case 115: //cancel order
+				isHandled=true
+				$('#cancel-order').trigger('click');
+				break;
+			case 116: //checkout order
+				isHandled=true
+				$('#checkout-order').trigger('click');
+				break;
+			case 122: //print order
+				isHandled=true
+				$('#print-order').trigger('click');
+				break;
+			case 123: //preview order
+				isHandled=true
+				$('#preview-order').trigger('click');
+				break;
+		}
+		if(isHandled)
+			e.preventDefault()
+	}
+	
+	$(document).bind('keypress',listen);
+	//$(document).bind('keydown',listen);
 })(jQuery);

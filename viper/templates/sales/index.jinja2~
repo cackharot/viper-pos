@@ -196,7 +196,7 @@ table#tblTodayOrders tbody tr.active td{
 		<tr>
 			<th>Customer:</th>
 			<td>
-				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..." required />
+				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..."  value="<%=item.get('customername')%>" required />
 				<input type="hidden" name="customerid" value="<%=item.get('customerid')%>" />
 				<div class="controls">
 					<fieldset>
