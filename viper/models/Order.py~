@@ -19,15 +19,15 @@ class Order(Base):
 	Id = id_column()
 	TenantId = Column(UUID(), nullable=False,index=True)
 	OrderNo = Column(Integer,index=True)
-	CustomerId = Column(String, nullable=True)
+	CustomerId = Column(String(50), nullable=True)
 	OrderAmount = Column(Float,default=0)
 	PaidAmount = Column(Float,default=0) 
 	OrderDate = Column(DateTime)
 	ShipDate = Column(DateTime, nullable=True)
-	IpAddress = Column(String, nullable=True)
-	CreatedBy = Column(String)
+	IpAddress = Column(String(30), nullable=True)
+	CreatedBy = Column(String(50))
 	CreatedOn = Column(DateTime)
-	UpdatedBy = Column(String, nullable=True)
+	UpdatedBy = Column(String(50), nullable=True)
 	UpdatedOn = Column(DateTime, nullable=True)
 	Status = Column(Boolean, default=True)		
 	
@@ -47,12 +47,14 @@ class Order(Base):
 	def toJSON(self):
 		serialized = dict((column_name, getattr(self, column_name))
                           for column_name in self.__table__.c.keys())
+		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 
+		else: serialized['CustomerName']=None
 		import json
 		return json.dumps(serialized,default=jsonHandler)
 
 	def toDict(self):
-		serialized = dict((column_name, getattr(self, column_name))
-                          for column_name in self.__table__.c.keys())
+		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())
+		serialized['CustomerName'] = self.CustomerName
 		return serialized
         
 	def __repr__(self):

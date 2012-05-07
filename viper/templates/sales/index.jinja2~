@@ -20,7 +20,7 @@ table#tblTodayOrders tbody tr.active td{
 	 <div class="page-header">
       <h1>Sales
       	<div class="span8 pull-right"> 
-      		<button id="new-order" class="btn btn-primary"><i class="icon-file icon-white"></i> New (F2)</button>
+      		<button id="new-order" class="btn btn-primary"><i class="icon-file icon-white"></i> New (F3)</button>
       		<button id="cancel-order" class="btn btn-warning"><i class="icon-remove icon-white"></i> Cancel (F4)</button>
       		<button id="checkout-order" class="btn btn-success"><i class="icon-ok icon-white"></i> Checkout (F5)</button>
       		<button id="print-order" class="btn btn-primary"><i class="icon-print icon-white"></i> Print (F11)</button>
@@ -66,12 +66,16 @@ table#tblTodayOrders tbody tr.active td{
 			</div>
 		</div>
 		<div class="span9" style="border-left:1px solid #ccc;padding-left:10px;">
-			<div class="span12">
+			<div class="span12" id="orderDetailsDiv">
 		  		<div class="span6">
 		  			<strong>Order No#</strong> <span id="orderNumber">0</span>
 		  		</div>
 		  		<div class="span6" style="text-align:right">
 		  			<strong>Order Date:</strong> <span id="orderDate"></span>
+		  		</div>
+		  		<div class="clear"/>
+		  		<div class="span12">
+		  			<strong>Customer Name:</strong> <span id="customerName"></span>
 		  		</div>
 			</div>
 			<div class="span12" id="statusMessage">
@@ -196,7 +200,7 @@ table#tblTodayOrders tbody tr.active td{
 		<tr>
 			<th>Customer:</th>
 			<td>
-				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..."  value="<%=item.get('customername')%>" required />
+				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..."  value="<%=item.get('customername')||'''%>" required />
 				<input type="hidden" name="customerid" value="<%=item.get('customerid')%>" />
 				<div class="controls">
 					<fieldset>

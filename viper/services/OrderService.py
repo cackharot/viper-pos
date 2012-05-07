@@ -30,6 +30,10 @@ class OrderService(object):
 		if orderid:
 			order = DBSession.query(Order).filter(Order.Id==orderid, Order.TenantId==UserIdentity.TenantId, Order.Status==True).first()
 			if order:
+				if order.CustomerId:
+					cus = DBSession.query(Customer).get(order.CustomerId)
+					if cus:
+						order.CustomerName = cus.FirstName
 				#fetch the line items here
 				order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
 				#fetch the payment details
@@ -219,12 +223,15 @@ class OrderService(object):
 			if orders:
 				for order in orders:
 					if order:
+						order.CustomerName = None
 						#fetch the line items here
 						order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
 						if order.LineItems:
 							order.OrderAmount = sum([x.Amount for x in order.LineItems])
 						#fetch the payment details
 						order.Payments = DBSession.query(OrderPayment).filter(OrderPayment.OrderId==order.Id, OrderPayment.Status==True).all()
+						if order.Payments:
+							order.PaidAmount = sum([x.PaidAmount for x in order.Payments])
 			
 			return orders
 		return None

@@ -47,12 +47,15 @@ class Order(Base):
 	def toJSON(self):
 		serialized = dict((column_name, getattr(self, column_name))
                           for column_name in self.__table__.c.keys())
+		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 
+		else: serialized['CustomerName']=None
 		import json
 		return json.dumps(serialized,default=jsonHandler)
 
 	def toDict(self):
-		serialized = dict((column_name, getattr(self, column_name))
-                          for column_name in self.__table__.c.keys())
+		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())
+		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 
+		else: serialized['CustomerName']=None
 		return serialized
         
 	def __repr__(self):
