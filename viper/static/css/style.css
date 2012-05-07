@@ -7,6 +7,10 @@ tbody.scroll {
 	overflow: auto;
 }
 
+.tbold{
+	font-weight:bold;
+}
+
 .tcenter{
 	text-align:center !important;
 }

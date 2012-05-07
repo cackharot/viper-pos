@@ -90,6 +90,8 @@ class OrderService(object):
 			for x in lineitems:
 				item = LineItem()
 				item.OrderId = orderid
+				if x.has_key('productid'):
+					item.ProductId = x['productid']
 				item.Name = x["name"]
 				item.Barcode = x["barcode"]
 				item.MRP = x["mrp"]
@@ -101,6 +103,9 @@ class OrderService(object):
 		pass
 	
 	def SaveOrderPayments(self,orderid,payments):
+		"""
+			Saves the order payment details in db
+		"""
 		if orderid and payments:
 			for x in payments:
 				item = OrderPayment()
@@ -118,12 +123,10 @@ class OrderService(object):
 			Deletes the order details from db
 		"""
 		if order and order.Id:
-			o = DBSession.query(Order).filter_by(OrderId=order.Id,TenantId=UserIdentity.TenantId).first()
-			if o:
-				DBSession.delete(o)
+			DBSession.query(Order).filter(Order.OrderId==order.Id,Order.TenantId==UserIdentity.TenantId).delete()
 		pass
 		
-	def SaveOrderPayment(self, orderid, orderpayment):
+	def UpdateOrderPayment(self, orderid, orderpayment):
 		"""
 			Saves the order payment details in db
 		"""

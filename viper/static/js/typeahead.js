@@ -37,6 +37,8 @@
 		this.sorter = this.options.sorter || this.sorter
 		this.highlighter = this.options.highlighter || this.highlighter
 		this.updater = this.options.updater || this.updater
+		this.idField = this.options.idField || 'id'
+		this.idControl = this.options.idControl || []
 		this.$menu = $(this.options.menu).appendTo('body')
 		if (this.options.ajax) {
 			var ajax = this.options.ajax;
@@ -66,14 +68,25 @@
 		constructor: Typeahead,
 
 		select: function () {
-			var val = this.$menu.find('.active').attr('data-value')
+			var val = this.$menu.find('.active').data('value')
 			this.$element
 				.val(this.updater(val))
 				.change()
+			
+			this.updateIdCtrl(val)			
 			return this.hide()
+		},
+		
+		updateIdCtrl: function(item){
+			if(this.idField && this.idControl.length>0) {
+				this.idControl.val(item[this.idField])
+			}
 		},
 
 		updater: function (item) {
+			if (this.ajax.displayField) {
+				return item[this.ajax.displayField]
+			}
 			return item
 		},
 
@@ -157,14 +170,15 @@
 			this.ajax.data = data;
 	
 			items = $.grep(data, function (item) {
-				var ditem;
+				/*var ditem;
 				if (that.ajax.displayField) {
 					ditem = item[that.ajax.displayField];
 				}
 				if (that.matcher(ditem)) {
 					that.ajax.matchItem = item;
 					return ditem;
-				}
+				}*/
+				return item
 			})
 	
 			items = this.sorter(items)
@@ -192,7 +206,8 @@
 			}
 			
 			items = $.grep(this.source, function (item) {
-				return that.matcher(item)
+				//return that.matcher(item)
+				return item
 			})
 			
 			items = this.sorter(items)
@@ -209,7 +224,7 @@
 		},
 
 		sorter: function (items) {
-			var beginswith = [],
+			/*var beginswith = [],
 				caseSensitive = [],
 				caseInsensitive = [],
 				item
@@ -223,11 +238,15 @@
 				else caseInsensitive.push(item)
 			}
 			
-			return beginswith.concat(caseSensitive, caseInsensitive)
+			return beginswith.concat(caseSensitive, caseInsensitive)*/
+			return items
 		},
 
 		highlighter: function (item) {
 			var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+			if (this.ajax.displayField) {
+					item = item[this.ajax.displayField]
+			}
 			return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
 				return '<strong>' + match + '</strong>'
 			})
@@ -237,7 +256,9 @@
 			var that = this
 			
 			items = $(items).map(function (i, item) {
-				i = $(that.options.item).attr('data-value', item)
+				//i = $(that.options.item).attr('data-value', item)
+				i = $(that.options.item)
+				i.data('value',item)
 				i.find('a').html(that.highlighter(item))
 				return i[0]
 			})

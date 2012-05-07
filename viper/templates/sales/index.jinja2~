@@ -1,5 +1,19 @@
 {% extends "templates/layout.jinja2" %}
 {% block head %}
+<style>
+table#tblTodayOrders tbody tr{
+	cursor:pointer;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+table#tblTodayOrders tbody tr td{
+	-moz-user-select: none;
+	-webkit-user-select: none;
+}
+table#tblTodayOrders tbody tr.active td{
+	background-color:lightyellow !important;
+}
+</style>
 {% endblock %}
 {% block content %}
 <section id="sales-page">
@@ -117,7 +131,7 @@
 						<td></td>
 						<td></td>
 						<td><h3 id="lblBalanceAmount">Balance/Change Amount:</h3></td>
-						<td style="text-align:right;padding-right:50px"><h3 id="blanceAmount">0.0</h3></td>
+						<td style="text-align:right;padding-right:50px"><h3 id="balanceAmount">0.0</h3></td>
 					</tr>
 				</tbody>
 			</table>
@@ -183,14 +197,14 @@
 			<th>Customer:</th>
 			<td>
 				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..." required />
-				<input type="hidden" name="customerid" />
+				<input type="hidden" name="customerid" value="<%=item.get('customerid')%>" />
 				<div class="controls">
 					<fieldset>
 						<label class="radio inline">
-							<input type="radio" name="searchfield" value="mobile" checked="checked"/> Mobile
+							<input type="radio" name="searchfield" value="mobile"/> Mobile
 						</label>
 						<label class="radio inline">
-							<input type="radio" name="searchfield" value="name"/> Name
+							<input type="radio" name="searchfield" value="name" checked="checked"/> Name
 						</label>
 						<label class="radio inline">
 							<input type="radio" name="searchfield" value="customerno"/> Customer No
@@ -213,7 +227,7 @@
 		<tr>
 			<th>Paid Amount:</th>
 			<td>
-				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('orderamount').toFixed(2)%>" required autofocus="autofocus"/>
+				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('balanceamount').toFixed(2)%>" required autofocus="autofocus"/>
 			</td>
 		</tr>
 	</script>
@@ -239,14 +253,14 @@
 			<td class="p tright"><%= item.get('price') %></td>
 			<td class="d tright"><%= item.get('discount') %></td>
 			<td class="q tright"><%= item.get('quantity') %></td>
-			<td class="st tright" style="font-weight:bold;"><%= item.get('subtotal').toFixed(2) %></td>
+			<td class="st tright tbold"><%= item.get('subtotal').toFixed(2) %></td>
 		</tr>
 	</script>
 	<script type="text/template" id="tpl-todayorderitem">
-		<tr data-orderid="<%= item.get('orderid') %>">
-			<td class="o"><a href="#" title="Click to edit!"><%= item.get('orderno') %></a></td>
+		<tr data-orderid="<%= item.get('orderid') %>" title="Double click to edit!">
+			<td class="o tbold"><%= item.get('orderno') %></td>
 			<td class="c"><%= $.format.date(ToLocalDate(item.get('orderdate')),'dd/MM h:mm a') %></td>
-			<td class="a tright" style="font-weight:bold;"><%= item.get('orderamount').toFixed(2) %></td>
+			<td class="a tright tbold"><%= item.get('orderamount').toFixed(2) %></td>
 		</tr>
 	</script>	
 </section>
