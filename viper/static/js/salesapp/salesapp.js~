@@ -18,9 +18,13 @@
 			subtotal: 0.0
 		},
 		initialize: function (model, options) {
-			this.bind("change", this.updateUI);
+			this.bind("change:name", this.updateUI);
+			this.bind("change:quantity", this.updateUI);
+			this.bind("change:price", this.updateUI);
+			this.bind("change:barcode", this.updateUI);
 		},
 		updateUI: function () {
+			var id = this.get('id');
 			var barcode = this.get('barcode');
 			var name = this.get('name');
 			var quantity = this.get('quantity');
@@ -32,7 +36,7 @@
 				'subtotal': subtotal
 			})
 
-			var $tr = $('tr[data-barcode=' + barcode + ']', $('#tblOrderLineItems tbody'));
+			var $tr = $('tr[data-id=' + id + ']', $('#tblOrderLineItems tbody'));
 
 			if ($tr.length > 0) {
 				$('.n', $tr).text(name);
@@ -51,12 +55,31 @@
 			this.bind("change", this.updateTotal);
 			this.bind("reset", this.resetRecords);
 		},
-		addLineItemRecord: function (item) {
+		refreshUI: function(callback) {
+			var that = this
+			this.hideUI(function(){
+				that.resetRecords();
+				var cnt = 1;
+				that.each(function(item){
+					item.set({'slno':cnt++})
+					that.addItemTpl(item)
+				});
+				that.updateTotal();
+				that.showUI();
+				if(callback) callback();
+			});
+		},
+		addItemTpl: function(item){		
+			var n = item.get('slno')
+			if(!n) item.set({'slno':this.length})
 			var compiled = _.template($('#tpl-lineitem').html());
 			var tr = compiled({
 				'item': item
 			});
 			$('#tblOrderLineItems tbody').prepend(tr);
+		},
+		addLineItemRecord: function (item) {
+			this.addItemTpl(item);
 			this.updateTotal();
 		},
 		updateTotal: function () {
@@ -104,16 +127,14 @@
 			$('#totalAmount').text(0.0);
 			$('#savingsAmount').text(0.0);
 			$('#totalItemsQuantity').text('0/0');
-			$('#paidAmount').text(0.0);
-			$('#balanceAmount').text(0.0);
 		},
 		hideUI: function (callback) {
-			$('#tblOrderLineItems tbody').fadeOut('slow', function (e) {
+			$('#tblOrderLineItems tbody').fadeOut('normal', function (e) {
 				if (callback) callback();
 			});
 		},
 		showUI: function (callback) {
-			$('#tblOrderLineItems tbody').fadeIn('slow', function () {
+			$('#tblOrderLineItems tbody').fadeIn('false', function (e) {
 				if (callback) callback();
 			});
 		}
@@ -144,7 +165,8 @@
 			customername: '',
 			lineItems: new LineItemCollection,
 			payments: new OrderPaymentsCollection,
-			isprinted: false
+			isprinted: false,
+			ispaid: false,
 		},
 		getOrderAmount: function () {
 			return this.get('lineItems').reduce(function (m, x) {
@@ -159,49 +181,6 @@
 	});
 
 	OrdersCollection = Backbone.Collection.extend({
-		model: Order,
-		initialize: function (models, options) {
-			this.bind("add", this.addorderitem);
-			this.bind("remove", this.removeorderitem);
-			this.bind("change", this.updateorderitem);
-		},
-		addorderitem: function (item) {
-			if (!item) return;
-			var compiled = _.template($('#tpl-todayorderitem').html());
-			var tr = compiled({
-				'item': item
-			});
-			$('#tblTodayOrders tbody').prepend(tr)
-		},
-		removeorderitem: function (item) {
-			if (!item) return;
-			var orderid = item.get('orderid');
-			var $tr = $('tr[data-orderid=' + orderid + ']', $('#tblTodayOrders tbody'));
-			if ($tr.length > 0) $tr.remove();
-		},
-		updateorderitem: function (orderid) {
-			if (!orderid) return;
-			var item = this.find(function (x) {
-				return x.get('orderid') == orderid;
-			});
-			if (item) {
-				var orderno = item.get('orderno');
-				var odate = item.get('orderdate');
-				var amt = item.getOrderAmount();
-
-				var $tr = $('tr[data-orderid="' + orderid + '"]', $('#tblTodayOrders tbody'));
-				if ($tr.length > 0) {
-					$('.o', $tr).text(orderno);
-					$('.c', $tr).text(ToLocalDate(odate));
-					$('.a', $tr).text(amt.toFixed(2));
-				}
-			}
-		},
-		resetUI: function () {
-			$('#tblTodayOrders tbody tr').each(function () {
-				$(this).remove();
-			});
-		}
 	});
 
 	remote = (function () {
@@ -227,26 +206,150 @@
 			}
 		};
 	})();
+	
+	window.TodayOrderList = new OrdersCollection;
+	
+	window.OrderListView = Backbone.View.extend({
+		el: $('#orderListDiv'),
+		model: window.TodayOrderList,
+		initialize: function(options) {
+			this.vent = options.vent
+			this.model = window.TodayOrderList
+		
+			_.bindAll(this, "updateorderitem")
+		
+			this.model.bind('add',this.addorderitem)
+			this.model.bind('remove',this.removeorderitem)
+			this.vent.bind("updateOrder",this.updateorderitem)
+			this.vent.bind("resetUI",this.resetUI)
+			this.vent.bind("loadTodayOrders",this.loadTodayOrders)
+			
+			this.loadTodayOrders()
+		},
+		events: {
+			"click #refresh-orders": "loadTodayOrders",
+			"click #tblTodayOrders tbody tr": "editOrder"
+		},
+		editOrder: function(e) {
+			$('#tblTodayOrders tbody').find('.active').removeClass('active')
+			var $tr = $(e.target).parent()
+			$tr.addClass('active')
+			var orderid = $tr.data('orderid')
+			this.vent.trigger('editOrder', orderid)
+		},
+		addorderitem: function (item) {
+			if (!item) return;
+			var compiled = _.template($('#tpl-todayorderitem').html());
+			var tr = compiled({
+				'item': item
+			});
+			$('#tblTodayOrders tbody').prepend(tr)
+		},
+		removeorderitem: function (item) {
+			if (!item) return;
+			var orderid = item.get('orderid');
+			var $tr = $('tr[data-orderid=' + orderid + ']', $('#tblTodayOrders tbody'));
+			if ($tr.length > 0) $tr.remove();
+		},
+		updateorderitem: function (orderid) {
+			if (!orderid) return;
+			var item = this.model.find(function (x) {
+				return x.get('orderid') == orderid;
+			});
+			if (item) {
+				var orderno = item.get('orderno');
+				var odate = item.get('orderdate');
+				var amt = item.getOrderAmount();
+				
+				item.set({'orderamount':amt})
+
+				var $tr = $('tr[data-orderid="' + orderid + '"]', $('#tblTodayOrders tbody'));
+				if ($tr.length > 0) {
+					$('.o', $tr).text(orderno);
+					$('.c', $tr).text(ToLocalDate(odate));
+					$('.a', $tr).text(amt.toFixed(2));
+				}
+			}
+		},
+		resetUI: function () {
+			$('#tblTodayOrders tbody tr').each(function () {
+				$(this).remove();
+			});
+		},
+		loadTodayOrders: function() {
+			this.resetUI()
+			var model = this.model
+			$.ajax({
+				url: '/sales/todayorders',
+				accepts: 'application/json',
+				contentType: 'application/json',
+				data: null,
+				dataType: 'json',
+				type: 'POST'
+			}).done(function (data, textStatus, xhr) {
+				if (typeof (data) == "string") data = eval('(' + data + ')');
+				if (data && data.length > 0) {
+					for (var item = data.length - 1; item >= 0; --item) {
+						if (data[item] && data[item].Id) {
+							var o = new Order;
+							o.set({
+								'orderid': data[item].Id,
+								'customerid': data[item].CustomerId,
+								'customername': data[item].CustomerName,
+								'orderno': data[item].OrderNo,
+								'orderdate': data[item].OrderDate,
+								'paidamount': data[item].PaidAmount,
+								'orderamount': data[item].OrderAmount,
+								'lineItems': new LineItemCollection,
+								'payments': new OrderPaymentsCollection,
+								'isprinted': false,
+								'isloaded': false,
+								'ispaid': data[item].PaidAmount>0,
+							});
+							model.add(o);
+						}
+					};
+				} else {
+					showMsg('info', '<strong>Hmmm!</strong> No orders made today.', false);
+				}
+			}).fail(function () {
+				showMsg('warn', '<strong>Oops!</strong> Error in loading todays order details.', false);
+			});
+		}
+	});
 
 	window.SalesAppView = Backbone.View.extend({
 		el: $("#sales-page"),
 		model: null,
-		initialize: function () {
-			this.lstOrders = new OrdersCollection;
-			this.refreshOrders();
+		initialize: function (options) {
+			this.vent = options.vent
+			this.lstOrders = window.TodayOrderList
+			
+			_.bindAll(this, "editOrder");
+			
+			this.vent.bind('editOrder',this.editOrder)
+			this.itemNameTypeahead()
 		},
 		render: function () {
 			var item = this.model;
 			var odate = $.format.date(ToLocalDate(item.get('orderdate')), 'dd-MM-yyyy hh:mm a')
-			var pamt = item.get('paidamount');
-			var tamt = item.get('orderamount');
-			var balance = tamt - pamt;
+
 			$('#orderDate').html(odate);
 			$('#orderNumber').html(item.get('orderno'));
 			$('#customerName').text(item.get('customername') || '');
-
-			$('#paidAmount').text(pamt);
-			$('#balanceAmount').text(Math.abs(balance));
+			this.updateAmounts()
+		},
+		updateAmounts:	function() {
+			if(this.model.get('ispaid')===true) {
+				var tamt = this.model.get('orderamount');
+				var pamt = this.model.get('paidamount');
+				var balance = tamt - pamt;
+				$('#paidAmount').text(pamt);
+				$('#balanceAmount').text(balance);
+			}else{
+				$('#paidAmount').text(0.0);
+				$('#balanceAmount').text(0.0);
+			}
 		},
 		events: {
 			"click #add-item": "addLineItem",
@@ -256,11 +359,85 @@
 			"click #new-order": "newOrderClick",
 			"click #cancel-order": "cancelOrder",
 			"click #checkout-order": "checkOutOrder",
-			"click #refresh-orders": "refreshOrders",
+			"click a.del-lineitem": "deleteLineItem",
 			"keyup input[name=barcode]": "key_addlineitem",
 		},
 		key_addlineitem: function (e) {
 			if (e.keyCode == 13) this.addLineItem();
+		},
+		deleteLineItem: function(e) {
+			var slno = $(e.target).parent().data('slno')
+			if(slno) {
+				var items = this.model.get('lineItems')
+				var item = items.find(function(x){ return x.get('slno')==slno;})
+				if(item) {
+					items.remove(item)
+					items.refreshUI()
+					this.vent.trigger('updateOrder', this.model.get('orderid'))
+					showMsg('info','<span class="label label-info">'+item.get('name')+'</span> removed from the order!')
+				}
+			}
+		},
+		itemNameTypeahead: function() {
+			var that = this
+			$('input[name=itemName]').typeahead({
+				idField: 'Barcode',
+				idControl: $('input[name=barcode]'),
+				onSelected: function(item) {
+					if (!this.model) {
+						showMsg('warn','Please click new order to add items!')
+						return
+					}
+					var tmp = $('input[name=quantity]').val();
+					var quantity = 1.0;
+					if (tmp && tmp.length > 0) quantity = parseFloat(tmp);
+					var found = that.findAndUpdateItem(item.Barcode,quantity)
+					if(!found) {
+						item.Quantity = 1;
+						that.addItemToUI(item, that);
+					}
+				},
+				formatter: function(displayValue, item) {
+					return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.MRP.toFixed(2) + '</span></div>';
+				},
+				ajax: {
+					url: "/sales/searchitem",
+					timeout: 500,
+					displayField: "Name",
+					triggerLength: 1,
+					method: 'post',
+					dataType: 'json',
+					loadingClass: "loading-circle icon-refresh",
+					preDispatch: function (query) {
+						return {
+							name: query,
+						}
+					},
+					preProcess: function (data) {
+						if (!data) return false;
+						if (data.success === false) {
+							return false;
+						}
+						if (typeof (data) == "string") data = eval('(' + data + ')');
+						return data;
+					}
+				}
+			});
+		},
+		findAndUpdateItem: function(barcode,quantity) {
+			var item = this.model.get('lineItems').find(function (x) {
+				return x.get('barcode') == barcode;
+			});
+
+			if (item) {
+				var q = item.get('quantity');
+				item.set({
+					'quantity': q + quantity
+				});
+				this.vent.trigger('updateOrder', this.model.get('orderid'))
+				return true;
+			}			
+			return false;
 		},
 		addLineItem: function () {
 			if (!this.model) {
@@ -276,20 +453,9 @@
 			if (tmp && tmp.length > 0) quantity = parseFloat(tmp);
 
 			if (barcode && barcode.length > 1 && quantity > 0) {
-				var item = this.model.get('lineItems').find(function (x) {
-					return x.get('barcode') == barcode;
-				});
-
-				if (item) {
-					var q = item.get('quantity');
-					item.set({
-						'quantity': q + quantity
-					});
-					this.lstOrders.updateorderitem(this.model.get('orderid'));
-				} else {
-					var model = this.model;
-					var lstOrders = this.lstOrders;
-					var _addtoui = this.addItemToUI;
+				var found = this.findAndUpdateItem(barcode,quantity)
+				if(!found) {
+					var that = this
 
 					remote.searchItem(barcode, function (data) {
 						if (typeof (data) == "string") data = eval('(' + data + ')');
@@ -304,8 +470,9 @@
 								$('#tblSelectItem tbody td button').each(function () {
 									$(this).click(function () {
 										var id = parseInt($(this).data('id'));
-										data[id].Quanitity = quantity;
-										_addtoui(data[id], model, lstOrders);
+										data[id].Quantity = quantity;
+										that.addItemToUI(data[id], that);
+
 										$('#selectItemModal').modal('hide');
 										$txtBarcode[0].select(0, barcode.length);
 									});
@@ -314,32 +481,31 @@
 								// show pop to select the item
 								$('#selectItemModal').modal('show');
 							} else {
-								data[0].Quanitity = quantity;
-								_addtoui(data[0], model, lstOrders);
+								data[0].Quantity = quantity;
+								that.addItemToUI(data[0], that);
 							}
 						} else {
 							showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
 						}
 					});
 				}
-
 				$txtBarcode[0].select(0, barcode.length);
 			} else {
 				showMsg('warn', '<strong>Enter a valid barcode!</strong>');
 				$txtBarcode[0].focus();
 			}
 		},
-		addItemToUI: function (data, model, lstOrders) {
+		addItemToUI: function (data, that) {
 			var barcode = data.Barcode;
 			var itemName = data.Name;
 			var price = data.SellPrice;
 			var discount = data.Discount;
 			var mrp = data.MRP;
-			var quantity = data.Quanitity;
+			var quantity = data.Quantity;
 
 			var item = new LineItem({
-				orderid: model.get('orderid'),
-				slno: model.get('lineItems').length + 1,
+				id: uuid(),
+				orderid: that.model.get('orderid'),
 				productid: data.ProductId,
 				name: itemName,
 				barcode: barcode,
@@ -349,23 +515,21 @@
 				discount: discount,
 				subtotal: Math.round(price * quantity)
 			});
-
-			model.get('lineItems').add(item);
-			lstOrders.updateorderitem(model.get('orderid'));
-		},
-		deleteLineItem: function () {
-
+			
+			item.hasMultiple = data.hasMultiple
+			that.model.get('lineItems').add(item)
+			that.vent.trigger('updateOrder', that.model.get('orderid'))
 		},
 		newOrderClick: function (e) {
-			this.newOrder();
+			this.newOrder(function(){
+				var $txtBarcode = $('input[name=barcode]');
+				$txtBarcode[0].select(0, $txtBarcode.val().length);
+			});
 		},
 		newOrder: function (callback) {
 			if (this.model) {
 				var items = this.model.get('lineItems');
-				items.hideUI(function () {
-					items.resetRecords();
-					items.showUI();
-				});
+				items.resetRecords();
 			}
 
 			this.model = new Order;
@@ -394,81 +558,95 @@
 			});
 		},
 		editOrder: function (orderid) {
-			if (!orderid) return;
-			this.model = new Order();
-			this.model.bind("change", this.render, this);
-
-			this.model.get('lineItems').reset();
-			this.model.get('payments').reset();
+			if (!orderid || (this.model && orderid == this.model.get('orderid')))
+				return
+			
+			found = this.lstOrders.find(function(x){
+				return x.get('orderid')==orderid;
+			});
+			
+			if(found){
+				this.model = found
+				this.model.bind("change", this.render, this);
+				if(!found.get('isloaded')===true)
+					this.fetchAndEditOrder(orderid)
+				else{
+					var that = this
+					this.model.get('lineItems').refreshUI(function(){
+						that.render()
+					})
+				}
+			}else{
+				showMsg('error','<strong>Oops!</strong> Something went really wrong.')
+			}
+		},
+		fetchAndEditOrder: function(orderid){
 			var currentOrder = this.model;
 			var items = this.model.get('lineItems');
+			
+			items.refreshUI();
+			$.post('/sales/getorder/' + orderid, null, function (data) {
+				if (typeof (data) == "string") data = eval('(' + data + ')');
+				if (data) {
+					var o = data.order;
+					var orderid = o.Id;
+					var lineitems = data.lineitems;
+					var payments = data.payments;
 
-			items.hideUI(function () {
-				items.resetRecords();
+					currentOrder.set({
+						'id': o.Id,
+						'orderid': o.Id,
+						'customerid': o.CustomerId,
+						'customername': o.CustomerName,
+						'orderno': o.OrderNo,
+						'orderdate': o.OrderDate,
+						'paidamount': o.PaidAmount,
+						'orderamount': o.OrderAmount,
+						'isloaded': true,
+					});
 
-				$.post('/sales/getorder/' + orderid, null, function (data) {
-					if (typeof (data) == "string") data = eval('(' + data + ')');
-					if (data) {
-						var o = data.order;
-						var orderid = o.Id;
-						var lineitems = data.lineitems;
-						var payments = data.payments;
-
-						currentOrder.set({
-							'id': o.Id,
-							'orderid': o.Id,
-							'customerid': o.CustomerId,
-							'customername': o.CustomerName,
-							'orderno': o.OrderNo,
-							'orderdate': o.OrderDate,
-							'paidamount': o.PaidAmount,
-							'orderamount': o.OrderAmount
-						});
-
-						if (lineitems) {
-							for (var i = 0; i < lineitems.length; i++) {
-								var price = lineitems[i].SellPrice;
-								var quantity = lineitems[i].Quantity;
-								var no = i + 1;
-								var item = new LineItem({
-									slno: no,
-									productid: lineitems[i].ProductId,
-									name: lineitems[i].Name,
-									barcode: lineitems[i].Barcode,
-									mrp: lineitems[i].MRP,
-									quantity: quantity,
-									price: price,
-									discount: lineitems[i].Discount,
-									subtotal: Math.round(price * quantity)
-								});
-								currentOrder.get('lineItems').add(item);
-							}
+					if (lineitems) {
+						for (var i = 0; i < lineitems.length; i++) {
+							var price = lineitems[i].SellPrice;
+							var quantity = lineitems[i].Quantity;
+							var item = new LineItem({
+								id: uuid(),
+								productid: lineitems[i].ProductId,
+								name: lineitems[i].Name,
+								barcode: lineitems[i].Barcode,
+								mrp: lineitems[i].MRP,
+								quantity: quantity,
+								price: price,
+								discount: lineitems[i].Discount,
+								subtotal: Math.round(price * quantity)
+							});
+							currentOrder.get('lineItems').add(item);
 						}
-
-						if (payments) {
-							for (var i = 0; i < payments.length; i++) {
-								var no = i + 1;
-								var item = new OrderPayment({
-									slno: no,
-									orderid: orderid,
-									paidamount: payments[i].PaidAmount,
-									paymenttype: payments[i].PaymentType,
-									paymentdate: payments[i].PaymentDate,
-								});
-								currentOrder.get('payments').add(item);
-							}
-						}
-
-						currentOrder.set({
-							'paidamount': currentOrder.getPaidAmount(),
-							'orderamount': currentOrder.getOrderAmount(),
-						});
-
-						var $txtBarcode = $('input[name=barcode]');
-						$txtBarcode[0].select(0, $txtBarcode.val().length);
 					}
-					items.showUI();
-				});
+
+					if (payments) {
+						for (var i = 0; i < payments.length; i++) {
+							var no = i + 1;
+							var item = new OrderPayment({
+								slno: no,
+								orderid: orderid,
+								paidamount: payments[i].PaidAmount,
+								paymenttype: payments[i].PaymentType,
+								paymentdate: payments[i].PaymentDate,
+							});
+							currentOrder.get('payments').add(item);
+						}
+					}
+
+					currentOrder.set({
+						'ispaid': (payments && payments.length>0),
+						'paidamount': currentOrder.getPaidAmount(),
+						'orderamount': currentOrder.getOrderAmount(),
+					});
+
+					var $txtBarcode = $('input[name=barcode]');
+					$txtBarcode[0].select(0, $txtBarcode.val().length);
+				}
 			});
 		},
 		cancelOrder: function () {
@@ -513,7 +691,7 @@
 					triggerLength: 1,
 					method: 'post',
 					dataType: 'json',
-					loadingClass: "loading-circle",
+					loadingClass: "loading-circle icon-refresh",
 					preDispatch: function (query) {
 						//showLoadingMask(true);
 						var fieldName = $('input[type=radio][name=searchfield]:checked').val();
@@ -536,6 +714,7 @@
 				}
 			});
 
+			$('#btnPayOrder', $('#checkoutOrderModel')).focus()
 			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder);
 		},
 		payOrder: function () {
@@ -549,11 +728,12 @@
 				var orderamount = salesappview.model.getOrderAmount();
 				var prevpaidamt = salesappview.model.getPaidAmount();
 
-				if ((paymenttype == 'Cash' && paidamount >= orderamount) || (paymenttype == 'Credit' && paidamount < orderamount) || (paymenttype == 'Card' && paidamount > 0.0) || (paymenttype == 'Cheque' && paidamount > 0.0)) {
+				if ((paymenttype == 'Cash' && (prevpaidamt+paidamount >= orderamount)) || (paymenttype == 'Credit' && paidamount < orderamount) || (paymenttype == 'Card' && paidamount > 0.0) || (paymenttype == 'Cheque' && paidamount > 0.0)) {
 					salesappview.model.set({
-						'paidamount': paidamount,
+						'paidamount': prevpaidamt+paidamount,
 						'customerid': customerid,
 						'customername': customername,
+						'ispaid':true,
 					});
 
 					var payment = new OrderPayment({
@@ -567,12 +747,12 @@
 					salesappview.model.save();
 					showMsg('success', '<strong>Hooray!</strong> Payment Successfull &amp; Order is saved.');
 				} else if (paymenttype == 'Credit' && paidamount >= orderamount) {
-					showMsg('warn','<strong>Oops!</strong> Wrong Payment Type. Please choose <span class="label label-info">Cash</span> as payment type if the paid amount is greater than order amount.',false);
+					showMsg('warn','<strong>Oops!</strong> Wrong Payment Type. Please choose <span class="label label-info">Cash</span> as payment type if the paid amount is greater than order amount.');
 				} else {
-					showMsg('warn','Paid amount show be greater than or equal to <strong>' + orderamount + '</strong>. Please choose <span class="label label-info">Credit</span> as payment type if the paid amount is lesser than order amount.',false);
+					showMsg('warn','Paid amount should be greater than or equal to <strong>' + orderamount + '</strong>. Please choose <span class="label label-info">Credit</span> as payment type if the paid amount is lesser than order amount.');
 				}
 			} else {
-				showMsg('error', '<strong>Oops!</strong> Please enter a valid customer to save this order.', false);
+				showMsg('error', '<strong>Oops!</strong> Please enter a valid customer to save this order.');
 			}
 
 			$(this).unbind('click', salesappview.payOrder);
@@ -583,52 +763,21 @@
 		},
 		previewOrder: function () {
 
-		},
-		refreshOrders: function () {
-			var lstorders = this.lstOrders;
-			lstorders.resetUI();
-			$.ajax({
-				url: '/sales/todayorders',
-				accepts: 'application/json',
-				contentType: 'application/json',
-				data: null,
-				dataType: 'json',
-				type: 'POST'
-			}).done(function (data, textStatus, xhr) {
-				if (typeof (data) == "string") data = eval('(' + data + ')');
-				if (data && data.length > 0) {
-					for (var item = data.length - 1; item >= 0; --item) {
-						if (data[item] && data[item].Id) {
-							var o = new Order();
-							o.set({
-								'orderid': data[item].Id,
-								'customerid': data[item].CustomerId,
-								'orderno': data[item].OrderNo,
-								'orderdate': data[item].OrderDate,
-								'paidamount': data[item].PaidAmount,
-								'orderamount': data[item].OrderAmount
-							});
-							lstorders.add(o);
-						}
-					};
-				} else {
-					showMsg('info', '<strong>Hmmm!</strong> No orders made today.', false);
-				}
-			}).fail(function () {
-				showMsg('warn', '<strong>Oops!</strong> Error in loading todays order details.', false);
-			});
 		}
 	});
 
-	var salesappview = new SalesAppView;
+	var vent = _.extend({}, Backbone.Events)
+	var salesappview = new SalesAppView({vent:vent})
+	var orderlistview = new OrderListView({vent:vent})
 
-	$('#tblTodayOrders tbody').on('dblclick', "tr", function (e) {
+	/*$('#tblTodayOrders tbody').on('dblclick', "tr", function (e) {
 		$('#tblTodayOrders tbody').find('.active').removeClass('active')
 		$(this).addClass('active')
 		var orderid = $(this).data('orderid')
-		if (orderid) salesappview.editOrder(orderid)
-		e.preventDefault()
-	});
+		//if (orderid) salesappview.editOrder(orderid)
+		if(orderid) vent.trigger('editOrder',orderid)
+		//e.preventDefault()
+	});*/
 
 	function showMsg(type, message, timeout) {
 		var ediv = '<div class="alert ';
@@ -644,8 +793,8 @@
 			ediv += '';
 		}
 		ediv += ' fade in">';
+		ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';		
 		ediv += message;
-		ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
 		ediv += '</div>';
 		$('#statusMessage').html(ediv);
 		$('.alert', $('#statusMessage')).alert();
@@ -653,33 +802,47 @@
 		if (timeout || timeout == undefined) {
 			setTimeout(function () {
 				$('.alert', $('#statusMessage')).alert('close');
-			}, 8000);
+			}, 10000);
 		}
 	}
 
 	String.prototype.startsWith = function (needle) {
 		return (this.indexOf(needle) == 0);
 	};
+	
+	uuid = function() {
+        // Otherwise, just use Math.random
+        // http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript/2117523#2117523
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+            return v.toString(16);
+        });
+    };
 
 	function listen(e) {
 		//console.log(e.type)
 		//console.log(e.keyCode)
 		var isHandled = false;
 		switch (e.keyCode) {
-		case 114:
+		case 114: //F3
 			//new order
 			isHandled = true
 			$('#new-order').trigger('click');
 			break;
-		case 115:
+		case 115: //F4
 			//cancel order
 			isHandled = true
 			$('#cancel-order').trigger('click');
 			break;
-		case 116:
+		case 116: //F5
 			//checkout order
 			isHandled = true
 			$('#checkout-order').trigger('click');
+			break;
+		case 117: // focus barcode
+			isHandled = true
+			$tb = $('input[name="barcode"]')
+			$tb[0].select(0,$tb.val().length)
 			break;
 		case 122:
 			//print order

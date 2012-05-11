@@ -37,6 +37,8 @@
 		this.sorter = this.options.sorter || this.sorter
 		this.highlighter = this.options.highlighter || this.highlighter
 		this.updater = this.options.updater || this.updater
+		this.formatter = this.options.formatter || this.formatter
+		this.onSelected = this.options.onSelected || this.onSelected
 		this.idField = this.options.idField || 'id'
 		this.idControl = this.options.idControl || []
 		this.$menu = $(this.options.menu).appendTo('body')
@@ -72,9 +74,14 @@
 			this.$element
 				.val(this.updater(val))
 				.change()
-			
+				
+			this.onSelected(val)
 			this.updateIdCtrl(val)			
 			return this.hide()
+		},
+		
+		onSelected: function(item) { 
+		
 		},
 		
 		updateIdCtrl: function(item){
@@ -241,15 +248,20 @@
 			return beginswith.concat(caseSensitive, caseInsensitive)*/
 			return items
 		},
+		
+		formatter: function(displayValue, item) {
+			return displayValue
+		},
 
 		highlighter: function (item) {
 			var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+			var displayValue = item
 			if (this.ajax.displayField) {
-					item = item[this.ajax.displayField]
+				displayValue = item[this.ajax.displayField]
 			}
-			return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+			return this.formatter(displayValue.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
 				return '<strong>' + match + '</strong>'
-			})
+			}),item)
 		},
 
 		render: function (items) {

@@ -33,7 +33,7 @@ def includeme(config):
 	config.add_route('addlineitem', '/sales/addlineitem',xhr=True)
 	config.add_route('deletelineitem', '/sales/deletelineitem/{id}',xhr=True)
 	config.add_route('updatelineitem', '/sales/updatelineitem',xhr=True)
-	config.add_route('searchitembybarcode','/sales/searchitem',xhr=True)
+	config.add_route('searchitems','/sales/searchitem',xhr=True)
 	pass
 
 @view_config(route_name='sales', renderer='sales/index.jinja2')
@@ -117,12 +117,18 @@ def updateLineItem(request):
 def deleteLineItem(request):
 	return json.dumps({'status':'success','message':'Line Item deleted successfully!'})
 	
-@view_config(route_name='searchitembybarcode', renderer="json")	
+@view_config(route_name='searchitems', renderer="json")	
 def searchItem(request):
 	barcode = request.params.get('barcode')
-	if barcode:
-		items = DBSession.query(Product).filter_by(Barcode=barcode).all()
+	name = request.params.get('name')
+	if barcode or name:
+		query = DBSession.query(Product)
+		if barcode:
+			query = query.filter(Product.Barcode==barcode)
+		elif name:
+			query = query.filter(Product.Name.like(name)).order_by(Product.Name)
+		items = query.limit(10).offset(0).all()
 		if items and len(items) > 0:
 			result = [x.toDict() for x in items]
-			return json.dumps(result)
+			return json.dumps(result,default=jsonHandler)
 	return None
