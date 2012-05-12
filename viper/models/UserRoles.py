@@ -26,7 +26,7 @@ class Role(Base):
 	pass
 
 class RolePrivileges(Base):
-	__tablename__ = "RolePrivlieges"
+	__tablename__ = "RolePrivileges"
 	Id            = id_column()
 	RoleId        = Column(String(20), nullable=False)
 	PrivilegeId   = Column(String(50), nullable=False)

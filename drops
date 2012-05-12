@@ -1,0 +1,5 @@
+drop table UserRoles;
+drop table UserDetails;
+drop table RolePrivileges;
+drop table Roles;
+drop table TenantDetails;

@@ -12,3 +12,11 @@ def jsonHandler(obj):
     else:
         #raise TypeError, 'Object of type %s with value of %s is not JSON serializable' % (type(obj), repr(obj))
         return None
+
+import sha
+Salt = '!@#$#@!'
+        
+def EncryptPassword(password):
+	if password:
+		return sha.new('%s--%s' % (password,Salt)).hexdigest()
+	return None
