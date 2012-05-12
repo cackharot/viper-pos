@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Order #<%=order.get('orderno') %></title>
+	<style>
+		body{
+			font-size:12px;
+			margin:0px auto;
+			padding:0px;
+			color:#000;
+		}
+		h1,h2,h3,h4,h5,h6{
+			padding:0px;
+			margin:0px;
+		}
+		table {
+		  max-width: 100%;
+		  background-color: transparent;
+		  border-collapse: collapse;
+		  border-spacing: 0;
+		}
+		table tbody + tbody {
+ 			border-top: 2px solid #dddddd;
+		}
+	</style>
+</head>
+<body>
+	<div style="width:330px;margin:0px 5px;">
+		<table border="0" cellpadding="0" cellspacing="0" style="width:110%;">
+			<tbody>
+				<tr>	
+					<td colspan="2" style="text-align:center;">
+						<h3>Sri Durga Home Needs</h3>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" style="text-align:center;">
+						<h4>Super Market<br/> #25, M.G.Road, Pondy-3</h4>
+					</td>
+				</tr>
+				<tr>
+					<td>No# <b><%=order.get('orderno') %></b></td>
+					<td>Date: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'dd-MM-yyyy') %> </td>
+				</tr>
+				<tr>
+					<td>Customer: <%=order.get('customername') || '' %> </td>
+					<td>Time: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'hh:mm a') %> </td>
+				</tr>
+			</tbody>
+		</table>
+		<% 
+			var qas = order.get('lineItems').getQAS(); 
+			var paidAmt = order.getPaidAmount();
+			var totalAmt = qas.totalAmount;
+			var balanceAmt = totalAmt - paidAmt;
+		%>
+		<table border="0" cellpadding="0" cellspacing="0">
+			<thead>
+				<tr style="border-bottom: 1px solid black;border-top: 1px solid black;">
+					<th style="text-align:left;width:110px;">Name</th>
+					<th style="text-align:right;width:50px;">MRP</th>
+					<th style="text-align:right;width:60px;">Price</th>
+					<th style="text-align:right;width:25px;">Qty</th>
+					<th style="text-align:right;width:50px;">Gross</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% order.get('lineItems').each(function(item) { %>
+					<tr>
+						<td style="text-align:left;width:110px;overflow:auto;"><%= item.get('name') %></td>
+						<td style="text-align:right;width:50px;"><%= item.get('mrp') %></td>
+						<td style="text-align:right;width:60px;"><%= item.get('price') %></td>
+						<td style="text-align:right;width:25px;"><%= item.get('quantity') %></td>
+						<td style="text-align:right;width:50px;"><%= item.get('subtotal') %></td>
+					</tr>
+				<% }); %>	
+				<tr style="border-top: 1px solid black;">
+					<td colspan="2" style="text-align:left;">
+						Items/Qty: <%=qas.totalItems%>/<%=qas.totalQuantity%>
+					</td>
+					<td></td>
+					<td style="text-align:right;"><h4>Total:</h4></td>
+					<td style="text-align:right;"><h4><%=qas.totalAmount%></h4></td>
+				</tr>
+				<tr>
+					<td style="text-align:left;">Savings: <b><%=qas.savings%></b></td>
+					<td></td>
+					<td></td>
+					<td style="text-align:right;">Paid:</td>
+					<td style="text-align:right;"><%=order.getPaidAmount()%></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td style="text-align:right;">Balance:</td>
+					<td style="text-align:right;"><%=balanceAmt%></td>
+				</tr>
+				<tr>
+					<td colspan="5" style="text-align:center;"><b><i>Thank You! Visit Again!</i></b></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>
