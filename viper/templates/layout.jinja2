@@ -10,10 +10,11 @@
     <meta name="author" content="cackharot@gmail.com">
     <link rel="shortcut icon" href="{{request.static_url('viper:static/favicon.ico')}}" />
 
+	<link href="{{request.static_url('viper:static/css/normalize.css')}}" rel="stylesheet"/>
     <link href="{{request.static_url('viper:static/css/bootstrap.css')}}" rel="stylesheet">
+    <link href="{{request.static_url('viper:static/css/font-awesome.css')}}" rel="stylesheet">
     <link href="{{request.static_url('viper:static/css/bootstrap-responsive.css')}}" rel="stylesheet"/>
     <link href="{{request.static_url('viper:static/css/jquery.dataTables.css')}}" rel="stylesheet">
-    <link href="{{request.static_url('viper:static/css/demo_table.css')}}" rel="stylesheet"/>
     <link href="{{request.static_url('viper:static/css/style.css')}}" rel="stylesheet"/>
     <style>
       body {
@@ -42,11 +43,11 @@
 			  <div class="nav-collapse">
 				<ul class="nav">
 				  <li class="active"><a href="#">Dashboard</a></li>
-				  <li><a href="/sales"><i class="icon-shopping-cart icon-white"></i> Sales</a></li>
-				  <li><a href="/stock"><i class="icon-briefcase icon-white"></i> Stock</a></li>
-				  <li><a href="/customers"><i class="icon-user icon-white"></i> Customers</a></li>
-				  <li><a href="/suppliers"><i class="icon-user icon-white"></i> Suppliers</a></li>
-				  <li><a href="/reports"><i class="icon-align-left icon-white"></i> Reports</a></li>
+				  <li><a href="/sales"><i class="icon-shopping-cart icon-large icon-white"></i> Sales</a></li>
+				  <li><a href="/stock"><i class="icon-book icon-large icon-white"></i> Stock</a></li>
+				  <li><a href="/customers"><i class="icon-user icon-large icon-white"></i> Customers</a></li>
+				  <li><a href="/suppliers"><i class="icon-user icon-large icon-white"></i> Suppliers</a></li>
+				  <li><a href="/reports"><i class="icon-align-left icon-large icon-white"></i> Reports</a></li>
 				  <li class="dropdown">
 				  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
 						Admin 
@@ -67,6 +68,11 @@
 					</ul>
 				  </li>
 				</ul>
+				<ul class="nav pull-right">
+				  	<li><a href="#" class="increaseFont" style="font-size:14px;">A+</a></li>
+				  	<li><a href="#" class="resetFont">A</a></li>
+				  	<li><a href="#" class="decreaseFont" style="font-size:10px;">A-</a></li>
+			  	</ul>
 			  </div><!--/.nav-collapse -->
 			</div>
 		</div>
@@ -99,10 +105,30 @@
     <script src="{{request.static_url('viper:static/js/backbone.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/typeahead.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/templateLoader.js')}}"></script>
-    <script src="{{request.static_url('viper:static/js/splitter.js')}}"></script>
     <script>
     	$(function(){
     		$('.dropdown-toggle').dropdown();    	
+			// Reset Font Size
+			var originalFontSize = $('html').css('font-size');
+				$(".resetFont").click(function(){
+				$('html').css('font-size', originalFontSize);
+			});
+			// Increase Font Size
+			$(".increaseFont").click(function(){
+				var currentFontSize = $('html').css('font-size');
+				var currentFontSizeNum = parseFloat(currentFontSize, 10);
+				var newFontSize = currentFontSizeNum*1.2;
+				$('html').css('font-size', newFontSize);
+				return false;
+			});
+			// Decrease Font Size
+			$(".decreaseFont").click(function(){
+				var currentFontSize = $('html').css('font-size');
+				var currentFontSizeNum = parseFloat(currentFontSize, 10);
+				var newFontSize = currentFontSizeNum*0.8;
+				$('html').css('font-size', newFontSize);
+				return false;
+			});
     	});
     </script>
     {% block footerscript %}{% endblock %}

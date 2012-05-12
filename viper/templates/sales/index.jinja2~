@@ -25,11 +25,11 @@ table#tblTodayOrders tbody tr.active td{
 	 <div class="page-header">
       <h1>Sales
       	<div class="span8 pull-right"> 
-      		<button id="new-order" class="btn btn-primary"><i class="icon-file icon-white"></i> New (F3)</button>
-      		<button id="cancel-order" class="btn btn-warning"><i class="icon-remove icon-white"></i> Cancel (F4)</button>
-      		<button id="checkout-order" class="btn btn-success"><i class="icon-ok icon-white"></i> Checkout (F5)</button>
-      		<button id="print-order" class="btn btn-primary"><i class="icon-print icon-white"></i> Print (F11)</button>
-      		<button id="preview-order" class="btn btn-primary"><i class="icon-eye-open icon-white"></i> Preview (F12)</button>
+      		<a id="new-order" class="btn btn-primary"><i class="icon-file icon-white"></i> New (F3)</a>
+      		<a id="cancel-order" class="btn btn-warning"><i class="icon-remove icon-white"></i> Cancel (F4)</a>
+      		<a id="checkout-order" class="btn btn-success"><i class="icon-shopping-cart icon-white"></i> Checkout (F5)</a>
+      		<a id="print-order" class="btn btn-primary"><i class="icon-print icon-white"></i> Print (F11)</a>
+      		<a id="preview-order" class="btn btn-primary"><i class="icon-eye-open icon-white"></i> Preview (F12)</a>
       	</div>
       </h1>
      </div> 
@@ -37,9 +37,9 @@ table#tblTodayOrders tbody tr.active td{
 		<div class="span3" id="orderListDiv">
 			<h3>Today Orders
 				<div class="pull-right">
-					<button id="refresh-orders" class="btn btn-mini btn-info">
+					<a id="refresh-orders" class="btn btn-mini btn-info">
 						<i class="icon-refresh icon-white"></i> Refresh
-					</button>
+					</a>
 				</div>
 			</h3>
 			<div style="height:510px;overflow:auto;">
@@ -98,7 +98,7 @@ table#tblTodayOrders tbody tr.active td{
 						<td><input type="text" name="barcode"/></td>
 						<td><input type="text" name="itemName"/></td>
 						<td><input type="text" name="quantity" value="1"/></td>
-						<td><button id="add-item" class="btn btn-primary"><i class="icon-plus icon-white"></i> Add </button></td>
+						<td><a id="add-item" class="btn btn-primary"><i class="icon-plus icon-white"></i> Add </a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -260,7 +260,7 @@ table#tblTodayOrders tbody tr.active td{
 			<td class="b"><%= item.get('barcode') %></td>
 			<td class="n"><%= item.get('name') %></td>
 			<td class="m tright"><%= item.get('mrp') %></td>
-			<td class="p tright"><%= Math.round(item.get('price')) %></td>
+			<td class="p tright"><%= item.get('price') %></td>
 			<td class="d tright"><%= item.get('discount') %></td>
 			<td class="q tright"><%= item.get('quantity') %></td>
 			<td class="st tright tbold"><%= item.get('subtotal').toFixed(2) %></td>

@@ -16,6 +16,12 @@ from ..models import (
     DBSession,
     Product,
     Customer,
+    Order,
+    LineItem,
+    OrderPayment,
+    User,
+    Tenant,
+    UserRoles,
     Base,
     )
     
@@ -31,6 +37,11 @@ def usage(argv):
 def getRand():
 	return random.randint(1,12098)    
 
+def Fixtures():
+	with transaction.manager:
+		
+	pass
+
 def main(argv=sys.argv):
     if len(argv) != 2:
         usage(argv)
@@ -40,35 +51,6 @@ def main(argv=sys.argv):
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.create_all(engine)
-    with transaction.manager:
-    	for i in range(1,50):
-			p = Product.Product()
-			p.TenantId = TestTenantId
-			p.Barcode = '%s' % getRand()
-			p.Name = 'Test Item %s' % p.Barcode
-			p.MRP = random.randint(1,500)
-			p.BuyPrice = p.MRP - (p.MRP * 0.12)
-			p.SellPrice = p.MRP - (p.MRP * 0.03)
-			p.Discount = 3.0
-			p.CreatedBy = TestUserId
-			p.CreatedOn = datetime.datetime.utcnow()
-			p.Status = 1
-			DBSession.add(p)
-    	
-    	for i in range(1,25):
-			c = Customer.Customer()
-			c.TenantId = TestTenantId
-			c.SSN = getRand()
-			c.FirstName = 'Customer%s' % getRand()
-			c.Email = c.FirstName + '@test.com'
-			c.Mobile = '9876543%s' % random.randint(100,999)
-			c.Phone = '654321'
-			c.Country = 'India'
-			c.City = 'TN'
-			c.CreatedBy = TestUserId
-			c.CreatedOn = datetime.datetime.utcnow()
-			c.Status = 1
-			DBSession.add(c)
-
-		print('Done.')
-	pass
+    Fixtures()
+    print('Done.')
+    pass
