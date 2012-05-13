@@ -6,6 +6,7 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
 	)
@@ -16,8 +17,8 @@ from ..library.vuid import id_column, UUID
 class Product(Base):
 	__tablename__ = 'Products'
 	Id = id_column()
-	TenantId = Column(UUID(), nullable=False,index=True)
-	Name = Column(String(50),index=True)
+	TenantId = Column(UUID(), ForeignKey('TenantDetails.Id'), nullable=False,index=True)
+	Name = Column(Unicode(50),index=True)
 	Barcode = Column(String(20),index=True)
 	MRP = Column(Float)
 	Discount = Column(Float)

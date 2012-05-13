@@ -5,23 +5,28 @@ from sqlalchemy import (
 	DateTime, 
 	Integer, 
 	Float, 
-	String, 
+	String,
+	Unicode, 
 	MetaData, 
 	ForeignKey,
 	)
+	
 from datetime import datetime 	
 from . import Base
 from ..library.vuid import id_column, UUID
 
+import formalchemy
+
 class Tenant(Base):
+	__label__	  = 'Tenant Details'
 	__tablename__ = 'TenantDetails'
 	Id            = id_column()
-	Name          = Column(String(50),index=True)
-	Description   = Column(String(255))
+	Name          = Column(Unicode(50),index=True)
+	Description   = Column(Unicode(255))
 	Url           = Column(String(255),index=True)
 	Website       = Column(String(255))
-	AdminUserId   = Column(UUID(),nullable=True)
-	BillingUserId = Column(UUID(),nullable=True)
+	AdminUserId   = Column(UUID(),ForeignKey('UserDetails.Id'),nullable=True)
+	BillingUserId = Column(UUID(),ForeignKey('UserDetails.Id'),nullable=True)
 	CreatedBy = Column(String(50))
 	CreatedOn = Column(DateTime)
 	UpdatedBy = Column(String(50), nullable=True)
@@ -29,8 +34,6 @@ class Tenant(Base):
 	Status    = Column(Boolean, default=True)		
 	
 	def __init__(self):
-		self.Name = None
-		self.Password = None
 		pass
 
 	def toDict(self):
@@ -39,5 +42,5 @@ class Tenant(Base):
 		return serialized
 		
 	def __repr__(self):
-		return u"User(%s, %s)" % (self.Id, self.Name)
+		return u"Tenant(%s, %s)" % (self.Id, self.Name)
 	pass

@@ -10,7 +10,7 @@
     <meta name="author" content="cackharot@gmail.com">
     <link rel="shortcut icon" href="{{request.static_url('viper:static/favicon.ico')}}" />
 
-	<link href="{{request.static_url('viper:static/css/normalize.css')}}" rel="stylesheet"/>
+<!--<link href="{{request.static_url('viper:static/css/normalize.css')}}" rel="stylesheet"/>-->
     <link href="{{request.static_url('viper:static/css/bootstrap.css')}}" rel="stylesheet">
     <link href="{{request.static_url('viper:static/css/font-awesome.css')}}" rel="stylesheet">
     <link href="{{request.static_url('viper:static/css/bootstrap-responsive.css')}}" rel="stylesheet"/>
@@ -48,9 +48,11 @@
 				  <li><a href="/customers"><i class="icon-user icon-large icon-white"></i> Customers</a></li>
 				  <li><a href="/suppliers"><i class="icon-user icon-large icon-white"></i> Suppliers</a></li>
 				  <li><a href="/reports"><i class="icon-align-left icon-large icon-white"></i> Reports</a></li>
+				  {% if user %}
+				  <li class="divider-vertical"></li>
 				  <li class="dropdown">
 				  	<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-						Admin 
+						<i class="icon-user icon-white"></i> {{user.UserName}} 
 						<b class="caret"></b>
 					</a>
 					<ul class="dropdown-menu" id="admin-menu">
@@ -65,14 +67,18 @@
 						<li><a href="/pickuplist">Manage Pickup Lists</a></li>
 						<li class="divider"></li>
 						<li><a href="/settings"><i class="icon-cog"></i> Settings</a></li>
+						<li><a href="/logout"><i class="icon-off icon-white"></i> Logout</a></li>
 					</ul>
 				  </li>
+				  {% endif %}
 				</ul>
+				<!--
 				<ul class="nav pull-right">
 				  	<li><a href="#" class="increaseFont" style="font-size:14px;">A+</a></li>
 				  	<li><a href="#" class="resetFont">A</a></li>
 				  	<li><a href="#" class="decreaseFont" style="font-size:10px;">A-</a></li>
 			  	</ul>
+			  	-->
 			  </div><!--/.nav-collapse -->
 			</div>
 		</div>
@@ -132,5 +138,15 @@
     	});
     </script>
     {% block footerscript %}{% endblock %}
+    <!--
+    <footer class="footer">
+		<p class="pull-right">
+			<a href="#">Back to top</a>
+		</p>
+		<p>
+			All Rights Reserved. &copy; www.vipersuites.com
+		<p>
+	</footer>
+	-->
 </body>
 </html>

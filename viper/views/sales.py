@@ -14,7 +14,6 @@ from ..models.Order import Order, OrderSearchParam
 from ..models.LineItem import LineItem
 from ..models.OrderPayment import OrderPayment
 from ..library.ViperLog import log
-from ..library.UserIdentity import UserIdentity
 from ..library.helpers import jsonHandler
 
 from ..services.OrderService import OrderService
@@ -44,6 +43,7 @@ def salesPage(request):
 @view_config(route_name='listorders', renderer="sales/orderlist.jinja2")
 def listOrders(request):
 	searchParam = OrderSearchParam()
+	searchParam.TenantId = request.user.TenantId
 	model = orderServiceProxy.SearchOrders(searchParam)
 	return {'model':model}
 
@@ -54,6 +54,7 @@ def getTodayOrders(request):
 	d = datetime.utcnow().date()
 	searchParam.FromOrderDate = d.replace(day=d.day-1)
 	searchParam.ToOrderDate = d
+	searchParam.TenantId = request.user.TenantId
 	model = orderServiceProxy.SearchOrders(searchParam)
 
 	if model:
@@ -66,7 +67,7 @@ def getTodayOrders(request):
 def getOrder(request):
 	orderid = request.matchdict['orderid']
 	if orderid:
-		model = orderServiceProxy.GetOrderById(orderid)
+		model = orderServiceProxy.GetOrderById(orderid,request.user.TenantId)
 		if model:
 			lineItems = None
 			payments = None
@@ -80,15 +81,15 @@ def getOrder(request):
 	    
 @view_config(route_name='neworder', renderer="json", accept="application/json")
 def newOrder(request):
-	model = orderServiceProxy.NewOrder()
+	model = orderServiceProxy.NewOrder(request.user.TenantId,request.user.Id)
 	return model.toJSON()
 	
 @view_config(route_name='saveorder', renderer="json")
 def saveOrder(request):
 	order = json.loads(request.body)
-	log.info(order)
+	#log.info(order)
 	if order:
-		orderServiceProxy.SaveOrder(order)
+		orderServiceProxy.SaveOrder(order,request.user.TenantId,request.user.Id)
 		return {'status':'success','message':'Order Saved Successfully!'}
 	return {'status':'error','message':'Invalid data!'}
 
@@ -97,32 +98,20 @@ def saveOrderlineitems(request):
 	orderid = request.matchdict['orderid']
 	lineitems = request.body
 	if orderid and lineitems:
-		orderServiceProxy.SaveOrderLineItems(lineitems)
+		orderServiceProxy.SaveOrderLineItems(orderid,lineitems)
 		return {'status':'success','message':'LineItems Saved Successfully!'}
 	return {'status':'error','message':'Invalid data!'}
 
 @view_config(route_name='deleteorder', renderer="json", accept="application/json")
 def deleteOrder(request):
 	return {'status':'success','message':'Order Deleted Successfully!'}
-	
-@view_config(route_name='addlineitem', renderer="json", accept="application/json")
-def addLineItem(request):
-	return json.dumps({'status':'success','message':'Line Item added successfully!'})
-	
-@view_config(route_name='updatelineitem', renderer="json", accept="application/json")
-def updateLineItem(request):
-	return json.dumps({'status':'success','message':'Line Item updated successfully!'})	
-	
-@view_config(route_name='deletelineitem', renderer="json", accept="application/json")
-def deleteLineItem(request):
-	return json.dumps({'status':'success','message':'Line Item deleted successfully!'})
-	
+
 @view_config(route_name='searchitems', renderer="json")	
 def searchItem(request):
 	barcode = request.params.get('barcode')
 	name = request.params.get('name')
 	if barcode or name:
-		query = DBSession.query(Product)
+		query = DBSession.query(Product).filter(Product.TenantId==request.user.TenantId)
 		if barcode:
 			query = query.filter(Product.Barcode==barcode)
 		elif name:

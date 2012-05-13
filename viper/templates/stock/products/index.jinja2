@@ -4,9 +4,9 @@
 	<div class="page-header">
 		<h1>Manage Products
 			 <small class="pull-right">
-			  	<a href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
+			  	<button href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
 			  		<i class="icon-plus icon-white"></i> Add Item
-			  	</a>
+			  	</button>
 			 </small>
 		 </h1>
 	</div> 	
@@ -60,7 +60,7 @@
 									<a href="{{'editproduct' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
 								</li>
 								<li>
-									<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-remove"></i> Delete</a>
+									<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
 								</li>
 							</ul>
 						</div>

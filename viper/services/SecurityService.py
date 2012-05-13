@@ -16,28 +16,31 @@ from ..library.helpers import EncryptPassword
 from .UserService import UserService
 from .TenantService import TenantService
 
+import logging
+log = logging.getLogger(__name__)
+
 class SecurityService(object):
 	"""
 		Security service class
 	"""
 	
 	def ValidateUser(self,tenantcode,username,password):
-		if not tenantcode and not username and not password:
+		if tenantcode and username and password:
 			tenantService = TenantService()
-			t = TenantService.GetTenantDetailsByName(tenantcode)
-			if not t:
+			t = tenantService.GetTenantDetailsByName(tenantcode)
+			if t:
 				userService = UserService()
 				user = userService.GetUserDetailsByName(username,t.Id)
-				if not user:
+				if user:
 					givenhashpass = EncryptPassword(password)
 					if user.Password == givenhashpass:
-						return True
-		return False
+						return user.Id
+		return None
 	
 	def GetUserRoles(self,userId):
-		if not name:
+		if name:
 			result = DBSession.query(UserRoles).filter(UserRoles.UserId==userId).all()
-			if not result:
+			if result:
 				return [x.RoleId for x in result]
 		return None
 	

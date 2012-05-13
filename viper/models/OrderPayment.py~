@@ -6,6 +6,7 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
 	)
@@ -18,7 +19,7 @@ class OrderPayment(Base):
 	Id = id_column()
 	OrderId = Column(UUID(), nullable=False)
 	PaymentDate = Column(DateTime, nullable=True)
-	PaymentType = Column(String(10),default='Cash')
+	PaymentType = Column(Unicode(10),default=u'Cash')
 	PaidAmount = Column(Float,default=0.0)
 	CreatedBy = Column(String(50))
 	CreatedOn = Column(DateTime)
@@ -34,7 +35,12 @@ class OrderPayment(Base):
 		self.PaymentDate = d
 		self.CreatedOn = d
 		pass
-
+		
+	def toDict(self):
+		serialized = dict((column_name, getattr(self, column_name))
+                          for column_name in self.__table__.c.keys())
+		return serialized
+		
 	def __repr__(self):
 		return u"Order(%s, %s)" % (self.Id, self.OrderNo)
 	pass

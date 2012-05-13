@@ -6,9 +6,9 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
-	Unicode
 	)
 from . import Base
 
@@ -18,7 +18,7 @@ from ..library.vuid import id_column, UUID
 class Customer(Base):
 	__tablename__ = 'Customers'
 	Id = id_column()
-	TenantId = Column(UUID(), nullable=False,index=True)
+	TenantId = Column(UUID(),ForeignKey('TenantDetails.Id'), nullable=False,index=True)
 	FirstName = Column(Unicode(50),index=True)
 	LastName = Column(Unicode(50), nullable=True)
 	Email = Column(String(255), nullable=True,index=True)

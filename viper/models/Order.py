@@ -6,6 +6,7 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
 	)
@@ -17,9 +18,9 @@ from ..library.helpers import jsonHandler
 class Order(Base):
 	__tablename__ = 'Orders'
 	Id = id_column()
-	TenantId = Column(UUID(), nullable=False,index=True)
+	TenantId = Column(UUID(),ForeignKey('TenantDetails.Id'), nullable=False,index=True)
 	OrderNo = Column(Integer,index=True)
-	CustomerId = Column(String(50), nullable=True)
+	CustomerId = Column(UUID(),index=True,nullable=False)
 	OrderAmount = Column(Float,default=0)
 	PaidAmount = Column(Float,default=0) 
 	OrderDate = Column(DateTime)

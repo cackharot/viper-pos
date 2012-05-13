@@ -2,9 +2,9 @@ Metadata-Version: 1.1
 Name: viper
 Version: 0.0
 Summary: viper
-Home-page: UNKNOWN
-Author: UNKNOWN
-Author-email: UNKNOWN
+Home-page: http://pos.vipersuites.in
+Author: cackharot
+Author-email: cackharot@gmail.com
 License: UNKNOWN
 Description: viper README
         ==================
@@ -27,7 +27,7 @@ Description: viper README
         
         -  Initial version
         
-Keywords: web wsgi bfg pylons pyramid
+Keywords: pos sales online point of sales openpos python pos erp viper
 Platform: UNKNOWN
 Classifier: Programming Language :: Python
 Classifier: Framework :: Pylons

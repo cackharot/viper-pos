@@ -22,13 +22,13 @@ class UserService(object):
 		pass
 	
 	def GetUserDetails(self,userId):
-		if not userId:
-			return DBSession.query(User).get(userId)
+		if userId:
+			return DBSession.query(User).filter(User.Id==userId,User.Status==True).first()
 		return None
 	
 	def GetUserDetailsByName(self,name,tenantId):
-		if not name:
-			return DBSession.query(User).filter(User.TenantId=tenantId,User.UserName==name).one()
+		if name and tenantId:
+			return DBSession.query(User).filter(User.TenantId==tenantId,User.UserName==name,User.Status==True).first()
 		return None
 	
 	pass

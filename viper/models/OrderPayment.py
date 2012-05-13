@@ -6,6 +6,7 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
 	)
@@ -18,7 +19,7 @@ class OrderPayment(Base):
 	Id = id_column()
 	OrderId = Column(UUID(), nullable=False)
 	PaymentDate = Column(DateTime, nullable=True)
-	PaymentType = Column(String(10),default='Cash')
+	PaymentType = Column(Unicode(10),default=u'Cash')
 	PaidAmount = Column(Float,default=0.0)
 	CreatedBy = Column(String(50))
 	CreatedOn = Column(DateTime)
@@ -29,7 +30,7 @@ class OrderPayment(Base):
 	def __init__(self):
 		self.Id = self.OrderId = None
 		self.PaidAmount = 0.0
-		self.PaymentType = 'Cash'
+		self.PaymentType = u'Cash'
 		d = datetime.utcnow()
 		self.PaymentDate = d
 		self.CreatedOn = d

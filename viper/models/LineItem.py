@@ -6,6 +6,7 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
 	)
@@ -19,7 +20,7 @@ class LineItem(Base):
 	OrderId = Column(UUID(), nullable=False)
 	ProductId = Column(UUID(), nullable=True)
 	Barcode = Column(String(20), nullable=False)
-	Name = Column(String(50), nullable=False)
+	Name = Column(Unicode(50), nullable=False)
 	MRP = Column(Float, default=0.0)
 	Discount = Column(Float, default=0.0)
 	SellPrice = Column(Float, default=0.0)

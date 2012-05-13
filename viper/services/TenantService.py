@@ -8,6 +8,7 @@ from sqlalchemy import desc,func,cast,Date
 
 from ..models import DBSession
 from ..models.User import User
+from ..models.Tenant import Tenant
 from ..models.UserRoles import Role, UserRoles, RolePrivileges
 from ..library.ViperLog import log
 
@@ -17,13 +18,13 @@ class TenantService(object):
 	"""
 	
 	def GetTenantDetails(self,tenantId):
-		if not tenantId:
+		if tenantId:
 			return DBSession.query(Tenant).get(tenantId)
 		return None
 	
 	def GetTenantDetailsByName(self,name):
-		if not name:
-			return DBSession.query(Tenant).filter(Tenant.Name==name).one()
+		if name:
+			return DBSession.query(Tenant).filter(Tenant.Name==name,Tenant.Status==True).first()
 		return None
 	
 	pass

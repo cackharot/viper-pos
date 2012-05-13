@@ -1347,7 +1347,8 @@ select:focus:required:invalid:focus {
           border-radius: 0;
 }
 
-.input-prepend input.span3 {
+.input-prepend input.span3,
+.input-append input.span3 {
 	width: 242px; !important
 }
 

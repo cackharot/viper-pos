@@ -19,14 +19,6 @@
      <div class="span8">
      <form action="{{'savecustomer'|route_url}}" method="post" class="form-horizontal">
 		<fieldset>
-			{% if model.SSN != None and model.SSN > 0 %}
-			<div class="control-group">
-				<label class="control-label" for="SSN">Customer Number</label>
-				<div class="controls">
-					<input name="SSN" id="SSN" class="input-xlarge disabled" disabled="" type="text" value="{{model.SSN}}"/>
-				</div>
-			</div>
-			{% endif %}
 			<div class="control-group">
 				<label class="control-label" for="FirstName">First Name</label>
 				<div class="controls">

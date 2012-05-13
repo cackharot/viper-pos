@@ -1,21 +1,57 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
+#from pyramid.authentication import AuthTktAuthenticationPolicy
+#from pyramid.authorization import ACLAuthorizationPolicy
+
 from models import DBSession
-from viper.views import customers,stock
+from library.security import get_user
+from library.security import SaaSAuthTktAuthenticationPolicy
+from library.security import UserAuthorizationPolicy
+from viper.views import customers,stock,sales
 
 def main(global_config, **settings):
     """ 
     	This function returns a Pyramid WSGI application.
     """
+     # Configure our authorization policy
+    authn_policy = SaaSAuthTktAuthenticationPolicy(settings)
+    authz_policy = UserAuthorizationPolicy()
+    
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
-    config = Configurator(settings=settings)
+    config = Configurator(settings=settings,
+    				    	root_factory='viper.handlers.auth.RootFactory',
+    				    	authentication_policy=authn_policy,
+    				    	authorization_policy=authz_policy)
+    
+    config.set_request_property(get_user, 'user', reify=True)
     config.include('pyramid_jinja2')
+    
+    # pyramid_formalchemy's configuration
+    config.include('pyramid_formalchemy')
+    config.include('fa.jquery')
+    config.include('viper.fainit')
+    
+    config.add_translation_dirs('viper:locale/')
+    
+    #from viper.handlers.auth import forbidden
+    #config.add_forbidden_view(forbidden)
+    config.add_tween('viper.library.security.auth_tween_factory')
+
+	#config.add_subscriber("simpleauth.subscribers.create_url_generator",       "pyramid.events.ContextFound")
+    config.include("pyramid_handlers")
+    #config.include("akhet")
+    
+    # simpleauth additions
+    config.add_handler('login', '/login', 'viper.handlers.auth:Auth', action='login')
+    config.add_handler('logout', '/logout', 'viper.handlers.auth:Auth', action='logout')
+    
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('index', '/')
+    config.add_route('home', '/')
     config.include(sales.includeme)
     config.include(stock.includeme)
     config.include(customers.includeme)
     config.scan()
-    return config.make_wsgi_app()
+    return config.make_wsgi_app()    

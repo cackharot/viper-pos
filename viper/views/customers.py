@@ -11,7 +11,6 @@ from viper.models import (
     DBSession,
     )
 from viper.models.Customer import Customer
-from ..library.UserIdentity import UserIdentity
 from ..library.helpers import jsonHandler
 
 def includeme(config):
@@ -29,7 +28,7 @@ def searchCustomer(request):
 		searchValue = request.params.get('search')
 		field = request.params.get('field','name')
 		result = None		
-		query = DBSession.query(Customer)
+		query = DBSession.query(Customer).filter(Customer.TenantId==request.user.TenantId)
 		
 		if searchValue is not None and searchValue != '':
 			searchValue = '%%%s%%' % searchValue
@@ -53,7 +52,7 @@ def customerList(request):
 		pageSize = request.params.get('pageSize', 50)
 		searchValue = request.params.get('searchValue', None)
 		
-		query = DBSession.query(Customer)
+		query = DBSession.query(Customer).filter(Customer.TenantId==request.user.TenantId)
 		
 		if searchValue is not None and searchValue != '':
 			query = query.filter(Customer.FirstName==searchValue)
@@ -86,9 +85,9 @@ def saveCustomer(request):
 	else:
 		c = DBSession.query(Customer).get(cid)
 	
-	if c.SSN == None or c.SSN <= 0:
-		c.SSN = int(DBSession.execute('SELECT MAX(SSN) FROM Customers').scalar()) + 1	
-	c.TenantId = UserIdentity.TenantId
+	c.TenantId = request.user.TenantId
+	c.CreatedBy = request.user.Id
+	c.UpdatedBy = request.user.Id
 	c.FirstName = request.params.get('FirstName', None)
 	c.LastName = request.params.get('LastName', None)
 	c.Email = request.params.get('Email', None)

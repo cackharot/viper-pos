@@ -12,7 +12,6 @@ from viper.models import (
     )
 from ..models.Product import Product
 from ..library.ViperLog import log
-from ..library.UserIdentity import UserIdentity
 
 def includeme(config):
 	config.add_route('stock', '/stock')
@@ -67,7 +66,9 @@ def saveProduct(request):
 	else:
 		p = DBSession.query(Product).get(uuid.UUID(pid))
 		
-	p.TenantId = UserIdentity.TenantId
+	p.TenantId = request.user.TenantId
+	p.CreatedBy = request.user.Id
+	p.UpdatedBy = request.user.Id
 	p.Barcode = request.params.get('Barcode', None)
 	p.Name = request.params.get('Name', None)
 	p.MRP = request.params.get('MRP', 0.0)
