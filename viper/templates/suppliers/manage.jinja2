@@ -27,6 +27,40 @@
 		 {% endif %}
 		<form action="{{'savesupplier'|route_url}}" method="post" class="form-horizontal">
 			{% import 'shared/contactform.jinja2' as contactForm with context %}
+			<h3>Agency Details</h3>
+			<table class="table">
+				<tbody>
+					<tr>
+						<td>
+							<div class="control-group {{ 'error' if renderer.is_error('Name') }}">
+								{{renderer.label('Name','Agency Name',class='control-label')}}
+								<div class="controls">
+									{{renderer.text('Name',size=100,class='input-xlarge',autofocus=True)}}
+								</div>
+							</div>
+						</td>
+						<td>
+							<div class="control-group {{ 'error' if renderer.is_error('Description') }}">
+								{{renderer.label('Description','Agency Description',class='control-label')}}
+								<div class="controls">
+									{{renderer.textarea('Description',class='input-xlarge')}}
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="control-group {{ 'error' if renderer.is_error('Address') }}">
+								{{renderer.label('Address','Agency Address',class='control-label')}}
+								<div class="controls">
+									{{renderer.textarea('Address',class='input-xlarge')}}
+								</div>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<h3>Contact Details</h3>
 			{{ contactForm.render(cfr) }}
 			<div class="form-actions">
 				<input type="hidden" name="sid" value="{{model.Id|d('',True)}}"/>

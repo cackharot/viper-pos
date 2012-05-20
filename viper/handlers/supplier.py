@@ -74,16 +74,19 @@ class SupplierController(object):
 			sid = self.request.matchdict.get('sid',None)
 
 		try:
-			if sid:
+			if sid: #edit
 				model = supplierService.GetSupplier(sid,self.TenantId)
 			
 				if not model:
 					return HTTPFound(location='/suppliers/index')
 				
 				form = Form(self.request,schema=SupplierSchema,obj=model)
-				cntform = Form(self.request,schema=ContactSchema,obj=model.Contacts[0])
+				cntform = vForm(prefix='suppliercontact-',request=self.request,schema=ContactSchema,obj=model.Contacts[0])
 				
-				if form.validate() and cntform.validate():
+				valid = form.validate() 
+				valid = cntform.validate() and valid
+				
+				if valid:
 					form.bind(model)
 					cntform.bind(model.Contacts[0])
 					
@@ -94,12 +97,15 @@ class SupplierController(object):
 						return HTTPFound(location='/suppliers/index')
 					else:
 						errors='Unable to add suppliers details!'
-			else:
+			else: #add
 				model = Supplier()
 				form = Form(self.request,schema=SupplierSchema,defaults={})
-				cntform = Form(self.request,schema=ContactSchema,defaults={})
+				cntform = vForm(prefix='suppliercontact-',request=self.request,schema=ContactSchema,defaults={})
 				
-				if form.validate() and cntform.validate():
+				valid = form.validate() 
+				valid = cntform.validate() and valid
+				
+				if valid:
 					model = form.bind(Supplier())
 					contact = cntform.bind(SupplierContactDetails())
 					

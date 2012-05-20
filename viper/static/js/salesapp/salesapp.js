@@ -67,8 +67,10 @@
 					that.addItemTpl(item)
 				});
 				that.updateTotal();
-				that.showUI();
-				if (callback) callback();
+				that.showUI(function(){
+					if (callback) 
+						callback();
+				});
 			});
 		},
 		addItemTpl: function (item) {
@@ -735,8 +737,9 @@
 				}
 			});
 
-			$('#btnPayOrder', $('#checkoutOrderModel')).focus()
-			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder);
+			$('#btnPayOrder', $('#checkoutOrderModel'))[0].focus()
+			$('#btnPayOrder', $('#checkoutOrderModel')).unbind('click',this.payOrder)
+			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder)
 		},
 		payOrder: function () {
 			var customerid = $('input[name=customerid]', $('#checkoutOrderModel')).val();
@@ -755,6 +758,7 @@
 						'customerid': customerid,
 						'customername': customername,
 						'ispaid': true,
+						'isloaded':true,
 					});
 
 					var payment = new OrderPayment({

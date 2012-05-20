@@ -155,7 +155,7 @@ body {
   margin: 0;
   /*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
   font-family:"myriad-pro-1","myriad-pro-2",Arial,Helvetica,sans-serif;
-  font-size: 15px;
+  font-size: 12px;
   line-height: 18px;
   color: #333333;
   background-color: #ffffff;
@@ -2382,7 +2382,7 @@ table .span24 {
   z-index: 1000;
   display: none;
   float: left;
-  min-width: 160px;
+  min-width: 120px;
   padding: 4px 0;
   margin: 1px 0 0;
   list-style: none;

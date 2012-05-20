@@ -5,9 +5,9 @@ class ContactSchema(Schema):
 	allow_extra_fields = True
 	FirstName = validators.MinLength(4,strip=True, not_empty=True,messages=dict(empty='First Name is required!',tooShort='First name should be atleast 4 letters long!'))
 	LastName  = validators.MinLength(4,strip=True, not_empty=False,messages=dict(tooShort='Last name should be atleast 4 letters long!'))
-	Email     = validators.Email(strip=True,not_empty=True)
-	Phone     = validators.Number(strip=True,not_empty=False)
-	Mobile    = validators.Number(strip=True,not_empty=True)
+	Email     = validators.Email(strip=True,not_empty=True,messages=dict(empty='Enter a valid email address!'))
+	Phone     = validators.Number(strip=True,not_empty=False,messages=dict(invalid='Enter a valid phone number!'))
+	Mobile    = validators.Number(strip=True,not_empty=True,messages=dict(empty='Enter a valid mobile number!',invalid='Mobile number should contain only digits!'))
 	Address   = validators.NotEmpty(strip=True,not_empty=True,messages=dict(empty='Enter a valid address!'))
 	City      = validators.NotEmpty(strip=True,not_empty=True,messages=dict(empty='Enter a valid City!'))
 	Country   = validators.NotEmpty(strip=True,not_empty=True,messages=dict(empty='Enter a valid Country!'))

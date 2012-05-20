@@ -36,9 +36,9 @@ class CustomerService(object):
 		lstCustomers = query.offset(pageNo).limit(pageSize).all()
 		return lstCustomers
 	
-	def CheckCustomerExists(self,cid,mobile=None,email=None):
+	def CheckCustomerExists(self,cid,tenantId,mobile=None,email=None):
 		if mobile and email:
-			query = DBSession.query(Customer.Id)
+			query = DBSession.query(Customer.Id).filter(Customer.TenantId==tenantId)
 			if cid:
 				query = query.filter(Customer.Id!=cid)
 			query = query.filter(or_(Customer.Contacts.any(CustomerContactDetails.Mobile==mobile),\
@@ -51,7 +51,7 @@ class CustomerService(object):
 	def AddCustomer(self, entity):
 		if entity and entity.TenantId and entity.CreatedBy and len(entity.Contacts) > 0:
 			cnt = entity.Contacts[0]
-			if self.CheckCustomerExists(None,cnt.Mobile, cnt.Email):
+			if self.CheckCustomerExists(None,entity.TenantId,cnt.Mobile, cnt.Email):
 				raise Exception('Customer email or mobile already exists!')
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
@@ -63,7 +63,7 @@ class CustomerService(object):
 		if entity and entity.Id and entity.TenantId and entity.UpdatedBy and len(entity.Contacts)>0:
 			cnt = entity.Contacts[0]
 			entity.Contacts[0].CustomerId = entity.Id
-			if self.CheckCustomerExists(entity.Id, cnt.Mobile, cnt.Email):
+			if self.CheckCustomerExists(entity.Id, entity.TenantId, cnt.Mobile, cnt.Email):
 				raise Exception('Customer email or mobile already exists!')
 			entity.UpdatedOn = datetime.utcnow()
 			entity.Status = True

@@ -20,11 +20,11 @@
 				<th>Company</th>
 				<th>Address</th>
 				<th>First Name</th>
-				<th>Last Name</th>
+				<!--<th>Last Name</th>-->
 				<th>Email</th>
 				<th>Phone</th>
 				<th>Mobile</th>
-				<th>Address</th>
+				<!--<th>Address</th>-->
 				<th>City</th>
 				<th>Action</th>
 			</tr>
@@ -42,9 +42,9 @@
 					<td>
 						{{cnt.FirstName}}
 					</td>
-					<td>
+					<!--<td>
 						{{cnt.LastName | d('---',True)}}
-					</td>
+					</td>-->
 					<td>
 						{{cnt.Email | d('---',True)}}
 					</td>
@@ -54,9 +54,9 @@
 					<td>
 						{{cnt.Mobile | d('---',True)}}
 					</td>
-					<td>
+					<!--<td>
 						{{cnt.Address | d('---',True)}}
-					</td>
+					</td>-->
 					<td>
 						{{cnt.City | d('---',True)}}
 					</td>
@@ -91,7 +91,7 @@
 		</tbody>
 	</table>
 	{% else %}
-		<div class="info">
+		<div class="alert alert-info">
 			No records found!
 		</div>
 	{% endif %}

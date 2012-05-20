@@ -36,14 +36,13 @@ class SupplierService(object):
 		lstSuppliers = query.offset(pageNo).limit(pageSize).all()
 		return lstSuppliers
 	
-	def CheckSupplierExists(self,cid,mobile=None,email=None):
-		if mobile and email:
-			query = DBSession.query(Supplier.Id)
+	def CheckSupplierExists(self,cid,tenantId,name=None):
+		if name:
+			query = DBSession.query(Supplier.Id).filter(Supplier.TenantId==tenantId)
 			if cid:
-				query = query.filter(Supplier.Id!=cid)
-			query = query.filter(or_(Supplier.Contacts.any(SupplierContactDetails.Mobile==mobile),\
-					Supplier.Contacts.any(SupplierContactDetails.Email==email)))
-			valid = query.scalar()
+				query = query.filter(Supplier.Id != cid)
+			query = query.filter(Supplier.Name==name)
+			valid = query.count()
 			if valid:
 				return True
 		return False
@@ -51,8 +50,8 @@ class SupplierService(object):
 	def AddSupplier(self, entity):
 		if entity and entity.TenantId and entity.CreatedBy and len(entity.Contacts) > 0:
 			cnt = entity.Contacts[0]
-			if self.CheckSupplierExists(None,cnt.Mobile, cnt.Email):
-				raise Exception('Supplier email or mobile already exists!')
+			if self.CheckSupplierExists(None,entity.TenantId,entity.Name):
+				raise Exception('Supplier name already exists!')
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
 			DBSession.add(entity)
@@ -63,8 +62,8 @@ class SupplierService(object):
 		if entity and entity.Id and entity.TenantId and entity.UpdatedBy and len(entity.Contacts)>0:
 			cnt = entity.Contacts[0]
 			entity.Contacts[0].CustomerId = entity.Id
-			if self.CheckSupplierExists(entity.Id, cnt.Mobile, cnt.Email):
-				raise Exception('Supplier email or mobile already exists!')
+			if self.CheckSupplierExists(entity.Id,entity.TenantId,entity.Name):
+				raise Exception('Supplier name already exists!')
 			entity.UpdatedOn = datetime.utcnow()
 			entity.Status = True
 			DBSession.add(entity)
@@ -73,6 +72,7 @@ class SupplierService(object):
 		
 	def DeleteSupplier(self,id,tenantId):
 		if id and tenantId:
+			DBSession.query(SupplierContactDetails).filter(SupplierContactDetails.SupplierId==id).delete()
 			return DBSession.query(Supplier).filter(Supplier.Id==id,\
 					Supplier.TenantId==tenantId).delete()
 		return False

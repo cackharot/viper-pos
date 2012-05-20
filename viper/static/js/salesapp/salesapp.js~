@@ -67,8 +67,10 @@
 					that.addItemTpl(item)
 				});
 				that.updateTotal();
-				that.showUI();
-				if (callback) callback();
+				that.showUI(function(){
+					if (callback) 
+						callback();
+				});
 			});
 		},
 		addItemTpl: function (item) {
@@ -628,7 +630,7 @@
 
 					if (lineitems) {
 						for (var i = 0; i < lineitems.length; i++) {
-							var price = lineitems[i].SellPrice;
+							var price = Math.round(lineitems[i].SellPrice);
 							var quantity = lineitems[i].Quantity;
 							var item = new LineItem({
 								id: uuid(),
@@ -735,7 +737,7 @@
 				}
 			});
 
-			$('#btnPayOrder', $('#checkoutOrderModel')).focus()
+			$('#btnPayOrder', $('#checkoutOrderModel'))[0].focus()
 			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder);
 		},
 		payOrder: function () {
@@ -755,6 +757,7 @@
 						'customerid': customerid,
 						'customername': customername,
 						'ispaid': true,
+						'isloaded':true,
 					});
 
 					var payment = new OrderPayment({
