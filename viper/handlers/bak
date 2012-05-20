@@ -1,0 +1,94 @@
+valid = tenantForm.validate()
+			valid = adminUserForm.validate() and valid
+			valid = contactForm.validate() and valid
+			valid = userContactForm.validate() and valid
+			if valid:
+				tenantForm.bind(tenant)
+				adminUserForm.bind(tenant.AdminUser)
+				contactForm.bind(tenant.Contacts[0])
+				if len(tenant.AdminUser.Contacts) <= 0:
+					tenant.AdminUser.Contacts.append(UserContactDetails())
+				userContactForm.bind(tenant.AdminUser.Contacts[0])
+				
+				tenant.AdminUser.TenantId = tenant.Id
+				tenant.UpdatedBy = tenant.AdminUser.UpdatedBy = self.request.user.Id
+				tenant.UpdatedOn = tenant.AdminUser.UpdatedOn = datetime.utcnow()
+				
+				#tenantService.SaveTenant(tenant)
+				return HTTPFound(location='/tenant/index')
+if self.request.TryUpdateModel(tenant) \
+		and self.request.TryUpdateModel(tenant.AdminUser) \
+		and self.request.TryUpdateModel(tenant.Contacts[0],prefix='tenantcontact-') \
+		and self.request.TryUpdateModel(tenant.AdminUser.Contacts[0],prefix='usercontact-'):
+				
+				
+def __init__(self, request, schema=None, validators=None, defaults=None, 
+					 obj=None, extra=None, include=None, exclude=None, state=None, 
+					 method="POST", variable_decode=False,  dict_char=".", 
+					 list_char="-", multipart=False):
+
+		self.request = request
+		self.schema = schema
+		self.validators = validators or {}
+		self.method = method
+		self.variable_decode = variable_decode
+		self.dict_char = dict_char
+		self.list_char = list_char
+		self.multipart = multipart
+		self.state = state
+
+		self.is_validated = False
+
+		self.errors = {}
+		self.data = {}
+
+		if self.state is None:
+			self.state = self.default_state()
+
+		if not hasattr(self.state, '_'):
+			self.state._ = get_localizer(self.request).translate
+
+		if defaults:
+			self.data.update(defaults)
+
+		if obj:
+			fields = self.schema.fields.keys() + self.validators.keys() 
+			prefix = self.schema.prefix
+			#log.info('Schema Prefix: %s' % prefix)
+			#log.info(fields)
+			for f in fields:
+				k = f
+				if prefix:
+					k = f.replace(prefix,'')
+					#log.debug('replace key:'+k)
+				if hasattr(obj, k):
+				    self.data[f] = getattr(obj, k)
+			log.debug('Data Bound: %s' % str(self.data))				
+
+		
+	def bind(self,obj,include=None,exclude=None):
+		if not self.is_validated:
+			raise RuntimeError, \
+						"Form has not been validated. Call validate() first"
+
+		if self.errors:
+			raise RuntimeError, "Cannot bind to object if form has errors"
+
+		items = [(k, v) for k, v in self.data.items() if not k.startswith("_")]
+		for k, v in items:
+
+			if include and k not in include:
+				continue
+
+			if exclude and k in exclude:
+				continue
+			
+			prefix = self.prefix
+			log.info('Schema Prefix: %s' % prefix)
+			if prefix and prefix != '' and k.startswith(prefix):
+				log.debug('Prefixed Key: %s' % k)
+				k = k.replace(prefix,'')
+				log.debug('\tRelplaced Key: %s' % k)
+
+			setattr(obj, k, v)
+		return obj			

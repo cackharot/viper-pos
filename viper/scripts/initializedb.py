@@ -16,6 +16,7 @@ from ..models import (
     DBSession,
     Product,
     Customer,
+    Supplier,
     Order,
     LineItem,
     OrderPayment,
@@ -28,6 +29,7 @@ from ..library.helpers import EncryptPassword
     
 TestTenantId = uuid.UUID('4f362af5-8657-41bc-a8c6-0166c46a4431')
 TestUserId = uuid.UUID('895f05cf-7fd3-45a2-88d0-13fac7d567f1')
+DefaultCustomerId = uuid.UUID('1dba743b516242108265dc0c12513b6c')
 
 def usage(argv):
     cmd = os.path.basename(argv[0])
@@ -40,57 +42,84 @@ def getRand():
 
 def Fixtures():
 	with transaction.manager:
-		t = Tenant.Tenant()
-		t.Id = TestTenantId
-		t.Name = 'Company'
-		t.Description = 'Master Tenant'
-		t.Url = 'http://company.viperpos.in'
-		t.Website = 'http://viperpos.in'
-		t.CreatedBy = 'Admin'
-		t.CreatedOn = datetime.utcnow()
-		t.Status = True
+		t = DBSession.query(Tenant.Tenant).get(TestTenantId)
+		if not t:
+			t = Tenant.Tenant()
+			t.Id = TestTenantId
+			t.Name = u'Company'
+			t.Description = u'Master Tenant'
+			t.Url = u'http://company.viperpos.in'
+			t.Website = u'http://viperpos.in'
+			t.CreatedBy = u'Admin'
+			t.CreatedOn = datetime.utcnow()
+			t.Status = True
+						
+			u = User.User()
+			u.Id = TestUserId
+			u.TenantId = t.Id
+			u.UserName = u'admin'
+			u.Password = EncryptPassword('company')
+			u.CreatedBy = u'Admin'
+			u.CreatedOn = datetime.utcnow()
+			u.Status = True
+			
+			c = Tenant.TenantContactDetails()
+			c.TenantId = t.Id
+			c.FirstName= u'admin'
+			c.LastName = u'company'
+			c.Email    = u'admin@company.com'
+			c.Mobile   = u'987654321'
+			c.Address  = u'Address'
+			c.City     = u'Pondy'
+			c.Country  = u'India'
+			c.Zipcode  = '605003'
+					
+			t.AdminUser = u
+			t.Contacts.append(c)
+			
+			DBSession.add(t)
 		
-		DBSession.add(t)
-		DBSession.flush()
-				
-		u = User.User()
-		u.Id = TestUserId
-		u.TenantId = t.Id
-		u.UserName = 'admin'
-		u.Password = EncryptPassword('company')
-		u.FirstName= 'admin'
-		u.LastName = 'company'
-		u.Email    = 'admin@company.com'
-		u.Mobile   = '987654321'
-		u.Address  = 'Address'
-		u.City     = 'Pondy'
-		u.Country  = 'India'
-		u.Zipcode  = '605003'
-		u.CreatedBy = 'Admin'
-		u.CreatedOn = datetime.utcnow()
-		u.Status = True
+		r = DBSession.query(UserRoles.Role).get('GR$Product_Admin')
+		if not r:
+			r = UserRoles.Role()
+			r.TenantId = t.Id
+			r.Id   = u'GR$Product_Admin'
+			r.Name = u'Product Admin'
+			r.Description = u'Product administrator role.'
 		
-		DBSession.add(u)
-		DBSession.flush()
+			DBSession.add(r)
 		
-		t.AdminUserId = u.Id
-		t.BillingUserId = u.Id
+		ur = DBSession.query(UserRoles.UserRoles).filter(UserRoles.UserRoles.UserId==TestUserId).all()
+		if not ur or len(ur) <=0:
+			ur = UserRoles.UserRoles()
+			ur.UserId = u.Id
+			ur.RoleId = r.Id
 		
-		DBSession.flush()
-		
-		r = UserRoles.Role()
-		r.Id   = 'GR$Product_Admin'
-		r.Name = 'Product Admin'
-		r.Description = 'Product administrator role.'
-		
-		DBSession.add(r)
-		
-		ur = UserRoles.UserRoles()
-		ur.UserId = u.Id
-		ur.RoleId = r.Id
-		
-		DBSession.add(ur)
-		DBSession.flush()
+			DBSession.add(ur)
+
+		cus = DBSession.query(Customer.Customer).get(DefaultCustomerId)
+		if not cus:
+			cus = Customer.Customer()
+			cus.Id = DefaultCustomerId
+			cus.TenantId = TestTenantId
+			cus.CustomerNo = 1
+			cus.CreatedOn = datetime.utcnow()
+			cus.CreatedBy = u'admin'
+			cus.Status = True
+			
+			c = Customer.CustomerContactDetails()
+			c.CustomerId = DefaultCustomerId
+			c.FirstName= u'Default'
+			c.LastName = u'default'
+			c.Email    = u'default@company.com'
+			c.Mobile   = u'987654321'
+			c.Address  = u'Address'
+			c.City     = u'Pondy'
+			c.Country  = u'India'
+			c.Zipcode  = '605001'
+			
+			cus.Contacts.append(c)
+			DBSession.add(cus)
 		pass
 	pass
 

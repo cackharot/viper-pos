@@ -29,13 +29,13 @@ class Role(Base):
 class RolePrivileges(Base):
 	__tablename__ = "RolePrivileges"
 	Id            = id_column()
-	RoleId        = Column(String(20), nullable=False)
-	PrivilegeId   = Column(String(50), nullable=False)
+	RoleId        = Column(Unicode(20), nullable=False)
+	PrivilegeId   = Column(Unicode(50), nullable=False)
 	pass
 
 class UserRoles(Base):
 	__tablename__ = 'UserRoles'
 	Id      = id_column()
 	UserId  = Column(UUID(),ForeignKey('UserDetails.Id'), nullable=False)
-	RoleId   = Column(String(20),ForeignKey('Roles.Id'), nullable=False)
+	RoleId  = Column(Unicode(20),ForeignKey('Roles.Id'), nullable=False)
 	pass

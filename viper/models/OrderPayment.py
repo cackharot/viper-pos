@@ -13,19 +13,15 @@ from sqlalchemy import (
 from datetime import datetime 	
 from . import Base
 from ..library.vuid import id_column, UUID
+from .AuditMixin import AuditMixin
 
-class OrderPayment(Base):
+class OrderPayment(AuditMixin,Base):
 	__tablename__ = 'OrderPayments'
 	Id = id_column()
 	OrderId = Column(UUID(), nullable=False)
 	PaymentDate = Column(DateTime, nullable=True)
 	PaymentType = Column(Unicode(10),default=u'Cash')
-	PaidAmount = Column(Float,default=0.0)
-	CreatedBy = Column(String(50))
-	CreatedOn = Column(DateTime)
-	UpdatedBy = Column(String(50), nullable=True)
-	UpdatedOn = Column(DateTime, nullable=True)
-	Status = Column(Boolean, default=True)		
+	PaidAmount = Column(Float,default=0.0)		
 	
 	def __init__(self):
 		self.Id = self.OrderId = None

@@ -10,10 +10,12 @@
     <meta name="author" content="cackharot@gmail.com">
     <link rel="shortcut icon" href="{{request.static_url('viper:static/favicon.ico')}}" />
 
-	<link href="{{request.static_url('viper:static/css/normalize.css')}}" rel="stylesheet"/>
+<!--<link href="{{request.static_url('viper:static/css/normalize.css')}}" rel="stylesheet"/>-->
     <link href="{{request.static_url('viper:static/css/bootstrap.css')}}" rel="stylesheet">
-    <link href="{{request.static_url('viper:static/css/font-awesome.css')}}" rel="stylesheet">
+	<link href="{{request.static_url('viper:static/css/font-awesome.css')}}" rel="stylesheet">
+<!--<link href="{{request.static_url('viper:static/css/typekit.css')}}" rel="stylesheet">-->
     <link href="{{request.static_url('viper:static/css/bootstrap-responsive.css')}}" rel="stylesheet"/>
+    <link href="{{request.static_url('viper:static/css/jquery-ui.css')}}" rel="stylesheet"/>
     <link href="{{request.static_url('viper:static/css/jquery.dataTables.css')}}" rel="stylesheet">
     <link href="{{request.static_url('viper:static/css/style.css')}}" rel="stylesheet"/>
     <style>
@@ -59,7 +61,7 @@
 						<li></li>
 						<li><a href="/sales/listorders">Manage Orders</a></li>
 						<li class="divider"></li>
-						<li><a href="/tenant">Manage Tenants</a></li>
+						<li><a href="/tenant/index">Manage Tenants</a></li>
 						<li><a href="/user">Manage Users</a></li>
 						<li><a href="/roles">Manage Roles</a></li>
 						<li><a href="/entity">Manage Entities</a></li>
@@ -103,6 +105,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{request.static_url('viper:static/js/jquery.js')}}"></script>
+    <script src="{{request.static_url('viper:static/js/jquery-ui.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/jquery.dateFormat-1.0.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/bootstrap.min.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/jquery.dataTables.min.js')}}"></script>

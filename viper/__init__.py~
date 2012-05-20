@@ -8,7 +8,7 @@ from models import DBSession
 from library.security import get_user
 from library.security import SaaSAuthTktAuthenticationPolicy
 from library.security import UserAuthorizationPolicy
-from viper.views import customers,stock,sales
+from viper.views import sales
 
 def main(global_config, **settings):
     """ 
@@ -29,11 +29,11 @@ def main(global_config, **settings):
     config.include('pyramid_jinja2')
     
     # pyramid_formalchemy's configuration
-    config.include('pyramid_formalchemy')
-    config.include('fa.jquery')
-    config.include('viper.fainit')
+    #config.include('pyramid_formalchemy')
+    #config.include('fa.jquery')
+    #config.include('viper.fainit')
     
-    config.add_translation_dirs('viper:locale/')
+    #config.add_translation_dirs('viper:locale/')
     
     #from viper.handlers.auth import forbidden
     #config.add_forbidden_view(forbidden)
@@ -41,17 +41,19 @@ def main(global_config, **settings):
 
 	#config.add_subscriber("simpleauth.subscribers.create_url_generator",       "pyramid.events.ContextFound")
     config.include("pyramid_handlers")
-    #config.include("akhet")
     
     # simpleauth additions
     config.add_handler('login', '/login', 'viper.handlers.auth:Auth', action='login')
     config.add_handler('logout', '/logout', 'viper.handlers.auth:Auth', action='logout')
     
+    #tenant contoller
+    config.include('viper.handlers.tenant')
+    config.include('viper.handlers.stock')
+    config.include('viper.handlers.customer')
+    
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('index', '/')
     config.add_route('home', '/')
     config.include(sales.includeme)
-    config.include(stock.includeme)
-    config.include(customers.includeme)
     config.scan()
     return config.make_wsgi_app()    

@@ -5,9 +5,17 @@ from sqlalchemy.orm import (
     sessionmaker,
     )
     
-from . import Tenant
-
 from zope.sqlalchemy import ZopeTransactionExtension
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
+
+
+#from .Tenant import Tenant
+#from .User import User
+#from .Order import Order
+#from .LineItem import LineItem
+#from .Product import Product
+#from .Customer import Customer
+#from .OrderPayment import OrderPayment
+#from .UserRoles import UserRoles, Role, RolePrivileges

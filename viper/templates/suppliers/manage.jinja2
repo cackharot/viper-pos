@@ -1,0 +1,39 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-suplier">
+	 <div class="page-header">
+       <h1> {% if model.Id == None %}
+       			Add Supplier
+       		{% else %}
+       			Edit Supplier
+       		{% endif %}
+		 <small class="pull-right">
+		  	<a href="/suppliers" title="Back to Supplier listing!" class="btn btn-primary">
+		  		<i class="icon-arrow-left icon-white"></i> Back
+		  	</a>
+		 </small></h1>
+	</div> 	
+	<div class="row">
+		<div class="span12">&nbsp;</div>
+	</div>
+	<div class="span8">
+		{% if errors or renderer.errorlist() or cfr.errorlist() %} 
+		 	<div class="alert alert-error">
+		 		<strong>Please correct the errors and submit again:</strong>
+		 		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
+		 		{{renderer.errorlist(name=None,class='')}}
+		 		{{cfr.errorlist(name=None,class='')}}
+		 	</div>
+		 {% endif %}
+		<form action="{{'savesupplier'|route_url}}" method="post" class="form-horizontal">
+			{% import 'shared/contactform.jinja2' as contactForm with context %}
+			{{ contactForm.render(cfr) }}
+			<div class="form-actions">
+				<input type="hidden" name="sid" value="{{model.Id|d('',True)}}"/>
+				<input type="submit" class="btn btn-primary" value="Save"/>
+				<input type="reset" name="reset" class="btn" value="Reset"/>
+			</div>
+		 </form>
+     </div>
+</section>      
+{% endblock %}

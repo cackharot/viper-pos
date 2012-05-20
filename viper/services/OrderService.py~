@@ -14,6 +14,10 @@ from ..models.LineItem import LineItem
 from ..models.OrderPayment import OrderPayment
 from ..library.ViperLog import log
 
+from ..services.SecurityService import SecurityService
+from ..services.CustomerService import CustomerService
+
+customerService = CustomerService()
 DefaultCustomerId = uuid.UUID('1dba743b516242108265dc0c12513b6c')
 
 class OrderService(object):
@@ -30,9 +34,9 @@ class OrderService(object):
 			order = DBSession.query(Order).filter(Order.Id==orderid, Order.TenantId==tenantId, Order.Status==True).first()
 			if order:
 				if order.CustomerId:
-					cus = DBSession.query(Customer).get(order.CustomerId)
+					cus = customerService.GetCustomer(order.CustomerId,tenantId)
 					if cus:
-						order.CustomerName = cus.FirstName
+						order.CustomerName = cus.Contacts[0].FirstName
 				#fetch the line items here
 				order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
 				#fetch the payment details
@@ -53,7 +57,7 @@ class OrderService(object):
 		o.CustomerName = 'Default'
 		o.OrderNo = self.GenerateOrderNo() #generate unique order no
 		o.OrderDate = datetime.utcnow()
-		o.IpAddress = ''
+		o.IpAddress = None
 		o.CreatedBy = userId
 		o.CreatedOn = o.OrderDate = datetime.utcnow()
 		o.Status = True
@@ -69,11 +73,12 @@ class OrderService(object):
 				orderid = order["orderid"]
 				o = self.GetOrderById(orderid,tenantId)
 				if o:
-					o.TenantId = tenantId
+					#o.TenantId = tenantId
 					o.CustomerId = order["customerid"]
 					o.OrderAmount = order["orderamount"]
 					o.PaidAmount = order["paidamount"]
-					#o.IpAddress = ''
+					o.IpAddress = order['ipaddress']
+					o.ShipDate = o.OrderDate
 					o.UpdatedBy = userId
 					o.UpdatedOn = datetime.utcnow()
 					
@@ -115,6 +120,8 @@ class OrderService(object):
 		"""
 		if orderid and payments:
 			for x in payments:
+				if x["paidamount"] <= 0:
+					continue
 				item = OrderPayment()
 				item.OrderId = orderid
 				item.PaidAmount = x["paidamount"]

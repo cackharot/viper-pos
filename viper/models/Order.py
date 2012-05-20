@@ -14,8 +14,9 @@ from datetime import datetime
 from . import Base
 from ..library.vuid import id_column, UUID
 from ..library.helpers import jsonHandler
+from .AuditMixin import AuditMixin
 
-class Order(Base):
+class Order(AuditMixin,Base):
 	__tablename__ = 'Orders'
 	Id = id_column()
 	TenantId = Column(UUID(),ForeignKey('TenantDetails.Id'), nullable=False,index=True)
@@ -26,11 +27,6 @@ class Order(Base):
 	OrderDate = Column(DateTime)
 	ShipDate = Column(DateTime, nullable=True)
 	IpAddress = Column(String(30), nullable=True)
-	CreatedBy = Column(String(50))
-	CreatedOn = Column(DateTime)
-	UpdatedBy = Column(String(50), nullable=True)
-	UpdatedOn = Column(DateTime, nullable=True)
-	Status = Column(Boolean, default=True)		
 	
 	def __init__(self):
 		self.Id = self.TenantId = self.CustomerId = None
@@ -44,15 +40,7 @@ class Order(Base):
 		self.LineItems = None
 		self.Payments = None
 		pass
-		
-	def toJSON(self):
-		serialized = dict((column_name, getattr(self, column_name))
-                          for column_name in self.__table__.c.keys())
-		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 
-		else: serialized['CustomerName']=None
-		import json
-		return json.dumps(serialized,default=jsonHandler)
-
+	
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())
 		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 

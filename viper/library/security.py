@@ -34,7 +34,7 @@ def auth_tween_factory(handler, registry):
 			#log.debug('request url: %s' % request.url)#route_url('login',request))
 			tokens = request.url.split('/')
 			skip = False
-			for x in ['admin_customer','admin','login','static','_debug_toolbar']:
+			for x in ['admin','login','static','_debug_toolbar']:
 				if x in tokens:
 					skip = True
 					break

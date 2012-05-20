@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime 
 
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy import func
 
 from viper.models import (
     DBSession,
@@ -33,10 +34,10 @@ def productListPage(request):
 		pageSize = request.params.get('pageSize', 50)
 		searchValue = request.params.get('searchValue', None)
 		
-		query = DBSession.query(Product)
+		query = DBSession.query(Product).filter(Product.TenantId==request.user.TenantId,Product.Status==True)
 		
 		if searchValue is not None and searchValue != '':
-			query = query.filter_by(Name=searchValue)
+			query = query.filter(func.like(Product.Name=='%%%s%%' % searchValue))
 		
 		lstItems = query.offset(pageNo).limit(pageSize).all()
 	except DBAPIError:
@@ -68,6 +69,7 @@ def saveProduct(request):
 		
 	p.TenantId = request.user.TenantId
 	p.CreatedBy = request.user.Id
+	p.UpdatedBy = request.user.Id
 	p.Barcode = request.params.get('Barcode', None)
 	p.Name = request.params.get('Name', None)
 	p.MRP = request.params.get('MRP', 0.0)

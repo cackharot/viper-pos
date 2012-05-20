@@ -59,8 +59,7 @@ def getTodayOrders(request):
 
 	if model:
 		items = [x.toDict() for x in model]
-		result = json.dumps(items,default=jsonHandler)
-		return result
+		return items
 	return None
 	
 @view_config(route_name='getorder', renderer="json", accept="application/json")
@@ -75,20 +74,21 @@ def getOrder(request):
 				lineItems = [x.toDict() for x in model.LineItems]
 			if model.Payments and len(model.Payments) > 0:
 				payments = [x.toDict() for x in model.Payments]
-			result = json.dumps({"order":model.toDict(),"lineitems":lineItems,"payments":payments},default=jsonHandler)
+			result = {"order":model.toDict(),"lineitems":lineItems,"payments":payments}
 			return result
 	return None
 	    
 @view_config(route_name='neworder', renderer="json", accept="application/json")
 def newOrder(request):
 	model = orderServiceProxy.NewOrder(request.user.TenantId,request.user.Id)
-	return model.toJSON()
+	return model.toDict()
 	
 @view_config(route_name='saveorder', renderer="json")
 def saveOrder(request):
 	order = json.loads(request.body)
 	#log.info(order)
 	if order:
+		order['ipaddress'] = request.remote_addr
 		orderServiceProxy.SaveOrder(order,request.user.TenantId,request.user.Id)
 		return {'status':'success','message':'Order Saved Successfully!'}
 	return {'status':'error','message':'Invalid data!'}

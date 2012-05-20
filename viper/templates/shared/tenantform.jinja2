@@ -1,0 +1,42 @@
+{% macro render(renderer) -%}
+<fieldset>
+	<table class="table table-condensed">
+		<tbody>
+			<tr>
+				<td><div class="control-group {{ 'error' if renderer.is_error('Name') }}">
+					{{renderer.label('Name','Tenant Name',class='control-label')}}
+					<div class="controls">
+						{% set dis='' %}
+						{% set dis='disabled' if model.Id %}
+						{{renderer.text('Name',size=20,class='input-xlarge',autofocus=true,disabled=dis)}}
+					</div>
+				</div></td>
+				<td><div class="control-group {{ 'error' if renderer.is_error('Description') }}">
+					{{renderer.label('Description',None,class='control-label')}}
+					<div class="controls">
+						{{renderer.textarea('Description',class='input-xlarge')}}
+					</div>
+				</div></td>
+			</tr>
+			<tr>
+				<td><div class="control-group {{ 'error' if renderer.is_error('Website') }}">
+					{{renderer.label('Website',None,class='control-label')}}
+					<div class="controls">
+						{{renderer.text('Website',size=255,class='input-xlarge')}}
+					</div>
+				</div></td>
+				<td><div class="control-group {{ 'error' if renderer.is_error('Url') }}">
+					{{renderer.label('Url','URL',class='control-label')}}
+					<div class="controls">
+						{{renderer.text('Url',size=255,class='input-xlarge')}}
+					</div>
+				</div></td>
+			</tr>
+		</tbody>
+	</table>
+	<input type="hidden" name="tenantId" value="{{model.Id|d('',True)}}"/>
+	{% if caller %}
+		caller()
+	{% endif%}
+</fieldset>
+{%- endmacro %}

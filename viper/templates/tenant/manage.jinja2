@@ -1,0 +1,65 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-tenant">
+	 <div class="page-header">
+       <h1> {% if model.Id == None %}
+       			Add Tenant
+       		{% else %}
+       			Edit Tenant
+       		{% endif %}
+		 <small class="pull-right">
+		  	<a href="/tenant/index" title="Back to Tenant listing!" class="btn btn-primary">
+		  		<i class="icon-arrow-left icon-white"></i> Back
+		  	</a>
+		 </small></h1>
+     </div> 	
+     <div class="row">
+     	<div class="span12">&nbsp;</div>
+     </div>
+     <div class="span8">
+     {% if errors or tfr.errorlist() or ufr.errorlist() or cfr.errorlist() or ucfr.errorlist() %} 
+     	<div class="alert alert-error">
+     		{{ '<strong>Please Correct the errors and submit again:</strong>'|safe if errors }}
+     		{{ ('<ul><li>'+ errors.message + '</li></ul>') | safe if errors }}
+     		{{ '<strong>Tenant Details Error:</strong>'| safe if tfr.errorlist() }}
+     		{{tfr.errorlist(name=None,class='')}}
+     		{{ '<strong>Tenant Contact Details Error:</strong>'| safe if cfr.errorlist() }}
+     		{{cfr.errorlist(name=None,class='')}}
+     		{{ '<strong>Tenant Admin User Details Error:</strong>'| safe  if ufr.errorlist() }}
+     		{{ufr.errorlist(name=None,class='')}}
+     		{{ '<strong>Tenant Admin Contact Details Error:</strong>'| safe if ucfr.errorlist() }}
+     		{{ucfr.errorlist(name=None,class='')}}
+     	</div>
+     {% endif %}
+     <form action="manage" method="post" class="form-horizontal">
+		{% import 'shared/tenantform.jinja2' as tenantForm with context %}
+		{% import 'shared/userform.jinja2' as userForm with context %}
+		{% import 'shared/contactform.jinja2' as contactForm with context %}
+		<table class="">
+			<tbody>
+				<tr><td><h3>Tenant Details</h3></td></tr>
+				<tr>
+					<td>{{ tenantForm.render(tfr) }}</td>
+				</tr>
+				<tr><td><h3>Tenant Contact Details</h3></td></tr>
+				<tr>
+					<td>{{ contactForm.render(cfr) }}</td>
+				</tr>
+				<tr><td><h3>Tenant Admin User Details</h3></td></tr>
+				<tr>
+					<td>{{ userForm.render(ufr) }}</td>
+				</tr>
+				<tr><td><h3>Admin User Contact Details</h3></td></tr>
+				<tr>
+					<td>{{ contactForm.render(ucfr) }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="form-actions">
+			<input type="submit" class="btn btn-primary" value="Save"/>
+			<input type="reset" class="btn" value="Reset"/>
+		</div>
+     </form>
+     </div>
+</section>      
+{% endblock %}

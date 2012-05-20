@@ -38,8 +38,8 @@ class Auth(object):
 	@view_config(renderer='templates/login/login.jinja2',context='pyramid.exceptions.Forbidden')
 	@action(renderer='templates/login/login.jinja2')
 	def login(self):
-		log.info('login called')
-		log.info(self.request.params)
+		#log.info('login called')
+		#log.info(self.request.params)
 		if 'submitlogin' in self.request.params:
 			companycode = self.request.params['companycode']
 			username = self.request.params['username']

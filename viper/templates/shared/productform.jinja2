@@ -1,0 +1,72 @@
+{% macro render(renderer) -%}
+<fieldset>
+	<div class="control-group {{ 'error' if renderer.is_error('Barcode') }}">
+		{{renderer.label('Barcode',None,class='control-label')}}
+		<div class="controls">
+			<div class="input-prepend">
+				<span class="add-on">
+					<i class="icon-barcode"></i>
+				</span>{{renderer.text('Barcode',size=50,class='input',style='width:242px',autofocus=True)}}
+			</div>
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('Name') }}">
+		{{renderer.label('Name',None,class='control-label')}}
+		<div class="controls">
+			{{renderer.text('Name',size=50,class='input-xlarge')}}
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('CategoryId') }}">
+		<label class="control-label" for="CategoryId">Category</label>
+		<div class="controls">
+			<input name="CategoryId" id="CategoryId" class="input-xlarge" type="text" value="{{model.CategoryId}}">
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('TaxCategoryId') }}">
+		<label class="control-label" for="TaxCategoryId">Tax Category</label>
+		<div class="controls">
+			<input name="TaxCategoryId" id="TaxCategoryId" class="input-xlarge" type="text" value="{{model.TaxCategoryId}}">
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('MRP') }}">
+		{{renderer.label('MRP','MRP',class='control-label')}}
+		<div class="controls">
+			{{renderer.text('MRP',size=6,class='input-xlarge')}}
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('Discount') }}">
+		{{renderer.label('Discount',None,class='control-label')}}
+		<div class="controls">
+			{{renderer.text('Discount',size=6,class='input-xlarge')}}
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('BuyPrice') }}">
+		{{renderer.label('BuyPrice','Buy Price',class='control-label')}}
+		<div class="controls">
+			{{renderer.text('BuyPrice',size=6,class='input-xlarge')}}
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('SellPrice') }}">
+		{{renderer.label('SellPrice','Sell Price',class='control-label')}}
+		<div class="controls">
+			{{renderer.text('SellPrice',size=6,class='input-xlarge')}}
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('MfgDate') }}">
+		{{renderer.label('MfgDate','Mfg. Date',class='control-label')}}
+		<div class="controls">
+			{{renderer.text('MfgDate',class='input-xlarge datetime')}}
+		</div>
+	</div>
+	<div class="control-group {{ 'error' if renderer.is_error('ExpiryDate') }}">
+		{{renderer.label('ExpiryDate','Expiry Date',class='control-label')}}
+		<div class="controls">
+			{{renderer.text('ExpiryDate',class='input-xlarge datetime')}}
+		</div>
+	</div>
+</fieldset>
+	{% if caller %}
+		caller()
+	{% endif%}
+</fieldset>
+{%- endmacro %}

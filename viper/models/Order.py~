@@ -6,6 +6,7 @@ from sqlalchemy import (
 	Integer, 
 	Float, 
 	String, 
+	Unicode,
 	MetaData, 
 	ForeignKey,
 	)
@@ -13,8 +14,9 @@ from datetime import datetime
 from . import Base
 from ..library.vuid import id_column, UUID
 from ..library.helpers import jsonHandler
+from .AuditMixin import AuditMixin
 
-class Order(Base):
+class Order(AuditMixin,Base):
 	__tablename__ = 'Orders'
 	Id = id_column()
 	TenantId = Column(UUID(),ForeignKey('TenantDetails.Id'), nullable=False,index=True)
@@ -25,11 +27,6 @@ class Order(Base):
 	OrderDate = Column(DateTime)
 	ShipDate = Column(DateTime, nullable=True)
 	IpAddress = Column(String(30), nullable=True)
-	CreatedBy = Column(String(50))
-	CreatedOn = Column(DateTime)
-	UpdatedBy = Column(String(50), nullable=True)
-	UpdatedOn = Column(DateTime, nullable=True)
-	Status = Column(Boolean, default=True)		
 	
 	def __init__(self):
 		self.Id = self.TenantId = self.CustomerId = None

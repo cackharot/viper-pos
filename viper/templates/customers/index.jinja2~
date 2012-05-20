@@ -65,7 +65,7 @@
 									<a href="{{'editcustomer' | route_url(cid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
 								</li>
 								<li>
-									<a href="{{'deletecustomer' | route_url(cid=item.Id)}}"><i class="icon-remove"></i> Delete</a>
+									<a href="{{'deletecustomer' | route_url(cid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
 								</li>
 								<li class="divider"></li>
 								<li>

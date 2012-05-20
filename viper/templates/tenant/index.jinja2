@@ -1,0 +1,78 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-tenants">
+	<div class="page-header">
+		<h1>Tenant List
+			 <small class="pull-right">
+			  	<a href="/tenant/manage" title="Add New Tenant!" class="btn btn-primary">
+			  		<i class="icon-plus icon-white"></i> Add Tenant
+			  	</a>
+			 </small>
+		 </h1>
+	</div> 	
+	<div class="row-fluid">
+		<div class="span12">&nbsp;</div>
+	</div>
+    {% if model != None and (model | count) > 0 %} 
+	<table id="customerTable" class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>Tenant Name</th>
+				<th>Website</th>
+				<th>URL</th>
+				<th>Description</th>
+				<th>Admin Name</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in model %}
+				<tr>
+					<td>
+						{{item.Name}}
+					</td>
+					<td>
+						{{item.Website}}
+					</td>
+					<td>
+						{{item.Url}}
+					</td>
+					<td>
+						{{item.Description | d('---',True)}}
+					</td>
+					<td>
+						{{item.AdminUser.UserName if item.AdminUser}}
+					</td>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								Action <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="/tenant/manage?tenantId={{item.Id}}"><i class="icon-pencil"></i> Edit</a>
+								</li>
+								<li>
+									<a href="/tenant/delete?tenantId={{item.Id}}"><i class="icon-trash"></i> Delete</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+		<div class="info">
+			No records found!
+		</div>
+	{% endif %}
+</section>      
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		//$('#prdTable').dataTable();
+	});
+</script>
+{% endblock %}

@@ -4,9 +4,9 @@
 	<div class="page-header">
 		<h1>Manage Products
 			 <small class="pull-right">
-			  	<button href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
+			  	<a href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
 			  		<i class="icon-plus icon-white"></i> Add Item
-			  	</button>
+			  	</a>
 			 </small>
 		 </h1>
 	</div> 	
@@ -23,6 +23,7 @@
 				<th>BuyPrice</th>
 				<th>SellPrice</th>
 				<th>Discount</th>
+				<th>Created On</th>
 				<th>Action</th>
 				<!--<th><i class="icon-pencil"></i> Edit</th>
 				<th><i class="icon-list-alt"></i> Audits</th>
@@ -49,6 +50,9 @@
 					</td>
 					<td>
 						{{item.Discount}}
+					</td>
+					<td>
+						{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}
 					</td>
 					<td>
 						<div class="btn-group">
@@ -79,8 +83,8 @@
 		</tbody>
 	</table>
 	{% else %}
-		<div class="info">
-			No records found!
+		<div class="alert alert-info">
+			No products found!
 		</div>
 	{% endif %}
 </section>      

@@ -1,0 +1,31 @@
+{% macro render(renderer) -%}
+<fieldset>
+	<table class="table">
+		<tbody>
+			<tr>
+				<td>
+					<div class="control-group {{ 'error' if renderer.is_error('UserName') }}">
+						{{renderer.label('UserName','User Name',class='control-label')}}
+						<div class="controls">
+							{{renderer.text('UserName',size=20,class='input-xlarge')}}
+						</div>
+					</div>
+				</td>
+				<td>
+					{% if not model.Id %}
+					<!--
+					{{renderer.label('Password',None,class='control-label')}}
+					<div class="controls">
+						{{renderer.password('Password',class='input-xlarge')}}
+					</div>
+					-->
+					{% endif %}
+				</td>
+			</tr>
+		</tbody>
+	<table>
+	{% if caller %}
+		caller()
+	{% endif%}
+</fieldset>
+{%- endmacro %}

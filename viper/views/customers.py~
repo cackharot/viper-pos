@@ -85,8 +85,6 @@ def saveCustomer(request):
 	else:
 		c = DBSession.query(Customer).get(cid)
 	
-	if c.SSN == None or c.SSN <= 0:
-		c.SSN = int(DBSession.execute('SELECT MAX(SSN) FROM Customers').scalar()) + 1	
 	c.TenantId = request.user.TenantId
 	c.CreatedBy = request.user.Id
 	c.UpdatedBy = request.user.Id

@@ -30,7 +30,7 @@ class OrderPayment(Base):
 	def __init__(self):
 		self.Id = self.OrderId = None
 		self.PaidAmount = 0.0
-		self.PaymentType = 'Cash'
+		self.PaymentType = u'Cash'
 		d = datetime.utcnow()
 		self.PaymentDate = d
 		self.CreatedOn = d
