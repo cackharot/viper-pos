@@ -17,16 +17,25 @@
 		<div class="span12">&nbsp;</div>
 	</div>
 	<div class="span8">
-		{% if errors or renderer.errorlist() %} 
+		{% if errors or renderer.errorlist() or cfr.errorlist() %} 
 		 	<div class="alert alert-error">
 		 		<strong>Please correct the errors and submit again:</strong>
 		 		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
 		 		{{renderer.errorlist(name=None,class='')}}
+		 		{{cfr.errorlist(name=None,class='')}}
 		 	</div>
 		 {% endif %}
 		<form action="{{'savecustomer'|route_url}}" method="post" class="form-horizontal">
 			{% import 'shared/contactform.jinja2' as contactForm with context %}
-			{{ contactForm.render(renderer) }}
+			<h3>Customer Details</h3>
+			<div class="control-group {{ 'error' if renderer.is_error('CustomerNo') }}">
+				{{renderer.label('CustomerNo','Customer Number',class='control-label')}}
+				<div class="controls">
+					{{renderer.text('CustomerNo',size=20,class='input-xlarge')}}
+				</div>
+			</div>
+			<h3>Customer Contact Details</h3>
+			{{ contactForm.render(cfr) }}
 			<div class="form-actions">
 				<input type="hidden" name="cid" value="{{model.Id|d('',True)}}"/>
 				<input type="submit" class="btn btn-primary" value="Save"/>

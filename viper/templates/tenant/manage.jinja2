@@ -35,26 +35,14 @@
 		{% import 'shared/tenantform.jinja2' as tenantForm with context %}
 		{% import 'shared/userform.jinja2' as userForm with context %}
 		{% import 'shared/contactform.jinja2' as contactForm with context %}
-		<table class="">
-			<tbody>
-				<tr><td><h3>Tenant Details</h3></td></tr>
-				<tr>
-					<td>{{ tenantForm.render(tfr) }}</td>
-				</tr>
-				<tr><td><h3>Tenant Contact Details</h3></td></tr>
-				<tr>
-					<td>{{ contactForm.render(cfr) }}</td>
-				</tr>
-				<tr><td><h3>Tenant Admin User Details</h3></td></tr>
-				<tr>
-					<td>{{ userForm.render(ufr) }}</td>
-				</tr>
-				<tr><td><h3>Admin User Contact Details</h3></td></tr>
-				<tr>
-					<td>{{ contactForm.render(ucfr) }}</td>
-				</tr>
-			</tbody>
-		</table>
+		<h3>Tenant Details</h3>
+		{{ tenantForm.render(tfr) }}
+		<h3>Tenant Contact Details</h3>
+		{{ contactForm.render(cfr) }}
+		<h3> Admin User Details</h3>
+		{{ userForm.render(ufr) }}
+		<h3>Admin User Contact Details</h3>
+		{{ contactForm.render(ucfr) }}
 		<div class="form-actions">
 			<input type="submit" class="btn btn-primary" value="Save"/>
 			<input type="reset" class="btn" value="Reset"/>

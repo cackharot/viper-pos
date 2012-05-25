@@ -1,14 +1,14 @@
 {% extends "templates/layout.jinja2" %}
 {% block content %}
-<section id="manage-customers">
+<section id="manage-users">
 	 <div class="page-header">
        <h1> {% if model.Id == None %}
-       			Add Customer
+       			Add User
        		{% else %}
-       			Edit Customer
+       			Edit User
        		{% endif %}
 		 <small class="pull-right">
-		  	<a href="/customers" title="Back to Customer listing!" class="btn btn-primary">
+		  	<a href="/users" title="Back to Users listing!" class="btn btn-primary">
 		  		<i class="icon-arrow-left icon-white"></i> Back
 		  	</a>
 		 </small></h1>
@@ -25,19 +25,15 @@
 		 		{{cfr.errorlist(name=None,class='')}}
 		 	</div>
 		 {% endif %}
-		<form action="{{'savecustomer'|route_url}}" method="post" class="form-horizontal">
+		<form action="{{'saveuser'|route_url}}" method="post" class="form-horizontal">
 			{% import 'shared/contactform.jinja2' as contactForm with context %}
-			<h3>Customer Details</h3>
-			<div class="control-group {{ 'error' if renderer.is_error('CustomerNo') }}">
-				{{renderer.label('CustomerNo','Customer Number',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('CustomerNo',size=20,class='input-xlarge')}}
-				</div>
-			</div>
+			{% import 'shared/userform.jinja2' as userForm with context %}
+			<h3>User Details</h3>
+			{{ userForm.render(renderer) }}
 			<h3>Contact Details</h3>
 			{{ contactForm.render(cfr) }}
 			<div class="form-actions">
-				<input type="hidden" name="cid" value="{{model.Id|d('',True)}}"/>
+				<input type="hidden" name="uid" value="{{model.Id|d('',True)}}"/>
 				<input type="submit" class="btn btn-primary" value="Save"/>
 				<input type="reset" name="reset" class="btn" value="Reset"/>
 			</div>

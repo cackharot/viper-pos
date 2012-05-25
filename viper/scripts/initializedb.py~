@@ -16,6 +16,7 @@ from ..models import (
     DBSession,
     Product,
     Customer,
+    Supplier,
     Order,
     LineItem,
     OrderPayment,

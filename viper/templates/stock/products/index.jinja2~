@@ -2,7 +2,7 @@
 {% block content %}
 <section id="manage-products">
 	<div class="page-header">
-		<h1>Manage Products
+		<h1>Product Management
 			 <small class="pull-right">
 			  	<a href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
 			  		<i class="icon-plus icon-white"></i> Add Item
@@ -52,7 +52,7 @@
 						{{item.Discount}}
 					</td>
 					<td>
-						{{item.CreatedOn | datetimeformat('%d/%m/%Y')}}
+						{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}
 					</td>
 					<td>
 						<div class="btn-group">

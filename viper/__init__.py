@@ -48,6 +48,7 @@ def main(global_config, **settings):
     
     #tenant contoller
     config.include('viper.handlers.tenant')
+    config.include('viper.handlers.user')
     config.include('viper.handlers.stock')
     config.include('viper.handlers.customer')
     config.include('viper.handlers.supplier')

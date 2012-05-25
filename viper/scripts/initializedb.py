@@ -63,6 +63,17 @@ def Fixtures():
 			u.CreatedOn = datetime.utcnow()
 			u.Status = True
 			
+			uc = User.UserContactDetails()
+			u.UserId = TestUserId
+			u.FirstName = u'admin'
+			u.LastName = u'Company'
+			u.Mobile = '12323453'
+			u.Phone ='123435'
+			u.Address = 'Address'
+			u.City = 'City'
+			u.Country = 'Country'
+			u.Zipcode ='1233455'
+			
 			c = Tenant.TenantContactDetails()
 			c.TenantId = t.Id
 			c.FirstName= u'admin'

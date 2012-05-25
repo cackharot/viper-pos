@@ -2,7 +2,7 @@
 {% block content %}
 <section id="manage-customers">
 	<div class="page-header">
-		<h1>Manage Customers
+		<h1>Customer Management
 			 <small class="pull-right">
 			  	<a href="{{'addcustomer'|route_url}}" title="Add new customer!" class="btn btn-primary">
 			  		<i class="icon-plus icon-white"></i> Add Customer
@@ -30,30 +30,31 @@
 		</thead>
 		<tbody>
 			{% for item in model %}
+				{% set cnt = item.Contacts[0] %}
 				<tr>
 					<!--<td>
 						{{item.SSN}}
 					</td>-->
 					<td>
-						{{item.FirstName}}
+						{{cnt.FirstName}}
 					</td>
 					<td>
-						{{item.LastName | d('---',True)}}
+						{{cnt.LastName | d('---',True)}}
 					</td>
 					<td>
-						{{item.Email | d('---',True)}}
+						{{cnt.Email | d('---',True)}}
 					</td>
 					<td>
-						{{item.Phone | d('---',True)}}
+						{{cnt.Phone | d('---',True)}}
 					</td>
 					<td>
-						{{item.Mobile | d('---',True)}}
+						{{cnt.Mobile | d('---',True)}}
 					</td>
 					<td>
-						{{item.Address | d('---',True)}}
+						{{cnt.Address | d('---',True)}}
 					</td>
 					<td>
-						{{item.City | d('---',True)}}
+						{{cnt.City | d('---',True)}}
 					</td>
 					<td>
 						<div class="btn-group">
