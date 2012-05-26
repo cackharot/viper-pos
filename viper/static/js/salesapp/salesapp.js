@@ -416,6 +416,7 @@
 						item.Quantity = 1;
 						that.addItemToUI(item, that);
 					}
+					$('input[name=itemName]')[0].select(0, $('input[name=itemName]').val().length);
 				},
 				formatter: function (displayValue, item) {
 					return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.MRP.toFixed(2) + '</span></div>';
@@ -505,15 +506,19 @@
 								data[0].Quantity = quantity;
 								that.addItemToUI(data[0], that);
 								$('input[name=itemName]').val(data[0].Name)
+								$txtBarcode[0].select(0, $txtBarcode.val().length);
 							}
 						} else {
 							showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
+							$txtBarcode[0].select(0, $txtBarcode.val().length);
 						}
 					});
+				}else{
+					$txtBarcode[0].select(0, $txtBarcode.val().length);
 				}
 			} else {
 				showMsg('warn', '<strong>Enter a valid barcode!</strong>');
-				$txtBarcode[0].focus()
+				$txtBarcode[0].select(0, $txtBarcode.val().length);
 			}
 		},
 		addItemToUI: function (data, that) {
@@ -793,7 +798,7 @@
 			this.showPrintableOrder()
 		},
 		showPrintableOrder: function (callback) {
-			if (!this.model) {
+			if (!this.model || this.model.get('lineItems').length <= 0) {
 				showMsg('info', 'No active order! Cannot print!')
 				return;
 			}
@@ -829,6 +834,10 @@
 		if(orderid) vent.trigger('editOrder',orderid)
 		//e.preventDefault()
 	});*/
+	
+	function hideMsg() {
+		$('#statusMessage').fadeOut();
+	}
 
 	function showMsg(type, message, timeout) {
 		var ediv = '<div class="alert ';
