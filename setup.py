@@ -7,10 +7,16 @@ README = open(os.path.join(here, 'README.txt')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
+    'setuptools',
     'pyramid',
     'SQLAlchemy',
     'transaction',
     'pyramid_tm',
+    'pyramid_handlers',
+    'formencode',
+    'pyramid_jinja2',
+    'mysql-python',
+    'pyramid_simpleform',
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
     'waitress',
