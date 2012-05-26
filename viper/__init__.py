@@ -1,14 +1,11 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
-#from pyramid.authentication import AuthTktAuthenticationPolicy
-#from pyramid.authorization import ACLAuthorizationPolicy
-
-from models import DBSession
 from library.security import get_user
 from library.security import SaaSAuthTktAuthenticationPolicy
 from library.security import UserAuthorizationPolicy
 from viper.views import sales
+from viper.models import DBSession
 
 def main(global_config, **settings):
     """ 
@@ -27,11 +24,7 @@ def main(global_config, **settings):
     
     config.set_request_property(get_user, 'user', reify=True)
     config.include('pyramid_jinja2')
-    
-    # pyramid_formalchemy's configuration
-    #config.include('pyramid_formalchemy')
-    #config.include('fa.jquery')
-    #config.include('viper.fainit')
+    config.include("pyramid_handlers")
     
     #config.add_translation_dirs('viper:locale/')
     
@@ -40,7 +33,7 @@ def main(global_config, **settings):
     config.add_tween('viper.library.security.auth_tween_factory')
 
 	#config.add_subscriber("simpleauth.subscribers.create_url_generator",       "pyramid.events.ContextFound")
-    config.include("pyramid_handlers")
+    
     
     # simpleauth additions
     config.add_handler('login', '/login', 'viper.handlers.auth:Auth', action='login')
@@ -58,4 +51,5 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.include(sales.includeme)
     config.scan()
-    return config.make_wsgi_app()    
+    return config.make_wsgi_app()
+
