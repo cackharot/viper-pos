@@ -1,4 +1,5 @@
 from pyramid.config import Configurator
+from pyramid.renderers import JSON
 from sqlalchemy import engine_from_config
 
 from library.security import get_user
@@ -6,6 +7,25 @@ from library.security import SaaSAuthTktAuthenticationPolicy
 from library.security import UserAuthorizationPolicy
 from viper.views import sales
 from viper.models import DBSession
+import uuid
+import datetime
+
+json_renderer = JSON()
+def datetime_adapter(obj, request):
+    if hasattr(obj, 'isoformat'):
+        return obj.isoformat()
+    elif isinstance(obj, datetime):
+        return obj.isoformat()
+    return str(obj)
+json_renderer.add_adapter(datetime.datetime, datetime_adapter)
+
+def uuid_adapter(obj,request):
+    if isinstance(obj,uuid.UUID):
+    	return str(obj)
+    else:
+        #raise TypeError, 'Object of type %s with value of %s is not JSON serializable' % (type(obj), repr(obj))
+        return None
+json_renderer.add_adapter(uuid.UUID, uuid_adapter)
 
 def main(global_config, **settings):
     """ 
@@ -25,6 +45,8 @@ def main(global_config, **settings):
     config.set_request_property(get_user, 'user', reify=True)
     config.include('pyramid_jinja2')
     config.include("pyramid_handlers")
+    
+    config.add_renderer('json', json_renderer)
     
     #config.add_translation_dirs('viper:locale/')
     
