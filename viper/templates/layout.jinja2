@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
-    <title>Viper POS From Viper Suits Inc</title>
+    <title>Viper POS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A Versatile Point of Sales System Software. Delivering simplicity, trust, relaiablity...">
@@ -74,13 +74,6 @@
 				  </li>
 				  {% endif %}
 				</ul>
-				<!--
-				<ul class="nav pull-right">
-				  	<li><a href="#" class="increaseFont" style="font-size:14px;">A+</a></li>
-				  	<li><a href="#" class="resetFont">A</a></li>
-				  	<li><a href="#" class="decreaseFont" style="font-size:10px;">A-</a></li>
-			  	</ul>
-			  	-->
 			  </div><!--/.nav-collapse -->
 			</div>
 		</div>
@@ -116,28 +109,7 @@
     <script src="{{request.static_url('viper:static/js/templateLoader.js')}}"></script>
     <script>
     	$(function(){
-    		$('.dropdown-toggle').dropdown();    	
-			// Reset Font Size
-			var originalFontSize = $('html').css('font-size');
-				$(".resetFont").click(function(){
-				$('html').css('font-size', originalFontSize);
-			});
-			// Increase Font Size
-			$(".increaseFont").click(function(){
-				var currentFontSize = $('html').css('font-size');
-				var currentFontSizeNum = parseFloat(currentFontSize, 10);
-				var newFontSize = currentFontSizeNum*1.2;
-				$('html').css('font-size', newFontSize);
-				return false;
-			});
-			// Decrease Font Size
-			$(".decreaseFont").click(function(){
-				var currentFontSize = $('html').css('font-size');
-				var currentFontSizeNum = parseFloat(currentFontSize, 10);
-				var newFontSize = currentFontSizeNum*0.8;
-				$('html').css('font-size', newFontSize);
-				return false;
-			});
+    		$('.dropdown-toggle').dropdown(); 
     	});
     </script>
     {% block footerscript %}{% endblock %}

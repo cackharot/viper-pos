@@ -13,22 +13,22 @@
      	<div class="span12">&nbsp;</div>
      </div>
      <div class="span8">
-     {% if errors or renderer.errorlist() -%} 
-     	<div class="alert alert-error">
-     		<strong>Please correct the errors and submit again:</strong>
-     		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
-     		{{renderer.errorlist(name=None,class='')}}
-     	</div>
-     {%- endif %}
-     <form action="{{'saveproduct'|route_url}}" method="post" class="form-horizontal">
-		{% import 'shared/productform.jinja2' as productForm with context %}
-		{{ productForm.render(renderer) }}
-		<div class="form-actions">
-			<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>
-			<input type="submit" class="btn btn-primary" value="Save"/>
-			<input type="reset" name="reset" class="btn" value="Reset"/>
-		</div>
-     </form>
+		 {% if errors or renderer.errorlist() -%} 
+		 	<div class="alert alert-error">
+		 		<strong>Please correct the errors and submit again:</strong>
+		 		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
+		 		{{renderer.errorlist(name=None,class='')}}
+		 	</div>
+		 {%- endif %}
+		 <form action="{{'saveproduct'|route_url}}" method="post" class="form-horizontal">
+			{% import 'shared/productform.jinja2' as productForm with context %}
+			{{ productForm.render(renderer) }}
+			<div class="form-actions">
+				<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>
+				<input type="submit" class="btn btn-primary" value="Save"/>
+				<input type="reset" name="reset" class="btn" value="Reset"/>
+			</div>
+		 </form>
      </div>
 </section>      
 {% endblock %}

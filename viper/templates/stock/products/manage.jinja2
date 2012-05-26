@@ -2,7 +2,8 @@
 {% block content %}
 <section id="manage-products">
 	 <div class="page-header">
-       <h1> Add Product
+       <h1> {{ 'Add Product' if not model.Id }}
+	        {{ 'Edit Product' if model.Id }}
 		 <small class="pull-right">
 		  	<a href="{{'products'|route_url}}" title="Back to Product listing!" class="btn btn-primary">
 		  		<i class="icon-arrow-left icon-white"></i> Back
