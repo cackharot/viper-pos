@@ -40,7 +40,7 @@
 					<div class="control-group {{ 'error' if purchaseRenderer.is_error('PurchaseDate') }}">
 						{{purchaseRenderer.label('PurchaseDate','Purchase Date',class='control-label')}}
 						<div class="controls">
-							{{purchaseRenderer.text('PurchaseDate',class='datetime input-medium')}}
+							{{purchaseRenderer.date('PurchaseDate',class='datetime input-medium')}}
 						</div>
 					</div>
 					<div class="form-actions">

@@ -16,7 +16,8 @@ class CustomerService(object):
 		Customer management service
 	"""
 	def GetCustomer(self,id,tenantId):
-		return DBSession.query(Customer).filter(Customer.Id==id,Customer.TenantId==tenantId,Customer.Status==True).first()
+		entity = DBSession.query(Customer).filter(Customer.Id==id,Customer.TenantId==tenantId,Customer.Status==True).one()
+		return entity
 		
 	def SearchCustomers(self,tenantId,pageNo=0,pageSize=50,searchField='name',searchValue=None):
 		if not tenantId:
@@ -50,6 +51,7 @@ class CustomerService(object):
 		
 	def AddCustomer(self, entity):
 		if entity and entity.TenantId and entity.CreatedBy and len(entity.Contacts) > 0:
+			DBSession.autoflush = False
 			cnt = entity.Contacts[0]
 			if self.CheckCustomerExists(None,entity.TenantId,entity.CustomerNo,cnt.Mobile, cnt.Email):
 				raise Exception('Customer Number or email or mobile already exists!')
@@ -61,9 +63,11 @@ class CustomerService(object):
 		
 	def SaveCustomer(self, entity):
 		if entity and entity.Id and entity.TenantId and entity.UpdatedBy and len(entity.Contacts)>0:
+			DBSession.autoflush = False
 			cnt = entity.Contacts[0]
 			entity.Contacts[0].CustomerId = entity.Id
 			if self.CheckCustomerExists(entity.Id, entity.TenantId, entity.CustomerNo, cnt.Mobile, cnt.Email):
+				DBSession.expire(entity)
 				raise Exception('Customer Number or email or mobile already exists!')
 			entity.UpdatedOn = datetime.utcnow()
 			entity.Status = True

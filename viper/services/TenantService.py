@@ -39,12 +39,13 @@ class TenantService(object):
 		
 	def CheckTenantNameExists(self,name):
 		if name:
-			t = DBSession.query(func.count(Tenant.Id)).filter(Tenant.Name==name).scalar()
+			t = DBSession.query(Tenant.Id).filter(Tenant.Name==name).count()
 			if t:
 				return True
 		return False
 		
 	def ProvisionTenant(self,tenant):
+		DBSession.autoflush = False
 		if self.CheckTenantNameExists(tenant.Name):
 			raise Exception('Tenant Name already exists! Please use different name.')
 		DBSession.add(tenant)

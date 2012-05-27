@@ -5,5 +5,5 @@ class PurchaseSchema(Schema):
 	allow_extra_fields = True
 	PurchaseNo	= validators.Number(strip=True,not_empty=True,messages=dict(empty='Bill No is required!'))
 	SupplierId 	= validators.String(strip=True,not_empty=True,messages=dict(empty='Supplier is required!'))
-	PurchaseDate= validators.DateValidator(strip=True,not_empty=False)
+	PurchaseDate= validators.DateValidator(strip=True,not_empty=True,messages=dict(empty='Purchsae date is required!'))
 	pass

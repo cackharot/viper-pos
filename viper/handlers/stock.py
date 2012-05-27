@@ -108,7 +108,7 @@ class StockController(object):
 						errors='Unable to save product details!'
 		except Exception, e:
 			errors = str(e)
-			log.info(e)
+			log.debug(e)
 			
 		return dict(model=model,renderer=vFormRenderer(pForm),errors=errors)
 		
@@ -128,6 +128,12 @@ class StockController(object):
 	def purchases(self):
 		lstPurchases = stockService.SearchPurchases(self.TenantId)
 		return dict(model=lstPurchases)
+		
+	def GetSuppliers(self):
+		lstSuppliers = SupplierService().GetSuppliers(self.TenantId)
+		if lstSuppliers:
+			lstSuppliers = [[str(x.Id),x.Name] for x in lstSuppliers]
+		return lstSuppliers
 	
 	@action(renderer='templates/stock/purchase/manage.jinja2')
 	def managepurchase(self):
@@ -142,6 +148,9 @@ class StockController(object):
 			pid = self.request.matchdict.get('pid',None)
 		else:
 			pid = self.request.params.get('pid',None)
+		
+		lstSuppliers = self.GetSuppliers()
+		
 		try:
 			if pid:
 				model = stockService.GetPurchase(pid,self.TenantId)
@@ -173,12 +182,9 @@ class StockController(object):
 						return HTTPFound(location='/stock/purchases')
 					else:
 						errors='Unable to save purchase details!'
-				
-			lstSuppliers = SupplierService().GetSuppliers(self.TenantId)
-			if lstSuppliers:
-				lstSuppliers = [[str(x.Id),x.Name] for x in lstSuppliers]
 		except Exception,e:
 			errors = str(e)
+			log.debug(e)
 			
 		return dict(model=model,suppliers=lstSuppliers,renderer=vFormRenderer(pForm),purchaseRenderer=vFormRenderer(form),errors=errors)
 

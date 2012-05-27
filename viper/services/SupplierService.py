@@ -53,6 +53,7 @@ class SupplierService(object):
 		
 	def AddSupplier(self, entity):
 		if entity and entity.TenantId and entity.CreatedBy and len(entity.Contacts) > 0:
+			DBSession.autoflush = False
 			cnt = entity.Contacts[0]
 			if self.CheckSupplierExists(None,entity.TenantId,entity.Name):
 				raise Exception('Supplier name already exists!')
@@ -64,9 +65,11 @@ class SupplierService(object):
 		
 	def SaveSupplier(self, entity):
 		if entity and entity.Id and entity.TenantId and entity.UpdatedBy and len(entity.Contacts)>0:
+			DBSession.autoflush = False
 			cnt = entity.Contacts[0]
 			entity.Contacts[0].CustomerId = entity.Id
 			if self.CheckSupplierExists(entity.Id,entity.TenantId,entity.Name):
+				DBSession.expire(entity)
 				raise Exception('Supplier name already exists!')
 			entity.UpdatedOn = datetime.utcnow()
 			entity.Status = True

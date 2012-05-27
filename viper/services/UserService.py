@@ -13,6 +13,8 @@ from ..models.UserRoles import Role, UserRoles, RolePrivileges
 from ..library.ViperLog import log
 from ..library.helpers import EncryptPassword
 
+from . import UserCacheService
+
 class UserService(object):
 	"""
 		User service class
@@ -25,7 +27,13 @@ class UserService(object):
 	
 	def GetUserDetails(self,userId,tenantId=None):
 		if userId:
-			return DBSession.query(User).filter(User.Id==userId,User.Status==True).first()
+			entity = UserCacheService.Get(userId)
+			if entity:
+				return entity
+			else:
+				entity = DBSession.query(User).filter(User.Id==userId,User.Status==True).one()
+				UserCacheService.Add(entity)
+				return entity
 		return None
 	
 	def GetUserDetailsByName(self,name,tenantId):
@@ -48,27 +56,36 @@ class UserService(object):
 	def AddUser(self,entity):
 		if entity and entity.TenantId and entity.CreatedBy:
 			cnt = entity.Contacts[0]
+			DBSession.autoflush = False
 			if self.CheckUserExists(None,entity.TenantId,entity.UserName,cnt.Mobile, cnt.Email):
 				raise Exception('User name or email or mobile already exists!')
 			entity.Password = EncryptPassword('company')
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
 			DBSession.add(entity)
+			DBSession.flush()
+			UserCacheService.Add(entity)
 			return True
 		return False
 		
 	def SaveUser(self,entity):
 		if entity and entity.Id and entity.TenantId and entity.UpdatedBy:
 			cnt = entity.Contacts[0]
+			DBSession.autoflush = False
 			if self.CheckUserExists(entity.Id,entity.TenantId,entity.UserName,cnt.Mobile, cnt.Email):
+				DBSession.expire(entity)
 				raise Exception('User name or email or mobile already exists!')
 			entity.UpdatedOn = datetime.utcnow()
-			DBSession.add(entity)
+			if not entity in DBSession:
+				DBSession.add(entity)
+			DBSession.flush()
+			UserCacheService.Add(entity)
 			return True
 		return False
 		
 	def DeleteUser(self,userId,tenantId):
 		if userId and tenantId:
+			UserCacheService.Remove(userId)
 			DBSession.query(User).filter(User.Id==userId,User.TenantId==tenantId).delete()
 			return True
 		return False

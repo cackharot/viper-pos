@@ -95,27 +95,49 @@ class StockService(object):
 		return False
 		
 	def GetPurchase(self,id,tenantId):
-		return DBSession.query(Purchase).filter(Purchase.Id==id,Purchase.TenantId==tenantId,Purchase.Status==True).first()
-			
-	def AddPurchase(self,purchase):
-		if purchase and purchase.TenantId and purchase.CreatedBy:
-			purchase.CreatedOn = datetime.utcnow()
-			purchase.Status = True
-			DBSession.add(purchase)
+		entity = DBSession.query(Purchase).filter(Purchase.Id==id,Purchase.TenantId==tenantId,Purchase.Status==True).one()
+		return entity
+	
+	def CheckDuplicatePurchase(self,id,tenantId,no):
+		query = DBSession.query(Purchase.Id).filter(Purchase.TenantId==tenantId)
+		if id:
+			query = query.filter(Purchase.Id != id)
+		found = query.filter(Purchase.PurchaseNo==no).count()
+		if found > 0:
+			return True
+		return False
+	
+	def AddPurchase(self,entity):
+		if entity and entity.TenantId and entity.CreatedBy:
+			DBSession.autoflush = False
+			if self.CheckDuplicatePurchase(None,entity.TenantId,entity.PurchaseNo):
+				raise Exception('Duplicate Purchase entry!')
+			if entity.PurchaseDate and isinstance(entity.PurchaseDate,unicode):
+				entity.PurchaseDate = datetime.strptime(entity.PurchaseDate,'%d-%m-%Y')
+			entity.CreatedOn = datetime.utcnow()
+			entity.Status = True
+			DBSession.add(entity)
 			return True
 		return False
 		
-	def SavePurchase(self,purchase):
-		if purchase and purchase.Id and purchase.TenantId and purchase.UpdatedBy:
-			purchase.UpdatedOn = datetime.utcnow()
-			DBSession.add(purchase)
+	def SavePurchase(self,entity):
+		if entity and entity.Id and entity.TenantId and entity.UpdatedBy:
+			DBSession.autoflush = False
+			if self.CheckDuplicatePurchase(entity.Id,entity.TenantId,entity.PurchaseNo):
+				DBSession.expire(entity)
+				raise Exception('Duplicate Purchase entry!')
+			if entity.PurchaseDate and isinstance(entity.PurchaseDate,unicode):
+				entity.PurchaseDate = datetime.strptime(entity.PurchaseDate,'%d-%m-%Y')
+			entity.UpdatedOn = datetime.utcnow()
+			if not entity in DBSession:
+				DBSession.add(entity)
 			return True
 		return False
 		
 	def DeletePurchase(self,id,tenantId):
 		if id and tenantId:
 			return DBSession.query(Purchase).filter(Purchase.Id==id,\
-					Product.TenantId==tenantId).delete()
+					Purchase.TenantId==tenantId).delete()
 		return False
 		
 	def SearchPurchases(self,tenantId,pageNo=0,pageSize=50,searchField=None,searchValue=None):

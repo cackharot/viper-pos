@@ -10,10 +10,9 @@ from pyramid.security import Allow, Everyone, Authenticated
 from pyramid.security import authenticated_userid
 from zope.interface import implements
 
-from ..models import DBSession
-from ..models.User import User
-import logging
+from ..services.UserService import UserService
 
+import logging
 log = logging.getLogger(__name__)
 
 from pyramid.events import subscriber
@@ -23,7 +22,6 @@ from pyramid.events import BeforeRender
 def add_global(event):
 	request, context = event['request'], event['context']
 	event['user'] = request.user
-	#log.info(event['user'])
 	pass
 
 
@@ -57,8 +55,9 @@ def get_user(request):
     # pattern).
     #log.info('called get user.')
     userid = unauthenticated_userid(request)
-    if userid is not None:
-        return DBSession.query(User).get(userid)
+    if userid:
+    	service = UserService()
+        return service.GetUserDetails(userid)
     return None
 
 class SaaSAuthTktAuthenticationPolicy(object):

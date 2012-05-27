@@ -24,10 +24,6 @@ class RootFactory(object):
     def __init__(self, request):
         pass
 
-#@view_config(renderer='templates/login/login.jinja2',context='pyramid.exceptions.Forbidden')
-def forbidden(request):
-	return {'companycode':'', 'username':'', 'password':'', 'message':''}
-
 class Auth(object):
 	"""
 		User Authentication handler
@@ -45,12 +41,12 @@ class Auth(object):
 			username = self.request.params['username']
 			password = self.request.params['password']
 			userid = securityService.ValidateUser(companycode,username,password)
-			log.debug('userid: %s' % userid)
+			#log.debug('userid: %s' % userid)
 			if userid is not None:
 				headers = remember(self.request, userid)
 				home = route_url('home', self.request)
 				return HTTPFound(location=home, headers=headers)
-			message = 'Please check your company code or username or password'
+			message = 'Please check your company code, username and password'
 			return dict(message=message, companycode=companycode, username=username, password=password)
 		else:
 			return {'companycode':'', 'username':'', 'password':'', 'message':''}

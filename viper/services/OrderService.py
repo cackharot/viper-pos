@@ -247,8 +247,6 @@ class OrderService(object):
 		return None
 		
 	def GenerateOrderNo(self,tenantId):
-		import sys
-		#return random.randint(0, sys.maxint)
 		tmp = DBSession.query(func.max(Order.OrderNo)).filter(Order.TenantId==tenantId).scalar()
 		if tmp != None: return int(tmp)+1 
 		else: return 1
