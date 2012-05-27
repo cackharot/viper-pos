@@ -47,6 +47,8 @@ def getRand():
 
 def Fixtures():
 	with transaction.manager:
+		tmp = DBSession.query(Purchase).count()
+		print('Purchase Count: %s' % tmp) 
 		t = DBSession.query(Tenant.Tenant).get(TestTenantId)
 		if not t:
 			t = Tenant.Tenant()
