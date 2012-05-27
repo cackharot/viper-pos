@@ -17,6 +17,10 @@ class SupplierService(object):
 	"""
 	def GetSupplier(self,id,tenantId):
 		return DBSession.query(Supplier).filter(Supplier.Id==id,Supplier.TenantId==tenantId,Supplier.Status==True).first()
+	
+	def GetSuppliers(self,tenantId):
+		query = DBSession.query(Supplier.Id,Supplier.Name).filter(Supplier.TenantId==tenantId,Supplier.Status==True)
+		return query.all()
 		
 	def SearchSupplier(self,tenantId,pageNo=0,pageSize=50,searchField='name',searchValue=None):
 		if not tenantId:

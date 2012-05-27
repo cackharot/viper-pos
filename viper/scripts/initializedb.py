@@ -25,6 +25,11 @@ from ..models import (
     UserRoles,
     Base,
     )
+    
+from ..models.Purchase import Purchase
+from ..models.PurchaseLineItem import PurchaseLineItem
+from ..models.PurchasePayment import PurchasePayment
+
 from ..library.helpers import EncryptPassword
     
 TestTenantId = uuid.UUID('4f362af5-8657-41bc-a8c6-0166c46a4431')

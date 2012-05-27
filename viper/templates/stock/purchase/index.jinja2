@@ -1,0 +1,86 @@
+{% extends "templates/layout.jinja2" %}
+{% block content %}
+<section id="manage-purchase">
+	<div class="page-header">
+		<h1>Purchase Management
+			 <small class="pull-right">
+			  	<a href="{{'addpurchase'|route_url}}" title="Add New Purchase!" class="btn btn-primary">
+			  		<i class="icon-plus icon-white"></i> Add 
+			  	</a>
+			 </small>
+		 </h1>
+	</div> 	
+	<div class="row-fluid">
+		<div class="span12">&nbsp;</div>
+	</div>
+    {% if model != None and (model | count) > 0 %} 
+	<table id="prdTable" class="table table-bordered table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>Bill No</th>
+				<th>Supplier Name</th>
+				<th>Total Items</th>
+				<th>Purchase Date</th>
+				<th>Purchase Amount</th>
+				<th>Paid Amount</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in model %}
+				<tr>
+					<td>
+						{{item.PurchaseNo}}
+					</td>
+					<td>
+						{{item.Supplier.Name}}
+					</td>
+					<td>
+						{{item.LineItems | count}}
+					</td>
+					<td>
+						{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}
+					</td>
+					<td>
+						{{item.PurchaseAmount}}
+					</td>
+					<td>
+						{{item.PaidAmount}}
+					</td>
+					<td>
+						<div class="btn-group">
+							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+								Action <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{{'editpurchase' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
+								</li>
+								<li>
+									<a href="{{'deletepurchase' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
+								</li>
+								<li class="divider"></li>
+								<li>
+									<a href="#">$ View Payments</a>
+								</li>
+							</ul>
+						</div>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+		<div class="alert alert-info">
+			No Purchases found!
+		</div>
+	{% endif %}
+</section>      
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		//$('#prdTable').dataTable();
+	});
+</script>
+{% endblock %}

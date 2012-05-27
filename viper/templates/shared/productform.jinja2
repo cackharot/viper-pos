@@ -19,7 +19,7 @@
 	<div class="control-group {{ 'error' if renderer.is_error('CategoryId') }}">
 		<label class="control-label" for="CategoryId">Category</label>
 		<div class="controls">
-			<input name="CategoryId" id="CategoryId" class="input-xlarge" type="text" value="{{model.CategoryId}}">
+			{{renderer.select('CategoryId',[['2512571362BE49278623B784C49CB01A','Default']],prompt='Choose a category',class='input-xlarge')}}
 		</div>
 	</div>
 	<div class="control-group {{ 'error' if renderer.is_error('TaxCategoryId') }}">

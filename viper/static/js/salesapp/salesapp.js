@@ -1,5 +1,5 @@
 /*
- *   Viper POS
+ *	Viper POS
  *	salesapp.js
  *	contains backbone based mvc app.
  */
@@ -67,9 +67,8 @@
 					that.addItemTpl(item)
 				});
 				that.updateTotal();
-				that.showUI(function(){
-					if (callback) 
-						callback();
+				that.showUI(function () {
+					if (callback) callback();
 				});
 			});
 		},
@@ -474,7 +473,7 @@
 			var quantity = 1.0;
 			if (tmp && tmp.length > 0) quantity = parseFloat(tmp);
 
-			if (barcode && barcode.length > 1 && quantity > 0) {
+			if (barcode && barcode.length > 0 && quantity > 0) {
 				var found = this.findAndUpdateItem(barcode, quantity)
 				if (!found) {
 					var that = this
@@ -494,9 +493,11 @@
 										var id = parseInt($(this).data('id'));
 										data[id].Quantity = quantity;
 										that.addItemToUI(data[id], that);
-										$txtBarcode[0].select(0, barcode.length)
-										$('input[name=itemName]').val(data[id].Name)
+
+										$('#tblSelectItem tbody').html('');
 										$('#selectItemModal').modal('hide');
+										$('input[name=itemName]').val(data[id].Name)
+										$txtBarcode[0].select(0, barcode.length)
 									});
 								});
 
@@ -509,11 +510,29 @@
 								$txtBarcode[0].select(0, $txtBarcode.val().length);
 							}
 						} else {
-							showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
-							$txtBarcode[0].select(0, $txtBarcode.val().length);
+							if (!isNaN(barcode)) {
+								var mrp = parseFloat(barcode)
+								if (mrp <= 1000.00) {
+									var d = {}
+									d.Barcode = mrp.toString()
+									d.MRP = mrp
+									d.SellPrice = mrp
+									d.Quantity = 1.0
+									d.Name = ''
+									d.Discount = 0.0
+									d.ProductId = null
+									that.addItemToUI(d, that)
+								} else {
+									showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
+								}
+							} else {
+								showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
+							}
+
+							$txtBarcode[0].select(0, barcode.length);
 						}
 					});
-				}else{
+				} else {
 					$txtBarcode[0].select(0, $txtBarcode.val().length);
 				}
 			} else {
@@ -743,7 +762,7 @@
 			});
 
 			$('#btnPayOrder', $('#checkoutOrderModel'))[0].focus()
-			$('#btnPayOrder', $('#checkoutOrderModel')).unbind('click',this.payOrder)
+			$('#btnPayOrder', $('#checkoutOrderModel')).unbind('click', this.payOrder)
 			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder)
 		},
 		payOrder: function () {
@@ -763,7 +782,7 @@
 						'customerid': customerid,
 						'customername': customername,
 						'ispaid': true,
-						'isloaded':true,
+						'isloaded': true,
 					});
 
 					var payment = new OrderPayment({
@@ -834,7 +853,7 @@
 		if(orderid) vent.trigger('editOrder',orderid)
 		//e.preventDefault()
 	});*/
-	
+
 	function hideMsg() {
 		$('#statusMessage').fadeOut();
 	}

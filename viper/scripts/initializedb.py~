@@ -25,6 +25,11 @@ from ..models import (
     UserRoles,
     Base,
     )
+    
+from ..models.Purchase import Purchase
+#from ..models.PurchaseLineItem import PurchaseLineItem
+#from ..models.PurchasePayment import PurchasePayment
+
 from ..library.helpers import EncryptPassword
     
 TestTenantId = uuid.UUID('4f362af5-8657-41bc-a8c6-0166c46a4431')
@@ -62,6 +67,17 @@ def Fixtures():
 			u.CreatedBy = u'Admin'
 			u.CreatedOn = datetime.utcnow()
 			u.Status = True
+			
+			uc = User.UserContactDetails()
+			u.UserId = TestUserId
+			u.FirstName = u'admin'
+			u.LastName = u'Company'
+			u.Mobile = '12323453'
+			u.Phone ='123435'
+			u.Address = 'Address'
+			u.City = 'City'
+			u.Country = 'Country'
+			u.Zipcode ='1233455'
 			
 			c = Tenant.TenantContactDetails()
 			c.TenantId = t.Id

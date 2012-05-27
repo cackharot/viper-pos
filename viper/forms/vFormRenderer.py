@@ -125,7 +125,7 @@ class vFormRenderer(object):
 		Outputs <select> element.
 		"""
 		id = id or name
-		val = self.value(name, selected_value)
+		val = [self.value(name, selected_value)]
 		return tags.select(self.prefix + name, val, options, id, **attrs) + self.getErrorTag(name)
 
 	def checkbox(self, name, value="1", checked=False, label=None, id=None, 

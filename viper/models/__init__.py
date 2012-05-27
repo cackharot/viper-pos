@@ -11,13 +11,15 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
 
-from .ContactDetailsMixin import ContactDetailsMixin
+#from .ContactDetailsMixin import ContactDetailsMixin
 
-#from .Tenant import Tenant
-#from .User import User
+#from .Tenant import Tenant, TenantContactDetails
+#from .User import User, UserContactDetails
 #from .Order import Order
 #from .LineItem import LineItem
 #from .Product import Product
-#from .Customer import Customer
+#from .Customer import Customer, CustomerContactDetails
+#from .Supplier import Supplier, SupplierContactDetails
 #from .OrderPayment import OrderPayment
 #from .UserRoles import UserRoles, Role, RolePrivileges
+#from .Purchase import Purchase, PurchaseLineItem, PurchasePayment
