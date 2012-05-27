@@ -132,12 +132,12 @@ class OrderService(object):
 				DBSession.add(item)				
 		pass
 		
-	def DeleteOrder(self, order,tenantId):
+	def DeleteOrder(self, tenantId, orderid):
 		"""
 			Deletes the order details from db
 		"""
-		if order and order.Id:
-			DBSession.query(Order).filter(Order.OrderId==order.Id,Order.TenantId==tenantId).delete()
+		if tenantId and orderid:
+			DBSession.query(Order).filter(Order.OrderId==orderid,Order.TenantId==tenantId).delete()
 		pass
 		
 	def UpdateOrderPayment(self, orderid, orderpayment,userId):

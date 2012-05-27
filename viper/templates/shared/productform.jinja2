@@ -55,13 +55,13 @@
 	<div class="control-group {{ 'error' if renderer.is_error('MfgDate') }}">
 		{{renderer.label('MfgDate','Mfg. Date',class='control-label')}}
 		<div class="controls">
-			{{renderer.text('MfgDate',class='input-xlarge datetime')}}
+			{{renderer.date('MfgDate',class='input-xlarge datetime')}}
 		</div>
 	</div>
 	<div class="control-group {{ 'error' if renderer.is_error('ExpiryDate') }}">
 		{{renderer.label('ExpiryDate','Expiry Date',class='control-label')}}
 		<div class="controls">
-			{{renderer.text('ExpiryDate',class='input-xlarge datetime')}}
+			{{renderer.date('ExpiryDate',class='input-xlarge datetime')}}
 		</div>
 	</div>
 </fieldset>

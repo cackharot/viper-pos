@@ -72,7 +72,11 @@ class StockController(object):
 	@action(renderer='templates/stock/products/manage.jinja2')
 	def manageproduct(self):
 		errors = None
-		pid = self.request.matchdict.get('pid',None)
+		model = None
+		if self.request.method == 'GET':
+			pid = self.request.matchdict.get('pid',None)
+		else:
+			pid = self.request.params.get('pid',None)
 		try:
 			if pid:
 				model = stockService.GetProduct(pid,self.TenantId)
@@ -104,6 +108,7 @@ class StockController(object):
 						errors='Unable to save product details!'
 		except Exception, e:
 			errors = str(e)
+			log.info(e)
 			
 		return dict(model=model,renderer=vFormRenderer(pForm),errors=errors)
 		
@@ -133,7 +138,10 @@ class StockController(object):
 		productmodel = Product()
 		pForm = Form(self.request,schema=ProductSchema,defaults=productmodel.toDict())
 			
-		pid = self.request.matchdict.get('pid',None)
+		if self.request.method == 'GET':
+			pid = self.request.matchdict.get('pid',None)
+		else:
+			pid = self.request.params.get('pid',None)
 		try:
 			if pid:
 				model = stockService.GetPurchase(pid,self.TenantId)

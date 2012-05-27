@@ -1,6 +1,7 @@
 from webhelpers.html import tags
 from webhelpers.html.builder import HTML
 
+from datetime import datetime
 from ..library.ViperLog import log
 
 class vFormRenderer(object):
@@ -87,6 +88,16 @@ class vFormRenderer(object):
 		"""
 		id = id or name
 		val = self.value(name, value)
+		return tags.text(self.prefix + name, val, id, **attrs) + self.getErrorTag(name)
+		
+	def date(self, name, value=None, id=None, **attrs):
+		"""
+		Outputs date text input.
+		"""
+		id = id or name
+		val = self.value(name, value)
+		if isinstance(val,datetime):
+			val = val.strftime('%d-%m-%Y')
 		return tags.text(self.prefix + name, val, id, **attrs) + self.getErrorTag(name)
 
 	def file(self, name, value=None, id=None, **attrs):

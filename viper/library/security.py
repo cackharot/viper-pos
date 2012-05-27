@@ -39,7 +39,7 @@ def auth_tween_factory(handler, registry):
 					skip = True
 					break
 			if not skip:
-				log.info('checking auth')
+				#log.info('checking auth')
 				userid = authenticated_userid(request)
 				if userid is None:
 					#raise HTTPForbidden()

@@ -13,42 +13,83 @@ from ..models.Purchase import Purchase
 from ..models.PurchaseLineItem import PurchaseLineItem
 from ..models.PurchasePayment import PurchasePayment
 
+from . import OrderCacheService
+
 class StockService(object):
 	"""
 		Stock management service
 	"""
 	def GetProduct(self,id,tenantId):
-		return DBSession.query(Product).filter(Product.Id==id,Product.TenantId==tenantId,Product.Status==True).first()
+		if id and tenantId:
+			entity = OrderCacheService.GetProduct(id)
+			if entity and entity.TenantId == tenantId:
+				if not entity in DBSession:
+					DBSession.add(entity)
+				return entity
+			else:
+				entity = DBSession.query(Product).filter(Product.Id==id,Product.TenantId==tenantId,Product.Status==True).first()
+				OrderCacheService.AddProduct(entity)
+			return entity
+		return None
+		
+	def GetProductsByBarcode(self,tenantId,barcode):
+		if tenantId and barcode:
+			items = OrderCacheService.GetProductsByBarcode(tenantId,barcode)
+			if items and len(items) > 0:
+				return items
+			else:
+				items = self.GetProducts(tenantId,0,10,'Barcode',barcode)
+				if items and len(items) > 0:
+					for i in items:
+						OrderCacheService.AddProduct(i)
+					return items
+		return None
 		
 	def GetProducts(self,tenantId,pageNo=0,pageSize=50,searchField='Name',searchValue=None):
 		if not tenantId:
 			return None
 		query = DBSession.query(Product).filter(Product.TenantId==tenantId,Product.Status==True)
 		
-		if searchValue and searchValue != '':
-			if searchField and searchField == 'Name':
-				query = query.filter(Product.Name.like('%%%s%%' % searchValue))
+		if searchValue and searchField:
+			if searchField == 'Name':
+				query = query.filter(Product.Name.like('%%%s%%' % searchValue)).order_by(Product.Name)
+			elif searchField == 'Barcode':
+				query = query.filter(Product.Barcode == searchValue)
 		
 		lstItems = query.offset(pageNo).limit(pageSize).all()
 		return lstItems
 		
-	def AddProduct(self,product):
-		if product and product.TenantId and product.CreatedBy:
-			product.CreatedOn = datetime.utcnow()
-			product.Status = True
-			DBSession.add(product)
+	def AddProduct(self,entity):
+		if entity and entity.TenantId and entity.CreatedBy:
+			if entity.MfgDate and isinstance(entity.MfgDate,unicode):
+				entity.MfgDate = datetime.strptime(entity.MfgDate,'%d-%m-%Y')
+			if entity.ExpiryDate and isinstance(entity.ExpiryDate,unicode):
+				entity.ExpiryDate = datetime.strptime(entity.ExpiryDate,'%d-%m-%Y')
+			entity.CreatedOn = datetime.utcnow()
+			entity.Status = True
+			DBSession.add(entity)
+			DBSession.flush()
+			OrderCacheService.AddProduct(entity)
 			return True
 		return False
 		
-	def SaveProduct(self,product):
-		if product and product.Id and product.TenantId and product.UpdatedBy:
-			product.UpdatedOn = datetime.utcnow()
-			DBSession.add(product)
+	def SaveProduct(self,entity):
+		if entity and entity.Id and entity.TenantId and entity.UpdatedBy:
+			if entity.MfgDate and isinstance(entity.MfgDate,unicode):
+				entity.MfgDate = datetime.strptime(entity.MfgDate,'%d-%m-%Y')
+			if entity.ExpiryDate and isinstance(entity.ExpiryDate,unicode):
+				entity.ExpiryDate = datetime.strptime(entity.ExpiryDate,'%d-%m-%Y')
+			entity.UpdatedOn = datetime.utcnow()
+			if not entity in DBSession:
+				DBSession.add(entity)
+			DBSession.flush()
+			OrderCacheService.AddProduct(entity)
 			return True
 		return False
 		
 	def DeleteProduct(self,id,tenantId):
 		if id and tenantId:
+			OrderCacheService.RemoveProduct(id)
 			return DBSession.query(Product).filter(Product.Id==id,\
 					Product.TenantId==tenantId).delete()
 		return False

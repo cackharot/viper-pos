@@ -17,7 +17,9 @@ from ..library.ViperLog import log
 from ..library.helpers import jsonHandler
 
 from ..services.OrderService import OrderService
+from ..services.StockService import StockService
 
+stockService = StockService()
 orderServiceProxy = OrderService()
 
 def includeme(config):
@@ -104,20 +106,23 @@ def saveOrderlineitems(request):
 
 @view_config(route_name='deleteorder', renderer="json", accept="application/json")
 def deleteOrder(request):
+	tenantId = request.user.TenantId
+	orderid = request.matchdict['orderid']
+	if orderid:
+		orderServiceProxy.DeleteOrder(tenantId,orderid)
 	return {'status':'success','message':'Order Deleted Successfully!'}
 
 @view_config(route_name='searchitems', renderer="json")	
 def searchItem(request):
+	tenantId = request.user.TenantId
 	barcode = request.params.get('barcode')
 	name = request.params.get('name')
 	if barcode or name:
-		query = DBSession.query(Product).filter(Product.TenantId==request.user.TenantId)
 		if barcode:
-			query = query.filter(Product.Barcode==barcode)
+			items = stockService.GetProductsByBarcode(tenantId,barcode)
 		elif name:
-			query = query.filter(Product.Name.like('%%%s%%' % name)).order_by(Product.Name)
-		items = query.limit(10).offset(0).all()
+			items = stockService.GetProducts(tenantId,0,10,'Name',name)
 		if items and len(items) > 0:
 			result = [x.toDict() for x in items]
-			return json.dumps(result,default=jsonHandler)
+			return result
 	return None
