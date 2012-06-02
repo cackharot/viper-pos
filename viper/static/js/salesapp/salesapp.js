@@ -599,6 +599,7 @@
 						'isNew': true,
 					});
 					lstorders.add(currentOrder)
+					hideMsg()
 					if (callback) callback()
 				}
 			});

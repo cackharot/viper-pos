@@ -20,8 +20,11 @@ class OrderCacheService(object):
 	def AddProduct(entity):
 		if entity and entity.Id:
 			items = CacheManager.Get(_ProductCacheKey)
-			items[str(entity.Id)] = entity
-			CacheManager.Add(_ProductCacheKey,items)
+			if items:
+				items[str(entity.Id)] = entity
+				CacheManager.Add(_ProductCacheKey,items)
+			else:
+				log.debug('Cache miss. Should not happen!')
 			return True
 		return False
 	

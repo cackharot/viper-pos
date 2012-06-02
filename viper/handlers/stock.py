@@ -2,6 +2,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid_handlers import action
 from pyramid.response import Response
 
+from ..models import DBSession
 from ..models.User import User
 from ..models.Tenant import Tenant
 from ..models.Product import Product
@@ -18,7 +19,7 @@ from formencode import Schema, validators
 from pyramid_simpleform import Form
 from pyramid_simpleform.renderers import FormRenderer
 
-from ..forms import ProductSchema, PurchaseSchema
+from ..forms import ProductSchema, PurchaseSchema, PurchaseLineItemSchema
 from datetime import datetime
 
 from ..forms.vForm import vForm
@@ -134,6 +135,69 @@ class StockController(object):
 		if lstSuppliers:
 			lstSuppliers = [[str(x.Id),x.Name] for x in lstSuppliers]
 		return lstSuppliers
+		
+	@action(renderer='json')
+	def deletepurchaselineitem(self):
+		purchaseId = self.request.params.get('purchaseId',None)
+		lineItemId = self.request.params.get('lineItemId',None)
+		
+		if purchaseId and lineItemId:
+			if stockService.DeletePurchaseLineItem(purchaseId,lineItemId,self.TenantId):
+				return dict(status=True,message='Line Item deleted successfully!')
+		
+		return dict(status=False,message="Invalid Data!")
+		
+	@action(renderer='json')
+	def addpurchaselineitem(self):
+		purchaseId = self.request.params.get('pid',None)
+		if purchaseId:
+			model = None
+			productId = self.request.params.get('ProductId',None)
+			quantity  = float(self.request.params.get('Quantity', 0.0))
+			taxAmount = float(self.request.params.get('TaxAmount',0.0))
+			
+			try:
+				if productId:
+					model = stockService.GetProduct(productId,self.TenantId)
+				if not model:
+					model = Product()
+			
+				pForm = Form(self.request,schema=ProductSchema,obj=model)
+			
+				if pForm.validate():
+					pForm.bind(model)
+					model.TenantId 	= self.TenantId
+					model.CreatedBy = self.UserId
+					model.Status 	= True
+				
+					if model.Id:
+						stockService.SaveProduct(model)
+					else:
+						stockService.AddProduct(model)
+					
+					litem 			 = PurchaseLineItem()
+					litem.PurchaseId = purchaseId
+					litem.ProductId  = model.Id
+					litem.Name 		 = model.Name
+					litem.Barcode 	 = model.Barcode
+					litem.MRP 		 = model.MRP
+					litem.Tax 		 = taxAmount
+					litem.BuyPrice 	 = model.BuyPrice
+					litem.Discount 	 = model.Discount
+					litem.Quantity 	 = quantity
+				
+					result = stockService.AddPurchaseLineItem(litem,self.TenantId)
+					if result:
+						return dict(status=True,id=litem.Id,message="Item added successfully!")
+					else:
+						DBSession.rollback()
+				else:
+					log.info('pForm validate failed : %s!' % (pForm.all_errors()))
+					return dict(status=False,message=pForm.all_errors())
+			except Exception,e:
+				log.debug(e)
+				return dict(status=False,message=e.message)
+		return dict(status=False,message="Invalid Data!")
 	
 	@action(renderer='templates/stock/purchase/manage.jinja2')
 	def managepurchase(self):

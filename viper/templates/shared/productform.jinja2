@@ -1,4 +1,4 @@
-{% macro render(renderer) -%}
+{% macro render(renderer,quantity=False) -%}
 <fieldset>
 	<div class="control-group {{ 'error' if renderer.is_error('Barcode') }}">
 		{{renderer.label('Barcode',None,class='control-label')}}
@@ -52,6 +52,14 @@
 			{{renderer.text('SellPrice',size=6,class='input-xlarge')}}
 		</div>
 	</div>
+	{% if quantity -%}
+	<div class="control-group">
+		<lable>Quantity</label>
+		<div class="controls">
+			<input type="text" class="input-xlarge" name="Quantity" value="0.0"/>
+		</div>
+	</div>
+	{%- endif %}
 	<div class="control-group {{ 'error' if renderer.is_error('MfgDate') }}">
 		{{renderer.label('MfgDate','Mfg. Date',class='control-label')}}
 		<div class="controls">

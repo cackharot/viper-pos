@@ -3,7 +3,7 @@ import logging
 log = logging.getLogger(__name__)
 
 memcacheServers = ['127.0.0.1:11211']
-cacheExpireTime = 30*60 #in seconds [30 minutes]
+cacheExpireTime = 0 #30*60 #in seconds [30 minutes]
 
 def initCacheServer():
 	log.info('Init Cache Manager with cache servers %s' % (memcacheServers))

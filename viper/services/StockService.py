@@ -157,4 +157,22 @@ class StockService(object):
 		
 		lstItems = query.offset(pageNo).limit(pageSize).all()
 		return lstItems
+		
+	def AddPurchaseLineItem(self,entity,tenantId):
+		if tenantId and entity and entity.PurchaseId:
+			DBSession.autoflush = False
+			purchase = self.GetPurchase(entity.PurchaseId,tenantId)
+			if purchase:
+				purchase.LineItems.append(entity)
+				DBSession.flush()
+				return True
+		return False
+		
+	def DeletePurchaseLineItem(self,purchaseId,lineItemId,tenantId):
+		if tenantId and purchaseId and lineItemId:
+			query = DBSession.query(PurchaseLineItem)#.join(Purchase)
+			#query = query.filter(Purchase.Id==purchaseId,Purchase.TenantId==tenantId)
+			query = query.filter(PurchaseLineItem.Id==lineItemId)
+			return query.delete()
+		return False
 	pass

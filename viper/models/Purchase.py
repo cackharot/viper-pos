@@ -45,11 +45,39 @@ class Purchase(AuditMixin,Base):
 		self.Payments = []
 		self.Status = True
 		pass
+		
+	@property
+	def TotalItems(self):
+		if self.LineItems:
+			return len(self.LineItems)
+		return 0
+		
+	@property
+	def TotalQuantity(self):
+		if self.LineItems:
+			return sum([x.Quantity for x in self.LineItems])
+		return 0
+		
+	def GetTotalAmount(self):
+		if self.LineItems:
+			self.TotalAmount = sum([x.BuyAmount for x in self.LineItems])
+			return self.TotalAmount
+		return 0
+		
+	def GetPaidAmount(self):
+		if self.Payments:
+			self.PaidAmount = sum([x.PaidAmount for x in self.Payments])
+			return self.PaidAmount
+		return 0
+		
+	def GetBalanceAmount(self):
+		return (self.TotalAmount - self.PaidAmount)
 	
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())
 		if hasattr(self,'SupplierName'): serialized['SupplierName']=self.SupplierName 
 		else: serialized['SupplierName']=None
+		
 		return serialized
 	
 	def __repr__(self):

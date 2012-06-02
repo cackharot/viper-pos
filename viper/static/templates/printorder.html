@@ -4,11 +4,17 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Order #<%=order.get('orderno') %></title>
 	<style>
+		@page {
+			margin:0px;
+			padding:0px;
+			width:100%;
+		}
 		body{
-			font-size:12px;
+			font-size:14px;
 			margin:0px auto;
 			padding:0px;
 			color:#000;
+			font-family: "Arial",Verdana;
 		}
 		h1,h2,h3,h4,h5,h6{
 			padding:0px;
@@ -23,29 +29,30 @@
 		table tbody + tbody {
  			border-top: 2px solid #dddddd;
 		}
+		.heading {
+			text-align:center;
+		}
+		#pDebug,#pDebugToolbarHandle { display: none !important;}
+		@media print{
+			#pDebug,#pDebugToolbarHandle { display: none !important; }
+		}
 	</style>
 </head>
 <body>
-	<div style="width:330px;margin:0px 5px;">
-		<table border="0" style="width:100%;">
+	<div>
+		<div class="heading">
+			<h2>Sri Durga Home Needs Super Market</h2>
+			<h4>#25, M.G.Road, Pondy-3. Ph: 2337517</h4>
+		</div>
+		<table border="0"> 
 			<tbody>
-				<tr>	
-					<td colspan="2" style="text-align:center;">
-						<h3>Sri Durga Home Needs</h3>
-					</td>
+				<tr>
+					<td width="50%">No# <b><%=order.get('orderno') %></b></td>
+					<td align="right">Date: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'dd-MM-yyyy') %> </td>
 				</tr>
 				<tr>
-					<td colspan="2" style="text-align:center;">
-						<h4>Super Market<br/> #25, M.G.Road, Pondy-3</h4>
-					</td>
-				</tr>
-				<tr>
-					<td>No# <b><%=order.get('orderno') %></b></td>
-					<td>Date: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'dd-MM-yyyy') %> </td>
-				</tr>
-				<tr>
-					<td>Customer: <%=order.get('customername') || '' %> </td>
-					<td>Time: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'hh:mm a') %> </td>
+					<td>Bill To: <%=order.get('customername') || '' %> </td>
+					<td align="right">Time: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'hh:mm a') %> </td>
 				</tr>
 			</tbody>
 		</table>
@@ -55,14 +62,14 @@
 			var totalAmt = qas.totalAmount;
 			var balanceAmt = totalAmt - paidAmt;
 		%>
-		<table border="0" cellpadding="0" cellspacing="0">
+		<table border="0" style="width:99%">
 			<thead>
 				<tr style="border-bottom: 1px solid black;border-top: 1px solid black;">
-					<th style="text-align:left;width:110px;">Name</th>
+					<th style="text-align:left;">Name</th>
 					<th style="text-align:right;width:40px;">MRP</th>
 					<th style="text-align:right;width:60px;">Price</th>
 					<th style="text-align:right;width:25px;">Qty</th>
-					<th style="text-align:right;width:40px;">Gross</th>
+					<th style="text-align:right;width:40px;">Total</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -79,22 +86,19 @@
 					<td colspan="2" style="text-align:left;">
 						Items/Qty: <%=qas.totalItems%>/<%=qas.totalQuantity%>
 					</td>
-					<td></td>
-					<td style="text-align:right;"><h4>Total:</h4></td>
+					<td colspan="2" style="text-align:right;"><h4>Total: Rs. </h4></td>
 					<td style="text-align:right;"><h4><%=qas.totalAmount%></h4></td>
 				</tr>
 				<tr>
-					<td style="text-align:left;">Savings: <b><%=qas.savings%></b></td>
+					<td style="text-align:left;">Savings: <b>Rs. <%=qas.savings%></b></td>
 					<td></td>
-					<td></td>
-					<td style="text-align:right;">Paid:</td>
+					<td colspan="2"  style="text-align:right;">Paid: Rs. </td>
 					<td style="text-align:right;"><%=order.getPaidAmount()%></td>
 				</tr>
 				<tr>
 					<td></td>
 					<td></td>
-					<td></td>
-					<td style="text-align:right;">Balance:</td>
+					<td colspan="2" style="text-align:right;">Balance: Rs. </td>
 					<td style="text-align:right;"><%=balanceAmt%></td>
 				</tr>
 				<tr>

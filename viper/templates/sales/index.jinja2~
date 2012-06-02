@@ -83,7 +83,7 @@ table#tblTodayOrders tbody tr.active td{
 		  		</div>
 			</div>
 			<div class="clear"></div>
-			<div class="span12" id="statusMessage" style="margin-left:0px;">
+			<div class="span12" id="statusMessage" style="margin-left:0px;margin-top:5px;">
 			</div>
 			<table class="table" style="margin-bottom:0px;">
 				<thead>
@@ -128,19 +128,19 @@ table#tblTodayOrders tbody tr.active td{
 					<tr>
 						<td>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></td>
 						<td></td>
-						<td><h3>Total Amount:</h3></td>
+						<td style="text-align:right"><h3>Total Amount: Rs. </h3></td>
 						<td width="150px" style="text-align:right;padding-right:50px;color:red;"><h1 id="totalAmount">0.0</h1></td>
 					</tr>
 					<tr>
-						<td>Savings: <b><span id="savingsAmount">0.0</span></b></td>
+						<td><h3>Savings: Rs. <span id="savingsAmount">0.0</span></h3></td>
 						<td></td>
-						<td><h3>Paid Amount:</h3></td>
+						<td style="text-align:right"><h3>Paid Amount: Rs. </h3></td>
 						<td style="text-align:right;padding-right:50px"><h3 id="paidAmount">0.0</h3></td>
 					</tr>
 					<tr>
 						<td></td>
 						<td></td>
-						<td><h3 id="lblBalanceAmount">Balance/Change Amount:</h3></td>
+						<td style="text-align:right"><h3 id="lblBalanceAmount">Balance/Change Amount: Rs. </h3></td>
 						<td style="text-align:right;padding-right:50px"><h3 id="balanceAmount">0.0</h3></td>
 					</tr>
 				</tbody>
@@ -198,7 +198,7 @@ table#tblTodayOrders tbody tr.active td{
 			</td>
 		</tr>
 		<tr>
-			<th>Total Amount:</th>
+			<th>Total Amount:Rs. </th>
 			<td>
 				<h3 style="color:red"><%= item.get('orderamount').toFixed(2)%></h3>
 			</td>
@@ -235,7 +235,7 @@ table#tblTodayOrders tbody tr.active td{
 			</td>
 		</tr>
 		<tr>
-			<th>Paid Amount:</th>
+			<th>Paid Amount: Rs. </th>
 			<td>
 				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('balanceamount').toFixed(2)%>" required autofocus="autofocus"/>
 			</td>

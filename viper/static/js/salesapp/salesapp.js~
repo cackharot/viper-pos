@@ -67,9 +67,8 @@
 					that.addItemTpl(item)
 				});
 				that.updateTotal();
-				that.showUI(function(){
-					if (callback) 
-						callback();
+				that.showUI(function () {
+					if (callback) callback();
 				});
 			});
 		},
@@ -494,7 +493,7 @@
 										var id = parseInt($(this).data('id'));
 										data[id].Quantity = quantity;
 										that.addItemToUI(data[id], that);
-										
+
 										$('#tblSelectItem tbody').html('');
 										$('#selectItemModal').modal('hide');
 										$('input[name=itemName]').val(data[id].Name)
@@ -513,7 +512,7 @@
 						} else {
 							if (!isNaN(barcode)) {
 								var mrp = parseFloat(barcode)
-								if(mrp <= 1000.00) {
+								if (mrp <= 1000.00) {
 									var d = {}
 									d.Barcode = mrp.toString()
 									d.MRP = mrp
@@ -523,17 +522,17 @@
 									d.Discount = 0.0
 									d.ProductId = null
 									that.addItemToUI(d, that)
-								}else{
+								} else {
 									showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
 								}
-							}else{
+							} else {
 								showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
 							}
-							
+
 							$txtBarcode[0].select(0, barcode.length);
 						}
 					});
-				}else{
+				} else {
 					$txtBarcode[0].select(0, $txtBarcode.val().length);
 				}
 			} else {
@@ -763,7 +762,7 @@
 			});
 
 			$('#btnPayOrder', $('#checkoutOrderModel'))[0].focus()
-			$('#btnPayOrder', $('#checkoutOrderModel')).unbind('click',this.payOrder)
+			$('#btnPayOrder', $('#checkoutOrderModel')).unbind('click', this.payOrder)
 			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder)
 		},
 		payOrder: function () {
@@ -783,7 +782,7 @@
 						'customerid': customerid,
 						'customername': customername,
 						'ispaid': true,
-						'isloaded':true,
+						'isloaded': true,
 					});
 
 					var payment = new OrderPayment({
@@ -854,7 +853,7 @@
 		if(orderid) vent.trigger('editOrder',orderid)
 		//e.preventDefault()
 	});*/
-	
+
 	function hideMsg() {
 		$('#statusMessage').fadeOut();
 	}
