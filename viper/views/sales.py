@@ -28,7 +28,7 @@ def includeme(config):
 	config.add_route('neworder', '/sales/neworder', xhr=True)
 	config.add_route('saveorder', '/sales/saveorder/{orderid}',xhr=True)
 	config.add_route('savelineitems','/sales/savelineitems',xhr=True)
-	config.add_route('deleteorder', '/sales/deleteorder/{orderid}',xhr=True)
+	config.add_route('deleteorder', '/sales/deleteorder/{orderid}')
 	config.add_route('getorder', '/sales/getorder/{orderid}',xhr=True)
 	config.add_route('todayorders', '/sales/todayorders',xhr=True)
 	config.add_route('addlineitem', '/sales/addlineitem',xhr=True)
