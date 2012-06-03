@@ -4,18 +4,13 @@ import uuid
 import logging
 log = logging.getLogger(__name__)
 
-_OrderCacheKey = 'OrderCacheKey'
-_ProductCacheKey = '_productcachekey'
+_OrderCacheKey = 'order:'
+_ProductCacheKey = 'product:'
 	
-def initCacheAreas():
-	log.info('Init cache keys...')
-	CacheManager.Add(_ProductCacheKey, dict())
-	CacheManager.Add(_OrderCacheKey, dict())
-	return True
-		
 class OrderCacheService(object):
-	_isinitialized = initCacheAreas()
-	
+	"""
+		Order, Product Cache service manager
+	"""
 	@staticmethod
 	def AddProduct(entity):
 		if entity and entity.Id:
@@ -24,7 +19,10 @@ class OrderCacheService(object):
 				items[str(entity.Id)] = entity
 				CacheManager.Add(_ProductCacheKey,items)
 			else:
-				log.debug('Cache miss. Should not happen!')
+				v = dict()
+				v[str(entity.Id)] = entity
+				CacheManager.Add(_ProductCacheKey, v)
+				log.debug('Init product cache area!')
 			return True
 		return False
 	

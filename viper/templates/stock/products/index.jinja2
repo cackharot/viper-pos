@@ -19,37 +19,41 @@
 			<tr>
 				<th><i class="icon-barcode"></i> Barcode</th>
 				<th>Name</th>
-				<th>MRP</th>
-				<th>BuyPrice</th>
-				<th>SellPrice</th>
-				<th>Discount</th>
-				<th>Created On</th>
+				<th style="text-align:right;">MRP</th>
+				<!--<th style="text-align:right;">BuyPrice</th>-->
+				<th style="text-align:right;">SellPrice</th>
+				<th style="text-align:right;">Discount</th>
+				<th style="text-align:center;">Created On</th>
+				<th style="text-align:center;">Updated On</th>
 				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for item in model %}
-				<tr>
+				<tr class="{{'alert alert-error' if not item.Status}}">
 					<td>
 						{{item.Barcode}}
 					</td>
 					<td>
 						{{item.Name}}
 					</td>
-					<td>
+					<td style="text-align:right;">
 						{{item.MRP}}
 					</td>
-					<td>
+					<!--<td style="text-align:right;">
 						{{item.BuyPrice}}
-					</td>
-					<td>
+					</td>-->
+					<td style="text-align:right;">
 						{{item.SellPrice}}
 					</td>
-					<td>
+					<td style="text-align:right;">
 						{{item.Discount}}
 					</td>
-					<td>
+					<td style="text-align:center;">
 						{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}
+					</td>
+					<td style="text-align:center;">
+						{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}
 					</td>
 					<td>
 						<div class="btn-group">
@@ -63,6 +67,15 @@
 								<li>
 									<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
 								</li>
+								{% if item.Status %}
+								<li>
+									<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Mark Return</a>
+								</li>
+								{% else %}
+								<li>
+									<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Make Active</a>
+								</li>
+								{% endif %}
 							</ul>
 						</div>
 					</td>
@@ -78,9 +91,39 @@
 </section>      
 {% endblock %}
 {% block footerscript %}
+<style>
+tr.alert-error td{
+	background-color: #F2DEDE !important;
+    border-color: #EED3D7;
+    color: #B94A48;
+}
+</style>
 <script>
 	$(function(){
 		//$('#prdTable').dataTable();
+		$('#prdTable a.pstatus').click(function(){
+			var url = $(this).data('url')
+			var st = $(this).data('status')
+			var tr = $(this).closest('tr')
+			var that = $(this)
+						
+			$.post(url,{status:!(st == 'True')},function(data){
+				if(data && data.status == true) {
+					if(st == 'True') {
+						tr.addClass('alert')
+						tr.addClass('alert-error')
+						that.text('Mark Active')
+						that.data('status','False')
+					} else {
+						tr.removeClass('alert')
+						tr.removeClass('alert-error')
+						that.text('Mark Return')
+						that.data('status','True')
+					}
+				}
+			})
+			return true
+		})
 	});
 </script>
 {% endblock %}

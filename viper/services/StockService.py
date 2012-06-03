@@ -27,7 +27,7 @@ class StockService(object):
 					DBSession.add(entity)
 				return entity
 			else:
-				entity = DBSession.query(Product).filter(Product.Id==id,Product.TenantId==tenantId,Product.Status==True).first()
+				entity = DBSession.query(Product).filter(Product.Id==id,Product.TenantId==tenantId).first()
 				OrderCacheService.AddProduct(entity)
 			return entity
 		return None
@@ -48,7 +48,7 @@ class StockService(object):
 	def GetProducts(self,tenantId,pageNo=0,pageSize=50,searchField='Name',searchValue=None):
 		if not tenantId:
 			return None
-		query = DBSession.query(Product).filter(Product.TenantId==tenantId,Product.Status==True)
+		query = DBSession.query(Product).filter(Product.TenantId==tenantId)
 		
 		if searchValue and searchField:
 			if searchField == 'Name':
@@ -56,7 +56,7 @@ class StockService(object):
 			elif searchField == 'Barcode':
 				query = query.filter(Product.Barcode == searchValue)
 		
-		lstItems = query.offset(pageNo).limit(pageSize).all()
+		lstItems = query.order_by(desc(Product.UpdatedOn),desc(Product.CreatedOn)).offset(pageNo).limit(pageSize).all()
 		return lstItems
 		
 	def AddProduct(self,entity):

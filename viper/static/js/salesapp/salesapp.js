@@ -20,6 +20,7 @@
 		initialize: function (model, options) {
 			this.bind("change:name", this.updateUI);
 			this.bind("change:quantity", this.updateUI);
+			this.bind("change:mrp", this.updateUI);
 			this.bind("change:price", this.updateUI);
 			this.bind("change:barcode", this.updateUI);
 		},
@@ -30,6 +31,7 @@
 			var quantity = this.get('quantity');
 			var mrp = this.get('mrp');
 			var price = this.get('price');
+			var discount = this.get('discount');
 			var subtotal = Math.round(price * quantity);
 
 			this.set({
@@ -41,6 +43,7 @@
 			if ($tr.length > 0) {
 				$('.n', $tr).text(name);
 				$('.p', $tr).text(price);
+				$('.d', $tr).text(discount);
 				$('.q', $tr).text(quantity);
 				$('.st', $tr).text(subtotal);
 			}
@@ -342,29 +345,32 @@
 			this.lstOrders = window.TodayOrderList
 
 			_.bindAll(this, "editOrder");
+			_.bindAll(this, "updateLineItem");
 
 			this.vent.bind('editOrder', this.editOrder)
+			this.vent.bind('updateLineItem', this.updateLineItem)
 			this.itemNameTypeahead()
 		},
 		render: function () {
-			var item = this.model;
+			//console.log('updating order')
+			var item = this.model
 			var odate = $.format.date(ToLocalDate(item.get('orderdate')), 'dd-MM-yyyy hh:mm a')
 
-			$('#orderDate').html(odate);
-			$('#orderNumber').html(item.get('orderno'));
-			$('#customerName').text(item.get('customername') || '');
+			$('#orderDate').html(odate)
+			$('#orderNumber').html(item.get('orderno'))
+			$('#customerName').text(item.get('customername') || '')
 			this.updateAmounts()
 		},
 		updateAmounts: function () {
-			if (this.model.get('ispaid') === true) {
-				var tamt = this.model.get('orderamount');
-				var pamt = this.model.get('paidamount');
-				var balance = tamt - pamt;
-				$('#paidAmount').text(pamt);
-				$('#balanceAmount').text(balance);
+			var pamt = this.model.getPaidAmount()
+			var tamt = this.model.getOrderAmount()
+			if (this.model.get('ispaid') === true || pamt > 0) {
+				var balance = tamt - pamt
+				$('#paidAmount').text(pamt)
+				$('#balanceAmount').text(balance)
 			} else {
-				$('#paidAmount').text(0.0);
-				$('#balanceAmount').text(0.0);
+				$('#paidAmount').text(0.0)
+				$('#balanceAmount').text(0.0)
 			}
 		},
 		events: {
@@ -381,6 +387,17 @@
 		},
 		key_addlineitem: function (e) {
 			if (e.keyCode == 13) this.addLineItem();
+		},
+		updateLineItem: function(data){
+			if(!this.model || !data)
+				return
+			var item = this.model.get('lineItems').find(function(x){
+				return x.get('id') == data.id
+			})
+			if(item) {
+				item.set(data.col, data.value)
+				this.updateAmounts()
+			}
 		},
 		deleteLineItem: function (e) {
 			var slno = $(e.target).parent().data('slno')
@@ -854,6 +871,31 @@
 		if(orderid) vent.trigger('editOrder',orderid)
 		//e.preventDefault()
 	});*/
+	
+	$('table#tblOrderLineItems tbody td.edit').live('click', function(){
+		var w = $(this).width()-10
+		$(this).editable(function(value,settings){
+			var col = $(this).data('col')
+			var id = $(this).parent().data('id')
+			var val = null
+			if(col != 'name') {
+				val = !isNaN(value) ? parseFloat(value) : null
+				value = val
+			}else{
+				val = value
+			}
+			if(val) {
+				vent.trigger('updateLineItem',{id:id, col:col, value:val})
+				return value
+			}
+		},
+		{
+			event: 'edit',
+			height: 20,
+			width: w
+		})
+		$(this).trigger('edit')
+	})
 
 	function hideMsg() {
 		$('#statusMessage').fadeOut();

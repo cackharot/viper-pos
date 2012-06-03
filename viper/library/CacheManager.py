@@ -15,7 +15,7 @@ class CacheManager(object):
 	@staticmethod
 	def Add(key,value):
 		#log.info('adding %s=%s' % (key,value))
-		CacheManager.cache.set(key,value,time=cacheExpireTime)
+		CacheManager.cache.set(key,value)#,time=cacheExpireTime)
 		pass
 		
 	@staticmethod

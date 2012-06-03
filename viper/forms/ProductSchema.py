@@ -11,6 +11,7 @@ class ProductSchema(Schema):
 	SellPrice = validators.Number(strip=True,not_empty=True,messages=dict(empty='Sell Price is required!',invalid='Sell Price must be a decimal number!'))
 	BuyPrice  = validators.Number(strip=True,not_empty=True,messages=dict(empty='Buy Price is required!',invalid='Buy Price must be a decimal number!'))
 	Discount  = validators.Number(strip=True,not_empty=True,if_missing=0.0,messages=dict(invalid='Discount must be a decimal number!'))
+	Status    = validators.Bool(not_empty=False,if_missing=False)
 	MfgDate   = validators.DateValidator(strip=True,not_empty=False)
 	ExpiryDate= validators.DateValidator(strip=True,not_empty=False)
 	pass

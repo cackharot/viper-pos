@@ -11,6 +11,7 @@
 		 </small></h1>
 	</div>
 	<div class="row-fluid">
+		 <div id="statusMessage">
 		 {% if errors or renderer.errorlist() or purchaseRenderer.errorlist() -%} 
 		 	<div class="alert alert-error">
 		 		<strong>Please correct the errors and submit again:</strong>
@@ -19,6 +20,7 @@
 		 		{{purchaseRenderer.errorlist(name=None,class='')}}
 		 	</div>
 		 {%- endif %}
+		 </div>
 		 </span>
 		 <div class="clear"></div>
 		 <div class="span7">
@@ -52,10 +54,10 @@
 						</tr>
 						<tr>
 							<td style="text-align:left;width:50%">
-								<h3>Paid Amount: Rs. <span id="totalAmount">{{model.GetTotalAmount()}}</span></h3>
+								<h3>Paid Amount: Rs. <span id="paidAmount">{{model.GetPaidAmount()}}</span></h3>
 							</td>
 							<td style="text-align:right">
-								<h3>Total Amount: Rs. <span id="paidAmount">{{model.GetPaidAmount()}}</span></h3>
+								<h3>Total Amount: Rs. <span id="totalAmount">{{model.GetTotalAmount()}}</span></h3>
 							</td>
 						</tbody>
 					</table>
@@ -84,7 +86,7 @@
 		 				<tbody>
 		 				{% for item in model.LineItems -%}
 		 					<tr>
-		 						<td><a data-quantity="{{item.Quantity}}" class="delitem" href="/stock/deletepurchaselineitem?purchaseId={{model.Id}}&lineItemId={{item.Id}}" alt="Delete this item!"><i class="icon-trash"></i> </a></td>
+		 						<td><a data-total="{{item.BuyAmount}}" data-quantity="{{item.Quantity}}" class="delitem" href="/stock/deletepurchaselineitem?purchaseId={{model.Id}}&lineItemId={{item.Id}}" alt="Delete this item!"><i class="icon-trash"></i> </a></td>
 		 						<td>{{item.Barcode}}</td>
 		 						<td>{{item.Name}}</td>
 		 						<td>{{item.MRP}}</td>
@@ -105,6 +107,7 @@
 			<form id="frmLineItem" class="form-inline well">
 				{% import 'shared/productform.jinja2' as productForm with context %}
 				{{ productForm.render(renderer,True) }}
+				<input type="hidden" name="ProductId" value=""/>
 				<div class="form-actions">
 					<input type="button" class="btn btn-primary" id="addlineItem" value="Add"/>
 					<input type="reset" name="reset" class="btn" value="Reset"/>
@@ -136,28 +139,78 @@
 	$(function(){
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
 		
+		$('form#frmLineItem input[type=text]').val('')
+		
 		$('#purchaseLineItemsDiv table tbody td a.delitem').on('click',function(){
 			var url = $(this).attr('href')
-			var quantity = $(this).data('quantity')
+			var quantity = parseFloat($(this).data('quantity'))
+			var total = parseFloat($(this).data('total'))
+			
 			var $tr = $(this).parent().parent()
 			$.get(url,null,function(data) {
 				if(data && data.status == true){
 					$tr.remove()
-					var ti = parseInt($('#totalItems').val())
-					var tq = parseFloat($('#totalQuantity').val())
-					$('#totalItems').val(ti-1)
-					$('#totalQuantity').val(tq-quantity)
+					var ti = parseInt($('#totalItems').text())
+					var tq = parseFloat($('#totalQuantity').text())
+					var ta = parseFloat($('#totalAmount').text())
+					
+					$('#totalAmount').text(ta-total)
+					$('#totalItems').text(ti-1)
+					$('#totalQuantity').text(tq-quantity)
+					showMsg('info', data.message)
 				}else{
-					alert(data.message)
+					showMsg('error',data.message)
 				}
 			})
 			return false
 		})
 		
+		$('form#frmLineItem input[name=Barcode]').blur(function(e){
+			var barcode = $(this).val()
+			if(barcode == '' || barcode.length == 0) {
+				e.preventDefault()
+				return false
+			}
+
+			$.post('/stock/getproductsbybarcode',{barcode:barcode},function(data){
+				if(data) {
+					if(data.length) {
+						data = data[0]
+					}
+					
+					$('form#frmLineItem input[name=ProductId]').val(data.Id)
+					$('form#frmLineItem input[name=Name]').val(data.Name)
+					
+					$('form#frmLineItem input[name=MRP]').val(data.MRP)
+					$('form#frmLineItem input[name=MRP]').data('MRP',data.MRP)
+					
+					$('form#frmLineItem input[name=BuyPrice]').val(data.BuyPrice)
+					$('form#frmLineItem input[name=BuyPrice]').data('BuyPrice',data.BuyPrice)
+					
+					$('form#frmLineItem input[name=SellPrice]').val(data.SellPrice)
+					$('form#frmLineItem input[name=SellPrice]').data('SellPrice',data.SellPrice)
+					
+					$('form#frmLineItem input[name=Discount]').val(data.Discount)
+					
+					if(data.MfgDate)
+						$('form#frmLineItem input[name=MfgDate]').val($.format.date(data.MfgDate,'dd-MM-yyyy'))
+					if(data.ExpiryDate)
+						$('form#frmLineItem input[name=ExpiryDate]').val($.format.date(data.ExpiryDate,'dd-MM-yyyy'))
+						
+					$('form#frmLineItem select[name=CategoryId]').val(data.CategoryId)
+					$('form#frmLineItem select[name=TaxCategoryId]').val(data.TaxCategoryId)
+				} else {
+					// no item found in db so new its a new item
+					$('form#frmLineItem input[type=text]').val('')
+					$('form#frmLineItem input[name=Barcode]')[0].focus()
+				}
+			})
+		})
+		
 		$('#addlineItem').click(function() {
 			var purchaseId = $('input#pid').val()
 			if(!purchaseId) {
-				alert('Should save the purchase before adding line items!')
+				showMsg('error', 'Should save the purchase before adding line items!')
 				return
 			}
 			
@@ -165,13 +218,47 @@
 			postdata += $('form#frmLineItem').serialize()
 			var jdata = $('form#frmLineItem').serializeObject()
 			jdata.Tax = jdata.Tax || 0.0
+
+			if (!(jdata.Name && jdata.Barcode && jdata.Quantity*1 > 0 
+				&& jdata.MRP*1 > 0 && jdata.BuyPrice*1 < jdata.MRP*1
+				&& jdata.SellPrice*1 > jdata.BuyPrice*1)) {
+				showMsg('warn', 'Invalid data')
+				return
+			}
+			
+			var found = false
+			$('#purchaseLineItemsDiv table tbody tr > td:nth-child(2)').each(function() {
+				if($(this).text() == jdata.Barcode) {
+					found = true
+					return
+				}
+			})
+			
+			if(found) {
+				var mrp = parseFloat($('form#frmLineItem input[name=MRP]').val())
+				var pmrp = parseFloat($('form#frmLineItem input[name=MRP]').data('MRP'))
+				
+				var bp = parseFloat($('form#frmLineItem input[name=BuyPrice]').val())
+				var pbp = parseFloat($('form#frmLineItem input[name=BuyPrice]').data('BuyPrice'))
+				
+				var sp = parseFloat($('form#frmLineItem input[name=SellPrice]').val())
+				var psp = parseFloat($('form#frmLineItem input[name=SellPrice]').data('SellPrice'))
+				
+				if(mrp == pmrp && bp == pbp && sp == psp) {
+					showMsg('warn', '<strong>"'+ jdata.Barcode +'"</strong> already added! If you want to update please delete and add again!')
+					return
+				}
+				$('form#frmLineItem input[name=ProductId]').val('')
+			}
 			
 			$.post('/stock/addpurchaselineitem',postdata,function(data){
 				if(data && data.status == true) {
 					//added success
 					var id = data.id;
+					var total = jdata.Quantity*jdata.BuyPrice;
 					var tr = '<tr>';
-					tr += '<td><a data-quantity="'+jdata.Quantity+'" class="delitem" href="/stock/deletepurchaselineitem?purchaseId=' + purchaseId;
+					tr += '<td><a data-total="' + total + '"';
+					tr += ' data-quantity="'+jdata.Quantity+'" class="delitem" href="/stock/deletepurchaselineitem?purchaseId=' + purchaseId;
 					tr += '&lineItemId='+id +'" alt="Delete this item!"><i class="icon-trash"></i> </a></td>';
 					tr += '<td>' + jdata.Barcode + '</td>';
 					tr += '<td>' + jdata.Name + '</td>';
@@ -180,19 +267,56 @@
 					tr += '<td>' + jdata.BuyPrice + '</td>';
 					tr += '<td>' + jdata.Discount + '</td>';
 					tr += '<td>' + jdata.Quantity + '</td>';
-					tr += '<td>' + jdata.Quantity*jdata.BuyPrice + '</td>';
+					tr += '<td>' + total + '</td>';
 					tr += '</tr>';
 					$('#purchaseLineItemsDiv table tbody').prepend(tr)
-					var ti = parseInt($('#totalItems').val())
-					var tq = parseFloat($('#totalQuantity').val())
-					$('#totalItems').val(ti+1)
-					$('#totalQuantity').val(tq+jdata.Quantity)
-					$('form#frmLineItem').reset()
+					
+					var ti = parseInt($('#totalItems').text())
+					var tq = parseFloat($('#totalQuantity').text())
+					var ta = parseFloat($('#totalAmount').text())
+					
+					$('#totalAmount').text(ta+total)
+					$('#totalItems').text(ti+1)
+					$('#totalQuantity').text(tq+parseFloat(jdata.Quantity))
+					$('form#frmLineItem input[type=text]').val('')
+					$('form#frmLineItem input[name=Barcode]')[0].focus()
+					showMsg('info', '<strong>"'+jdata.Barcode+'"</strong> added successfully!')
 				}else{
-					alert(data.message || 'Error while adding line item!')
+					showMsg('error', data.message || 'Error while adding line item!')
 				}
 			},'json')
 		});
+		
+		function hideMsg() {
+			$('#statusMessage').fadeOut();
+		}
+
+		function showMsg(type, message, timeout) {
+			var ediv = '<div class="alert ';
+			if (type == "error") {
+				ediv += 'alert-error';
+			} else if (type == "info") {
+				ediv += 'alert-info';
+			} else if (type == "success") {
+				ediv += 'alert-success';
+			} else if (type == "warn") {
+				ediv += 'alert-warning';
+			} else {
+				ediv += '';
+			}
+			ediv += ' fade in">';
+			ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
+			ediv += message;
+			ediv += '</div>';
+			$('#statusMessage').html(ediv);
+			$('.alert', $('#statusMessage')).alert();
+
+			if (timeout || timeout == undefined) {
+				setTimeout(function () {
+					$('.alert', $('#statusMessage')).alert('close');
+				}, 10000);
+			}
+		}
 	});
 </script>
 {% endblock %}

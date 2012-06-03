@@ -2,6 +2,7 @@ from pyramid.config import Configurator
 from pyramid.renderers import JSON
 from sqlalchemy import engine_from_config
 
+from library import CacheManager
 from library.security import get_user
 from library.security import SaaSAuthTktAuthenticationPolicy
 from library.security import UserAuthorizationPolicy
@@ -67,6 +68,8 @@ def main(global_config, **settings):
     config.include('viper.handlers.stock')
     config.include('viper.handlers.customer')
     config.include('viper.handlers.supplier')
+    
+    CacheManager.Clear()
     
     config.add_static_view('static', 'static', cache_max_age=3600)
     config.add_route('index', '/')

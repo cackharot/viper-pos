@@ -42,10 +42,10 @@
 						{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}
 					</td>
 					<td>
-						{{item.PurchaseAmount}}
+						{{item.GetTotalAmount()}}
 					</td>
 					<td>
-						{{item.PaidAmount}}
+						{{item.GetPaidAmount()}}
 					</td>
 					<td>
 						<div class="btn-group">

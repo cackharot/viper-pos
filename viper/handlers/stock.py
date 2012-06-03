@@ -37,6 +37,8 @@ def includeme(config):
 	config.add_handler('editpurchase', '/stock/manangepurchase/{pid}',handler=StockController,action='managepurchase')
 	config.add_handler('deleteproduct', '/stock/deleteproduct/{pid}',handler=StockController,action='deleteProduct')
 	config.add_handler('deletepurchase', '/stock/deletepurchase/{pid}',handler=StockController,action='deletePurchase')
+	config.add_handler('markreturnproduct', '/stock/markreturnproduct/{pid}',handler=StockController,action='markReturnProduct')
+
 	config.add_route('products', '/stock/products')
 	config.add_route('purchases', '/stock/purchases')
 	config.add_route('addproduct', '/stock/manageproduct')
@@ -57,6 +59,15 @@ class StockController(object):
 	@action(renderer='templates/stock/index.jinja2')
 	def index(self):
 		return {}
+		
+	@action(renderer='json')
+	def getproductsbybarcode(self):
+		barcode = self.request.params.get('barcode',None)
+		if barcode:
+			items = stockService.GetProductsByBarcode(self.TenantId,barcode)
+			if items and len(items) > 0:
+				return [x.toDict() for x in items]
+		return dict(status=False,message='No items found for the barcode "%s"!' % barcode)
 		
 	@action(renderer='templates/stock/products/index.jinja2')
 	def products(self):
@@ -119,6 +130,18 @@ class StockController(object):
 		val = stockService.DeleteProduct(pid,self.TenantId)
 		return HTTPFound(location='/stock/products')
 		
+	@action(renderer='json')
+	def markReturnProduct(self):
+		pid = self.request.matchdict.get('pid',None)
+		status = self.request.params.get('status',u'false')
+		if pid:
+			model = stockService.GetProduct(pid,self.TenantId)
+			if model:
+				model.Status = status == 'true'
+				stockService.SaveProduct(model)
+				return dict(status=True)
+		return dict(status=False)
+		
 	@action()	
 	def deletePurchase(self):
 		pid = self.request.matchdict.get('pid',None)
@@ -166,13 +189,14 @@ class StockController(object):
 			
 				if pForm.validate():
 					pForm.bind(model)
-					model.TenantId 	= self.TenantId
-					model.CreatedBy = self.UserId
-					model.Status 	= True
-				
+					model.TenantId = self.TenantId
+					model.Status = True
+					
 					if model.Id:
+						model.UpdatedBy = self.UserId
 						stockService.SaveProduct(model)
 					else:
+						model.CreatedBy = self.UserId
 						stockService.AddProduct(model)
 					
 					litem 			 = PurchaseLineItem()

@@ -25,7 +25,7 @@
 	<div class="control-group {{ 'error' if renderer.is_error('TaxCategoryId') }}">
 		<label class="control-label" for="TaxCategoryId">Tax Category</label>
 		<div class="controls">
-			<input name="TaxCategoryId" id="TaxCategoryId" class="input-xlarge" type="text" value="{{model.TaxCategoryId}}">
+			{{renderer.select('TaxCategoryId',[['8CD9785EF59C40138C9CFDDE4B144738','Tax 12.5%']],prompt='Choose a Tax category',class='input-xlarge')}}
 		</div>
 	</div>
 	<div class="control-group {{ 'error' if renderer.is_error('MRP') }}">
@@ -57,6 +57,13 @@
 		<lable>Quantity</label>
 		<div class="controls">
 			<input type="text" class="input-xlarge" name="Quantity" value="0.0"/>
+		</div>
+	</div>
+	{% else %}
+	<div class="control-group">
+		{{renderer.label('Status','Active',class='control-label')}}
+		<div class="controls">
+			{{renderer.checkbox('Status')}}
 		</div>
 	</div>
 	{%- endif %}
