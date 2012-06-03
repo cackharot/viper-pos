@@ -19,6 +19,10 @@ class CustomerService(object):
 		entity = DBSession.query(Customer).filter(Customer.Id==id,Customer.TenantId==tenantId,Customer.Status==True).one()
 		return entity
 		
+	def GetDefaultCustomer(self,tenantId):
+		entity = DBSession.query(Customer).filter(Customer.TenantId==tenantId,Customer.CustomerNo==1,Customer.Status==True).first()
+		return entity
+		
 	def SearchCustomers(self,tenantId,pageNo=0,pageSize=50,searchField='name',searchValue=None):
 		if not tenantId:
 			return None

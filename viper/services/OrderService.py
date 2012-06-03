@@ -18,7 +18,7 @@ from ..services.SecurityService import SecurityService
 from ..services.CustomerService import CustomerService
 
 customerService = CustomerService()
-DefaultCustomerId = uuid.UUID('1dba743b516242108265dc0c12513b6c')
+#DefaultCustomerId = uuid.UUID('1dba743b516242108265dc0c12513b6c')
 
 class OrderService(object):
 	"""
@@ -50,11 +50,15 @@ class OrderService(object):
 		"""
 		if not tenantId or not userId:
 			return None
+		
+		cus = customerService.GetDefaultCustomer(tenantId)
+			
 		o = Order()
 		o.Id = uuid.uuid4()
 		o.TenantId = tenantId
-		o.CustomerId = DefaultCustomerId
-		o.CustomerName = 'Default'
+		if cus and cus.Id and cus.Contacts:
+			o.CustomerId = cus.Id 
+			o.CustomerName = cus.Contacts[0].FirstName
 		o.OrderNo = self.GenerateOrderNo(tenantId) #generate unique order no
 		o.OrderDate = datetime.utcnow()
 		o.IpAddress = None
