@@ -110,7 +110,8 @@ def deleteOrder(request):
 	orderid = request.matchdict['orderid']
 	if orderid:
 		orderServiceProxy.DeleteOrder(tenantId,orderid)
-	return {'status':'success','message':'Order Deleted Successfully!'}
+	#return {'status':'success','message':'Order Deleted Successfully!'}
+	return HTTPFound(location='/sales/listorders')
 
 @view_config(route_name='searchitems', renderer="json")	
 def searchItem(request):
