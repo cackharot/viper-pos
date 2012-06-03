@@ -14,7 +14,6 @@ from ..models.Order import Order, OrderSearchParam
 from ..models.LineItem import LineItem
 from ..models.OrderPayment import OrderPayment
 from ..library.ViperLog import log
-from ..library.helpers import jsonHandler
 
 from ..services.OrderService import OrderService
 from ..services.StockService import StockService
