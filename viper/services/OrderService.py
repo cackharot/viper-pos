@@ -237,7 +237,7 @@ class OrderService(object):
 			if orders:
 				for order in orders:
 					if order:
-						cus = customerService.GetCustomer(order.CustomerId,tenantId)
+						cus = customerService.GetCustomer(order.CustomerId,order.TenantId)
 						if cus:
 							order.CustomerName = cus.Contacts[0].FirstName
 						else:
