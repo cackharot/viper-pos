@@ -237,7 +237,11 @@ class OrderService(object):
 			if orders:
 				for order in orders:
 					if order:
-						order.CustomerName = None
+						cus = customerService.GetCustomer(order.CustomerId,tenantId)
+						if cus:
+							order.CustomerName = cus.Contacts[0].FirstName
+						else:
+							order.CustomerName = None
 						#fetch the line items here
 						order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
 						if order.LineItems:
