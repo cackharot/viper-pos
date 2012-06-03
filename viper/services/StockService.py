@@ -8,6 +8,7 @@ from sqlalchemy import desc,func,cast,Date
 
 from ..models import DBSession
 from ..models.Product import Product
+from ..models.Supplier import Supplier
 from ..library.ViperLog import log
 from ..models.Purchase import Purchase
 from ..models.PurchaseLineItem import PurchaseLineItem
@@ -55,6 +56,10 @@ class StockService(object):
 				query = query.filter(Product.Name.like('%%%s%%' % searchValue)).order_by(Product.Name)
 			elif searchField == 'Barcode':
 				query = query.filter(Product.Barcode == searchValue)
+			elif searchField == 'Status':
+				query = query.filter(Product.Status == searchValue)
+			elif searchField == 'SuppierName':
+				query = query.join(Supplier).filter(Supplier.Name == searchValue)
 		
 		lstItems = query.order_by(desc(Product.UpdatedOn),desc(Product.CreatedOn)).offset(pageNo).limit(pageSize).all()
 		return lstItems
@@ -95,7 +100,9 @@ class StockService(object):
 		return False
 		
 	def GetPurchase(self,id,tenantId):
-		entity = DBSession.query(Purchase).filter(Purchase.Id==id,Purchase.TenantId==tenantId,Purchase.Status==True).one()
+		query = DBSession.query(Purchase)
+		query = query.filter(Purchase.Id==id,Purchase.TenantId==tenantId,Purchase.Status==True)
+		entity = query.one()
 		return entity
 	
 	def CheckDuplicatePurchase(self,id,tenantId,no):
@@ -150,10 +157,14 @@ class StockService(object):
 				query = query.filter(Purchase.PurchaseNo==searchValue)
 			elif searchField == 'SupplierId':
 				query = query.filter(Purchase.SupplierId==searchValue)
+			elif searchField == 'SupplierName':
+				query = query.join(Supplier).filter(Supplier.Name==searchValue)
 			elif searchField == 'Amount':
 				query = query.filter(Purchase.PurchaseAmount == searchValue)
 			elif searchField == 'Date':
 				query = query.filter(Purchase.PurchaseDate == searchValue)
+				
+		query = query.order_by(desc(Purchase.PurchaseDate))
 		
 		lstItems = query.offset(pageNo).limit(pageSize).all()
 		return lstItems

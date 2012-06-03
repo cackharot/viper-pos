@@ -19,6 +19,7 @@
 			<tr>
 				<th><i class="icon-barcode"></i> Barcode</th>
 				<th>Name</th>
+				<th>Supplier</th>
 				<th style="text-align:right;">MRP</th>
 				<!--<th style="text-align:right;">BuyPrice</th>-->
 				<th style="text-align:right;">SellPrice</th>
@@ -36,6 +37,9 @@
 					</td>
 					<td>
 						{{item.Name}}
+					</td>
+					<td>
+						{{item.Supplier.Name}}
 					</td>
 					<td style="text-align:right;">
 						{{item.MRP}}

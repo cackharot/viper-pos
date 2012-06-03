@@ -5,6 +5,7 @@ class ProductSchema(Schema):
 	allow_extra_fields = True
 	Name      = validators.String(strip=True,not_empty=True,messages=dict(empty='Name is required!'))
 	Barcode   = validators.String(strip=True,not_empty=True,messages=dict(empty='Barcode is required!'))
+	SupplierId= validators.String(not_empty=False)
 	CategoryId= validators.String(strip=True,not_empty=True,messages=dict(empty='Choose a category!'))
 	TaxCategoryId= validators.String(strip=True,not_empty=False,messages=dict(empty='Choose a category!'))
 	MRP       = validators.Number(strip=True,not_empty=True,messages=dict(empty='MRP is required!',invalid='MRP must be a decimal number!'))

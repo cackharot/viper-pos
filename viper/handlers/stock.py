@@ -173,7 +173,8 @@ class StockController(object):
 	@action(renderer='json')
 	def addpurchaselineitem(self):
 		purchaseId = self.request.params.get('pid',None)
-		if purchaseId:
+		supplierId = self.request.params.get('SupplierId',None)
+		if purchaseId and supplierId:
 			model = None
 			productId = self.request.params.get('ProductId',None)
 			quantity  = float(self.request.params.get('Quantity', 0.0))
@@ -189,6 +190,7 @@ class StockController(object):
 			
 				if pForm.validate():
 					pForm.bind(model)
+					model.SupplierId = supplierId
 					model.TenantId = self.TenantId
 					model.Status = True
 					
@@ -221,7 +223,7 @@ class StockController(object):
 			except Exception,e:
 				log.debug(e)
 				return dict(status=False,message=e.message)
-		return dict(status=False,message="Invalid Data!")
+		return dict(status=False,message="Invalid PurchaseId or SupplierId!")
 	
 	@action(renderer='templates/stock/purchase/manage.jinja2')
 	def managepurchase(self):

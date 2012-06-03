@@ -892,7 +892,8 @@
 		{
 			event: 'edit',
 			height: 20,
-			width: w
+			width: w,
+			cssclass: 'inline-form',
 		})
 		$(this).trigger('edit')
 	})

@@ -74,6 +74,11 @@
 			</thead>
 			<tbody>
 				<% order.get('lineItems').each(function(item) { %>
+					<% 
+						//var barcode = item.get('barcode');
+						//if(barcode.startsWith('.') || barcode.startsWith('0.'))
+						//	return
+					%>
 					<tr>
 						<td style="text-align:left;width:110px;overflow:auto;"><%= item.get('name') %></td>
 						<td style="text-align:right;width:50px;"><%= item.get('mrp') %></td>

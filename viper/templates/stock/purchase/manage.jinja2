@@ -209,12 +209,14 @@
 		
 		$('#addlineItem').click(function() {
 			var purchaseId = $('input#pid').val()
+			var supplierId = $('select[name=SupplierId]').val()
 			if(!purchaseId) {
 				showMsg('error', 'Should save the purchase before adding line items!')
 				return
 			}
 			
 			var postdata = 'pid=' + purchaseId + '&'
+			postdata += 'SupplierId=' + supplierId + '&'
 			postdata += $('form#frmLineItem').serialize()
 			var jdata = $('form#frmLineItem').serializeObject()
 			jdata.Tax = jdata.Tax || 0.0

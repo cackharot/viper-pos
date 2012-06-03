@@ -10,7 +10,10 @@ from sqlalchemy import (
 	MetaData, 
 	ForeignKey,
 	)
-from datetime import datetime 	
+from sqlalchemy.orm import relationship
+
+from .Supplier import Supplier
+from datetime import datetime
 from . import Base
 from ..library.vuid import id_column, UUID
 from .AuditMixin import AuditMixin
@@ -27,9 +30,12 @@ class Product(AuditMixin,Base):
 	SellPrice 	= Column(Float)
 	MfgDate 	= Column(DateTime, nullable=True)
 	ExpiryDate	= Column(DateTime, nullable=True)
+	SupplierId	= Column(UUID(), ForeignKey('Supplier.Id'), nullable=True,index=True)
 	CategoryId 	= Column(Integer, nullable=True)
 	TaxCategoryId = Column(Integer, nullable=True)
 	Picture 	= Column(String(255), nullable=True)
+	
+	Supplier 	= relationship("Supplier")
 	
 	def __init__(self):
 		self.Name = self.Barcode = ''
