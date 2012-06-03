@@ -141,7 +141,7 @@ class OrderService(object):
 			Deletes the order details from db
 		"""
 		if tenantId and orderid:
-			DBSession.query(Order).filter(Order.OrderId==orderid,Order.TenantId==tenantId).delete()
+			DBSession.query(Order).filter(Order.Id==orderid,Order.TenantId==tenantId).delete()
 		pass
 		
 	def UpdateOrderPayment(self, orderid, orderpayment,userId):
