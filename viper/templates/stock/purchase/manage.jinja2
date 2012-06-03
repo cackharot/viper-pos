@@ -215,9 +215,6 @@
 				return
 			}
 			
-			var postdata = 'pid=' + purchaseId + '&'
-			postdata += 'SupplierId=' + supplierId + '&'
-			postdata += $('form#frmLineItem').serialize()
 			var jdata = $('form#frmLineItem').serializeObject()
 			jdata.Tax = jdata.Tax || 0.0
 
@@ -252,6 +249,10 @@
 				}
 				$('form#frmLineItem input[name=ProductId]').val('')
 			}
+			
+			var postdata = 'pid=' + purchaseId + '&'
+			postdata += 'SupplierId=' + supplierId + '&'
+			postdata += $('form#frmLineItem').serialize()
 			
 			$.post('/stock/addpurchaselineitem',postdata,function(data){
 				if(data && data.status == true) {
