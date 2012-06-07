@@ -362,9 +362,11 @@
 			this.updateAmounts()
 		},
 		updateAmounts: function () {
-			var pamt = this.model.getPaidAmount()
-			var tamt = this.model.getOrderAmount()
-			if (this.model.get('ispaid') === true || pamt > 0) {
+			var pamt = this.model.get('paidamount')
+			var tamt = this.model.get('orderamount')
+			//console.log(pamt)
+			//console.log(tamt)
+			if (pamt > 0) {
 				var balance = tamt - pamt
 				$('#paidAmount').text(pamt)
 				$('#balanceAmount').text(balance)
@@ -704,7 +706,6 @@
 					}
 
 					currentOrder.set({
-						'ispaid': (payments && payments.length > 0),
 						'paidamount': currentOrder.getPaidAmount(),
 						'orderamount': currentOrder.getOrderAmount(),
 					});
@@ -799,7 +800,6 @@
 						'paidamount': prevpaidamt + paidamount,
 						'customerid': customerid,
 						'customername': customername,
-						'ispaid': true,
 						'isloaded': true,
 					});
 

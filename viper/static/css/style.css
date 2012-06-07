@@ -41,8 +41,9 @@ tbody.scroll {
 }
 
 .box{
-	padding:3px;
-	border:1px solid #ccc;
+	padding:5px 10px;
+	border:1px solid;
 	border-radius:6px;
-	background: #eee;
+	background-color: #D9EDF7;
+    border-color: #BCE8F1;
 }

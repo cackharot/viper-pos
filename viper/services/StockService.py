@@ -50,8 +50,8 @@ class StockService(object):
 		if not tenantId:
 			return None
 		query = DBSession.query(Product).filter(Product.TenantId==tenantId)
-		
-		if searchValue and searchField:
+
+		if searchField:
 			if searchField == 'Name':
 				query = query.filter(Product.Name.like('%%%s%%' % searchValue)).order_by(Product.Name)
 			elif searchField == 'Barcode':

@@ -68,6 +68,7 @@ def main(global_config, **settings):
     config.include('viper.handlers.stock')
     config.include('viper.handlers.customer')
     config.include('viper.handlers.supplier')
+    config.include('viper.handlers.reports')
     
     CacheManager.Clear()
     
