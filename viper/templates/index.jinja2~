@@ -4,48 +4,90 @@
 	 <div class="page-header">
       <h1>Welcome {{ user.UserName}},</h1>
      </div> 
-      <div class="row-fluid">
-        <div class="span6">
-        	<h3>Return Products
-        	<span style="margin-left:20px;font-size:14px;">Total: <span id="totalReturns">0</span></span>
-        	</h3>
-        	<table class="table" id="tblReturns">
-        		<thead>
-        			<th>Barcode</th>
-        			<th>Name</th>
-        			<th>MRP</th>
-        			<th>Stock</th>
-        		</thead>
-        		<tbody>
-        		</tbody>
-        	</table>
-        </div>
-        <div class="span6">
-        	<h3>Low Stock Products</h3>
-        	
-        </div>
-        <div class="span6">
-        	<h3>Top Customers</h3>
-        	
-        </div>
-        <div class="span6">
-        	<h3>Credit Purchases</h3>
-        	
-        </div>
-        <div class="span6">
-        	<h3>Credit Orders</h3>
-        	
-        </div>
-      </div>
+	<div class="row-fluid">
+		<div class="span6">
+	    	<h3>Return Products
+	    	<span class="pull-right" style="margin-right:20px;font-size:14px;">Total: <span id="totalReturns">0</span></span>
+	    	</h3>
+	    	<div style="max-height:280px;overflow-y:auto;">
+				<table class="table table-bordered table-striped table-condensed" id="tblReturns">
+					<thead>
+						<th>Supplier</th>
+						<th>Barcode</th>
+						<th>Name</th>
+						<th>MRP</th>
+						<th>Stock</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+	    </div>
+		<div class="span6">
+			<h3>Credit Purchases
+	    	<span class="pull-right" style="margin-right:20px;font-size:14px;">Total: <span id="totalCreditPurchases">0</span></span>
+	    	</h3>
+	    	<div style="max-height:280px;overflow-y:auto;">
+				<table class="table table-bordered table-striped table-condensed" id="tblCreditPurchases">
+					<thead>
+						<th>No</th>
+						<th>Supplier</th>
+						<th>Date</th>
+						<th>Total</th>
+						<th>Paid</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+	    	</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+	<div class="row-fluid">
+	    <div class="span6">
+	    	<h3>Low Stock Products
+	    	<span class="pull-right" style="margin-right:20px;font-size:14px;">Total: <span id="totalLowStock">0</span></span>
+	    	</h3>
+	    	<div style="max-height:280px;overflow-y:auto;">
+				<table class="table table-bordered table-striped table-condensed" id="tblLowStock">
+					<thead>
+						<th>Supplier</th>
+						<th>Barcode</th>
+						<th>Name</th>
+						<th>MRP</th>
+						<th>Stock</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+	    	</div>
+	    </div>
+	    <div class="span6">
+	    	<h3>Credit Orders</h3>
+	    	
+	    </div>
+	</div>
 </section>
 <section style="display:none;" id="templates">
 	<script type="text/template"  id="tdReturnProduct">
 		<% _.each(items,function(item) { %>
 		<tr>
+			<td><%= item.SupplierName%></td>
 			<td><%= item.Barcode%></td>
 			<td><%= item.Name%></td>
 			<td><%= item.MRP%></td>
 			<td><%= item.Stock%></td>
+		</tr>
+		<% }); %>
+	</script>
+	<script type="text/template"  id="tdPurchase">
+		<% _.each(items,function(item) { %>
+		<tr>
+			<td><%= item.PurchaseNo%></td>
+			<td><%= item.SupplierName%></td>
+			<td><%= $.format.date(ToLocalDate(item.PurchaseDate),'dd-MM-yyyy h:mm a') %></td>
+			<td><%= item.PurchaseAmount%></td>
+			<td><%= item.PaidAmount%></td>
 		</tr>
 		<% }); %>
 	</script>
@@ -62,6 +104,28 @@
 				})
 				$('#totalReturns').text(data.total || data.items.length)
 				$('table#tblReturns tbody').append(rows).fadeIn()
+			}
+		})
+		
+		$.post('reports/lowstocks',{minStock:1000},function(data){
+			if(data && data.status == true) {
+				var compiled = _.template($('#tdReturnProduct').html())
+				var rows = compiled({
+					'items': data.items
+				})
+				$('#totalLowStock').text(data.total || data.items.length)
+				$('table#tblLowStock tbody').append(rows).fadeIn()
+			}
+		})
+		
+		$.post('reports/creditpurchases',{pageNo:0,pageSize:10},function(data){
+			if(data && data.status == true) {
+				var compiled = _.template($('#tdPurchase').html())
+				var rows = compiled({
+					'items': data.items
+				})
+				$('#totalCreditPurchases').text(data.total || data.items.length)
+				$('table#tblCreditPurchases tbody').fadeOut().append(rows).fadeIn()
 			}
 		})
 	})

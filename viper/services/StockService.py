@@ -4,10 +4,13 @@ import random
 from datetime import datetime,date
 
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc,func,cast,Date
+from sqlalchemy import desc,func,cast,Date,distinct
+#from sqlalchemy.sql.operators.Operators import in_
 
 from ..models import DBSession
 from ..models.Product import Product
+from ..models.Order import Order
+from ..models.LineItem import LineItem
 from ..models.Supplier import Supplier
 from ..library.ViperLog import log
 from ..models.Purchase import Purchase
@@ -46,23 +49,55 @@ class StockService(object):
 					return items
 		return None
 		
-	def GetProducts(self,tenantId,pageNo=0,pageSize=50,searchField='Name',searchValue=None):
+	def GetProducts(self,tenantId,pageNo=0,pageSize=50,searchField=None,searchValue=None):
 		if not tenantId:
 			return None
 		query = DBSession.query(Product).filter(Product.TenantId==tenantId)
 
 		if searchField:
-			if searchField == 'Name':
+			if searchField == 'Name' and searchValue:
 				query = query.filter(Product.Name.like('%%%s%%' % searchValue)).order_by(Product.Name)
-			elif searchField == 'Barcode':
+			elif searchField == 'Barcode' and searchValue:
 				query = query.filter(Product.Barcode == searchValue)
 			elif searchField == 'Status':
 				query = query.filter(Product.Status == searchValue)
-			elif searchField == 'SuppierName':
+			elif searchField == 'SuppierName' and searchValue:
 				query = query.join(Supplier).filter(Supplier.Name == searchValue)
 		
 		lstItems = query.order_by(desc(Product.UpdatedOn),desc(Product.CreatedOn)).offset(pageNo).limit(pageSize).all()
 		return lstItems
+		
+	def GetReturnableProductIds(self,tenantId,pageNo=0,pageSize=50):
+		if not tenantId:
+			return None
+		query = DBSession.query(Product.Id).filter(Product.TenantId==tenantId,Product.Status==False)
+		#query = query.order_by(desc(Product.UpdatedOn),desc(Product.CreatedOn))
+		lstItems = query.offset(pageNo).limit(pageSize).all()
+		return lstItems, query.count()
+		
+	def GetProductStock(self,tenantId,minStock=1000,productIds=None):
+		if not tenantId:
+			return None
+
+		lsb  = DBSession.query(LineItem.ProductId,func.sum(LineItem.Quantity).label('Sold')).group_by(LineItem.ProductId).subquery()
+		plsb = DBSession.query(PurchaseLineItem.ProductId,func.sum(PurchaseLineItem.Quantity).label('Bought')).group_by(PurchaseLineItem.ProductId).subquery()
+		
+		smt = DBSession.query(Product.SupplierId,Supplier.Name.label('SupplierName'),Product.Id,Product.Name,Product.Barcode,Product.MRP,(func.ifnull(plsb.c.Bought,0)-func.ifnull(lsb.c.Sold,0)).label('Stock'))
+		smt = smt.join(Supplier)
+		smt = smt.outerjoin(lsb,lsb.c.ProductId==Product.Id)
+		smt = smt.outerjoin(plsb,plsb.c.ProductId==Product.Id)
+		smt = smt.group_by(Product.Id)
+
+		if productIds and len(productIds) > 0:
+			smt = smt.filter(Product.Id.in_(productIds))
+		
+		smt = smt.filter(Product.TenantId==tenantId).subquery()
+		
+		query = DBSession.query(smt)
+		query = query.filter(smt.c.Stock<=minStock).order_by(smt.c.Stock)
+			
+		lstItems = query.offset(0).limit(20).all()
+		return lstItems, query.count()
 		
 	def AddProduct(self,entity):
 		if entity and entity.TenantId and entity.CreatedBy:
@@ -150,24 +185,32 @@ class StockService(object):
 	def SearchPurchases(self,tenantId,pageNo=0,pageSize=50,searchField=None,searchValue=None):
 		if not tenantId:
 			return None
-		query = DBSession.query(Purchase).filter(Purchase.TenantId==tenantId,Purchase.Status==True)
+		query = DBSession.query(Purchase)
 		
-		if searchValue and searchField:
-			if searchField == 'PurchaseNo':
+		if searchField:
+			if searchField == 'PurchaseNo' and searchValue:
 				query = query.filter(Purchase.PurchaseNo==searchValue)
-			elif searchField == 'SupplierId':
+			elif searchField == 'SupplierId' and searchValue:
 				query = query.filter(Purchase.SupplierId==searchValue)
-			elif searchField == 'SupplierName':
+			elif searchField == 'SupplierName' and searchValue:
 				query = query.join(Supplier).filter(Supplier.Name==searchValue)
-			elif searchField == 'Amount':
+			elif searchField == 'Amount' and searchValue:
 				query = query.filter(Purchase.PurchaseAmount == searchValue)
-			elif searchField == 'Date':
+			elif searchField == 'Date' and searchValue:
 				query = query.filter(Purchase.PurchaseDate == searchValue)
+			elif searchField == 'Credit':
+				a = DBSession.query(PurchaseLineItem.PurchaseId,func.sum(PurchaseLineItem.BuyPrice*PurchaseLineItem.Quantity).label('tamt')).group_by(PurchaseLineItem.PurchaseId).subquery()
+ 				b = DBSession.query(PurchasePayment.PurchaseId,func.sum(PurchasePayment.PaidAmount).label('pamt')).group_by(PurchasePayment.PurchaseId).subquery()
+ 				
+				query = DBSession.query(Purchase.Id,Purchase.PurchaseNo,Purchase.PurchaseDate,Supplier.Name.label('SupplierName'),a.c.tamt.label('PurchaseAmount'),func.ifnull(b.c.pamt,0).label('PaidAmount'))
+				query = query.join(Supplier).join(a).outerjoin(b).group_by(Purchase.Id)
+				query = query.filter(func.ifnull(a.c.tamt,0) >  func.ifnull(b.c.pamt,0))
 				
+		query = query.filter(Purchase.TenantId==tenantId,Purchase.Status==True)
 		query = query.order_by(desc(Purchase.PurchaseDate))
 		
 		lstItems = query.offset(pageNo).limit(pageSize).all()
-		return lstItems
+		return lstItems, query.count()
 		
 	def AddPurchaseLineItem(self,entity,tenantId):
 		if tenantId and entity and entity.PurchaseId:

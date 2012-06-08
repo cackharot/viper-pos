@@ -112,6 +112,14 @@
     	$(function(){
     		$('.dropdown-toggle').dropdown(); 
     	});
+    	
+		function ToLocalDate (inDate) {
+			if(_.isString(inDate))
+				inDate = new Date(inDate);
+			var date = new Date();
+			date.setTime(inDate.valueOf() - 60000 * inDate.getTimezoneOffset());
+			return date;
+		}	
     </script>
     {% block footerscript %}{% endblock %}
     <!--

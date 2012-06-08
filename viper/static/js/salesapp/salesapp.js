@@ -539,7 +539,7 @@
 									d.Quantity = 1.0
 									d.Name = ''
 									d.Discount = 0.0
-									d.ProductId = null
+									d.Id = null
 									that.addItemToUI(d, that)
 								} else {
 									showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
@@ -570,7 +570,7 @@
 			var item = new LineItem({
 				id: uuid(),
 				orderid: that.model.get('orderid'),
-				productid: data.ProductId,
+				productid: data.Id,
 				name: itemName,
 				barcode: barcode,
 				mrp: mrp,

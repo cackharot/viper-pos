@@ -279,14 +279,6 @@ table#tblTodayOrders tbody tr.active td{
 	$(function(){
 		$('input[name=barcode]')[0].focus()
 	});
-	
-	function ToLocalDate (inDate) {
-		if(_.isString(inDate))
-			inDate = new Date(inDate);
-	    var date = new Date();
-    	date.setTime(inDate.valueOf() - 60000 * inDate.getTimezoneOffset());
-	    return date;
-	}	
 </script>
 <style>
 	.inline-form input

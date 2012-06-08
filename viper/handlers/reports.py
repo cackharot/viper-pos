@@ -30,12 +30,35 @@ class ReportController(object):
 
 	@action(renderer='json')
 	def getreturnproducts(self):
-		items = stockService.GetProducts(self.TenantId,0,20,searchField='Status',searchValue=False)
-		if items and len(items) > 0:
-			return dict(status=True,items=[dict(Barcode=x.Barcode,Name=x.Name,MRP=x.MRP,Stock=0.0) for x in items])
+		ids, total = stockService.GetReturnableProductIds(self.TenantId,0,20)
+		if ids and len(ids) > 0:
+			items, total = stockService.GetProductStock(self.TenantId,1000,[x.Id for x in ids])
+			log.info(items)
+			log.info(total)
+			if items and len(items) > 0:
+				return dict(status=True,total=total,items=[dict(SupplierName=x.SupplierName,Barcode=x.Barcode,Name=x.Name,MRP=x.MRP,Stock=x.Stock) for x in items])
 		return dict(status=False)
 		
-	def logout(self):
-		headers = forget(self.request)
-		loginpage = route_url('login', self.request)
-		return HTTPFound(location=loginpage, headers=headers)
+	@action(renderer='json')
+	def lowstocks(self):
+		minStock = self.request.params.get('minStock',1000)
+		items, total = stockService.GetProductStock(self.TenantId,minStock)
+		if items and len(items) > 0:
+			return dict(status=True,total=total,items=[dict(SupplierName=x.SupplierName,Barcode=x.Barcode,Name=x.Name,MRP=x.MRP,Stock=x.Stock) for x in items])
+		return dict(status=False)
+		
+	@action(renderer='json')
+	def creditpurchases(self):
+		pageNo     = self.request.params.get('pageNo',0)
+		pageSize   = self.request.params.get('pageSize',10)
+		supplierId = self.request.params.get('supplierId',None)
+		items, total = stockService.SearchPurchases(self.TenantId,pageNo,pageSize,'Credit',None)
+		if items and len(items) > 0:
+			return dict(status=True,total=total,
+								items=[dict(PurchaseNo=x.PurchaseNo,
+								SupplierName=x.SupplierName,
+								PurchaseDate=x.PurchaseDate,
+								PurchaseAmount=round(x.PurchaseAmount),
+								PaidAmount=round(x.PaidAmount)) for x in items])
+		return dict(status=False)
+		
