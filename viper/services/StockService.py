@@ -201,7 +201,6 @@ class StockService(object):
 			elif searchField == 'Credit':
 				a = DBSession.query(PurchaseLineItem.PurchaseId,func.sum(PurchaseLineItem.BuyPrice*PurchaseLineItem.Quantity).label('tamt')).group_by(PurchaseLineItem.PurchaseId).subquery()
  				b = DBSession.query(PurchasePayment.PurchaseId,func.sum(PurchasePayment.PaidAmount).label('pamt')).group_by(PurchasePayment.PurchaseId).subquery()
- 				
 				query = DBSession.query(Purchase.Id,Purchase.PurchaseNo,Purchase.PurchaseDate,Supplier.Name.label('SupplierName'),a.c.tamt.label('PurchaseAmount'),func.ifnull(b.c.pamt,0).label('PaidAmount'))
 				query = query.join(Supplier).join(a).outerjoin(b).group_by(Purchase.Id)
 				query = query.filter(func.ifnull(a.c.tamt,0) >  func.ifnull(b.c.pamt,0))
@@ -210,7 +209,10 @@ class StockService(object):
 		query = query.order_by(desc(Purchase.PurchaseDate))
 		
 		lstItems = query.offset(pageNo).limit(pageSize).all()
-		return lstItems, query.count()
+		if searchField == 'Credit':
+			return lstItems, query.count()
+		else:
+			return lstItems
 		
 	def AddPurchaseLineItem(self,entity,tenantId):
 		if tenantId and entity and entity.PurchaseId:
