@@ -40,15 +40,7 @@ class Order(AuditMixin,Base):
 		self.LineItems = None
 		self.Payments = None
 		pass
-		
-	def toJSON(self):
-		serialized = dict((column_name, getattr(self, column_name))
-                          for column_name in self.__table__.c.keys())
-		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 
-		else: serialized['CustomerName']=None
-		import json
-		return json.dumps(serialized,default=jsonHandler)
-
+	
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())
 		if hasattr(self,'CustomerName'): serialized['CustomerName']=self.CustomerName 
@@ -74,4 +66,5 @@ class OrderSearchParam(object):
 		self.IpAddress = None
 		self.MinAmount = None
 		self.MaxAmount = None
+		self.Credit = False
 	pass

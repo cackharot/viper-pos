@@ -37,8 +37,8 @@ class Order(AuditMixin,Base):
 		self.OrderDate = d
 		self.ShipDate = None
 		self.IpAddress = '0.0.0.0'
-		self.LineItems = None
-		self.Payments = None
+		self.LineItems = []
+		self.Payments = []
 		pass
 	
 	def toDict(self):
@@ -66,4 +66,5 @@ class OrderSearchParam(object):
 		self.IpAddress = None
 		self.MinAmount = None
 		self.MaxAmount = None
+		self.Credit = False
 	pass

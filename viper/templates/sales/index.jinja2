@@ -48,7 +48,7 @@ table#tblTodayOrders tbody tr.active td{
 					<tr>
 						<th>No#</th>
 						<th>Time</th>
-						<th>Amt</th>
+						<th class="tright">Amt</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -74,8 +74,14 @@ table#tblTodayOrders tbody tr.active td{
 		  		<div class="span2" style="margin-left:0px;text-align: right;">
 		  			<strong>Customer Name:</strong>
 		  		</div>
-		  		<div class="span3">
+		  		<div class="span4">
 			  		 <span id="customerName"></span>
+		  		</div>
+		  		<div class="span2" style="text-align: right;">
+		  			<strong>Payment Type:</strong>
+		  		</div>
+		  		<div class="span4">
+			  		<span id="paymentType">---</span>
 		  		</div>
 			</div>
 			<div class="clear"></div>
@@ -95,7 +101,7 @@ table#tblTodayOrders tbody tr.active td{
 						<td><input type="text" name="barcode"/></td>
 						<td><input type="text" name="itemName"/></td>
 						<td><input type="text" name="quantity" value="1"/></td>
-						<td><a id="add-item" class="btn btn-info"><i class="icon-plus icon-white"></i> Add </a></td>
+						<td><a id="add-item" class="btn btn-inverse btn-info"><i class="icon-plus icon-white"></i> Add </a></td>
 					</tr>
 				</tbody>
 			</table>
@@ -202,18 +208,18 @@ table#tblTodayOrders tbody tr.active td{
 		<tr>
 			<th>Customer:</th>
 			<td>
-				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..."  value="<%=item.get('customername')||''%>" required />
-				<input type="hidden" name="customerid" value="<%=item.get('customerid')||''%>" />
+				<input type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..."  value="<%=item.get('customername')||''%>" required></input>
+				<input type="hidden" name="customerid" value="<%=item.get('customerid')||''%>"></input>
 				<div class="controls">
 					<fieldset>
 						<label class="radio inline">
-							<input type="radio" name="searchfield" value="name" checked="checked"/> Name
+							<input type="radio" name="searchfield" value="name" checked="checked"></input> Name
 						</label>
 						<label class="radio inline">
-							<input type="radio" name="searchfield" value="mobile"/> Mobile
+							<input type="radio" name="searchfield" value="mobile"></input> Mobile
 						</label>
 						<label class="radio inline">
-							<input type="radio" name="searchfield" value="customerno"/> Customer No
+							<input type="radio" name="searchfield" value="customerno"></input> Customer No
 						</label>
 					</fieldset>
 				</div>
@@ -233,7 +239,7 @@ table#tblTodayOrders tbody tr.active td{
 		<tr>
 			<th>Paid Amount: Rs. </th>
 			<td>
-				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('balanceamount').toFixed(2)%>" required autofocus="autofocus"/>
+				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('balanceamount').toFixed(2)%>" required autofocus="autofocus"></input>
 			</td>
 		</tr>
 	</script>

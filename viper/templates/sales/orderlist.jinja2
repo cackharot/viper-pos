@@ -33,20 +33,16 @@
 						{{item.OrderDate | datetimeformat}}
 					</td>
 					<td>
-						{{item.CustomerName}}
+						{{item.CustomerName | d('--',true)}}
 					</td>
 					<td>
-						{%if item.LineItems is not none%}
-						 	{{item.LineItems|count}}
-						{%else%}
-							0
-						{% endif %}
+						{{item.ItemCount}}
 					</td>
 					<td>
-						{{item.OrderAmount}}
+						{{item.OrderAmount | round}}
 					</td>
 					<td>
-						{{item.PaidAmount}}
+						{{item.PaidAmount | round}}
 					</td>
 					<td>
 						<div class="btn-group">

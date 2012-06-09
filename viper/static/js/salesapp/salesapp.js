@@ -54,41 +54,38 @@
 		model: LineItem,
 		url: '/sales/savelineitems',
 		initialize: function (models, options) {
-			this.bind("add", this.addLineItemRecord);
-			this.bind("change", this.updateTotal);
-			this.bind("reset", this.resetRecords);
+			this.bind("add", this.addLineItemRecord)
+			this.bind("change", this.updateTotal)
+			this.bind("reset", this.resetRecords)
 		},
 		refreshUI: function (callback) {
 			var that = this
-			this.hideUI(function () {
-				that.resetRecords();
-				var cnt = 1;
-				that.each(function (item) {
-					item.set({
-						'slno': cnt++
-					})
-					that.addItemTpl(item)
-				});
-				that.updateTotal();
-				that.showUI(function () {
-					if (callback) callback();
-				});
+			$('#tblOrderLineItems tbody').slideUp('normal')
+			this.resetRecords()
+			var cnt = 1
+			this.each(function (item) {
+				item.set({
+					'slno': cnt++
+				})
+				that.addItemTpl(item)
 			});
+			this.updateTotal()
+			$('#tblOrderLineItems tbody').slideDown('slow')
 		},
 		addItemTpl: function (item) {
 			var n = item.get('slno')
 			if (!n) item.set({
 				'slno': this.length
 			})
-			var compiled = _.template($('#tpl-lineitem').html());
+			var compiled = _.template($('#tpl-lineitem').html())
 			var tr = compiled({
 				'item': item
-			});
-			$('#tblOrderLineItems tbody').prepend(tr);
+			})
+			$('#tblOrderLineItems tbody').prepend(tr)
 		},
 		addLineItemRecord: function (item) {
-			this.addItemTpl(item);
-			this.updateTotal();
+			this.addItemTpl(item)
+			this.updateTotal()
 		},
 		updateTotal: function () {
 			var qas = this.getQAS();
@@ -137,12 +134,12 @@
 			$('#totalItemsQuantity').text('0/0');
 		},
 		hideUI: function (callback) {
-			$('#tblOrderLineItems tbody').fadeOut('normal', function (e) {
+			$('#tblOrderLineItems tbody').slideUp('normal',function (e) {
 				if (callback) callback();
 			});
 		},
 		showUI: function (callback) {
-			$('#tblOrderLineItems tbody').fadeIn('false', function (e) {
+			$('#tblOrderLineItems tbody').slideDown('slow',function (e) {
 				if (callback) callback();
 			});
 		}
@@ -305,7 +302,6 @@
 				dataType: 'json',
 				type: 'POST'
 			}).done(function (data, textStatus, xhr) {
-				if (typeof (data) == "string") data = eval('(' + data + ')');
 				if (data && data.length > 0) {
 					for (var item = data.length - 1; item >= 0; --item) {
 						if (data[item] && data[item].Id) {
@@ -364,8 +360,9 @@
 		updateAmounts: function () {
 			var pamt = this.model.get('paidamount')
 			var tamt = this.model.get('orderamount')
-			//console.log(pamt)
-			//console.log(tamt)
+			
+			$('#paymentType').text(pamt == 0 ? 'Cash' : (tamt>pamt ? 'Credit':'Cash'))
+			
 			if (pamt > 0) {
 				var balance = tamt - pamt
 				$('#paidAmount').text(pamt)
@@ -632,28 +629,25 @@
 
 			if (found) {
 				this.model = found
-				this.model.bind("change", this.render, this);
+				this.model.bind("change", this.render, this)
 				if (!found.get('isloaded') === true) {
 					this.fetchAndEditOrder(orderid)
 				} else {
-					var that = this
-					this.model.get('lineItems').refreshUI(function () {
-						that.render()
-						var $txtBarcode = $('input[name=barcode]');
-						$txtBarcode[0].select(0, $txtBarcode.val().length);
-					})
+					this.model.get('lineItems').refreshUI()
+					this.render()
+					var $txtBarcode = $('input[name=barcode]')
+					$txtBarcode[0].select(0, $txtBarcode.val().length)
 				}
 			} else {
 				showMsg('error', '<strong>Oops!</strong> Something went really wrong.')
 			}
 		},
 		fetchAndEditOrder: function (orderid) {
-			var currentOrder = this.model;
-			var items = this.model.get('lineItems');
-
-			items.refreshUI();
+			var currentOrder = this.model
+			var items = this.model.get('lineItems')
+			items.hideUI()
+			
 			$.post('/sales/getorder/' + orderid, null, function (data) {
-				if (typeof (data) == "string") data = eval('(' + data + ')');
 				if (data) {
 					var o = data.order;
 					var orderid = o.Id;
@@ -710,6 +704,8 @@
 						'orderamount': currentOrder.getOrderAmount(),
 					});
 
+					items.refreshUI()
+					
 					var $txtBarcode = $('input[name=barcode]');
 					$txtBarcode[0].select(0, $txtBarcode.val().length);
 				}
@@ -773,7 +769,6 @@
 						if (data.success === false) {
 							return false;
 						}
-						if (typeof (data.mylist) == "string") data.mylist = eval('(' + data.mylist + ')');
 						// We good!
 						return data.mylist;
 					}

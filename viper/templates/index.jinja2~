@@ -15,8 +15,8 @@
 						<th>Supplier</th>
 						<th>Barcode</th>
 						<th>Name</th>
-						<th>MRP</th>
-						<th>Stock</th>
+						<th class="tright">MRP</th>
+						<th class="tright">Stock</th>
 					</thead>
 					<tbody>
 					</tbody>
@@ -33,8 +33,8 @@
 						<th>No</th>
 						<th>Supplier</th>
 						<th>Date</th>
-						<th>Total</th>
-						<th>Paid</th>
+						<th class="tright">Total</th>
+						<th class="tright">Paid</th>
 					</thead>
 					<tbody>
 					</tbody>
@@ -54,8 +54,8 @@
 						<th>Supplier</th>
 						<th>Barcode</th>
 						<th>Name</th>
-						<th>MRP</th>
-						<th>Stock</th>
+						<th class="tright">MRP</th>
+						<th class="tright">Stock</th>
 					</thead>
 					<tbody>
 					</tbody>
@@ -63,8 +63,22 @@
 	    	</div>
 	    </div>
 	    <div class="span6">
-	    	<h3>Credit Orders</h3>
-	    	
+	    	<h3>Credit Orders
+	    	<span class="pull-right" style="margin-right:20px;font-size:14px;">Total: <span id="totalCreditOrders">0</span></span>
+	    	</h3>
+	    	<div style="max-height:280px;overflow-y:auto;">
+				<table class="table table-bordered table-striped table-condensed" id="tblCreditOrders">
+					<thead>
+						<th>No</th>
+						<th>Customer</th>
+						<th>Date</th>
+						<th class="tright">Total</th>
+						<th class="tright">Paid</th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+	    	</div>
 	    </div>
 	</div>
 </section>
@@ -75,8 +89,8 @@
 			<td><%= item.SupplierName%></td>
 			<td><%= item.Barcode%></td>
 			<td><%= item.Name%></td>
-			<td><%= item.MRP%></td>
-			<td><%= item.Stock%></td>
+			<td class="tright"><%= item.MRP%></td>
+			<td class="tright"><%= item.Stock%></td>
 		</tr>
 		<% }); %>
 	</script>
@@ -84,10 +98,21 @@
 		<% _.each(items,function(item) { %>
 		<tr>
 			<td><%= item.PurchaseNo%></td>
-			<td><%= item.SupplierName%></td>
-			<td><%= $.format.date(ToLocalDate(item.PurchaseDate),'dd-MM-yyyy h:mm a') %></td>
-			<td><%= item.PurchaseAmount%></td>
-			<td><%= item.PaidAmount%></td>
+			<td><%= item.SupplierName || '---'%></td>
+			<td><%= $.format.date(ToLocalDate(item.PurchaseDate),'dd-MM-yyyy  h:mm a') %></td>
+			<td class="tright"><%= item.PurchaseAmount.toFixed(2)%></td>
+			<td class="tright"><%= item.PaidAmount.toFixed(2)%></td>
+		</tr>
+		<% }); %>
+	</script>
+	<script type="text/template"  id="tdOrder">
+		<% _.each(items,function(item) { %>
+		<tr>
+			<td><%= item.OrderNo%></td>
+			<td><%= item.CustomerName || '---'%></td>
+			<td><%= $.format.date(ToLocalDate(item.OrderDate),'dd-MM-yyyy  h:mm a') %></td>
+			<td class="tright"><%= item.OrderAmount.toFixed(2)%></td>
+			<td class="tright"><%= item.PaidAmount.toFixed(2)%></td>
 		</tr>
 		<% }); %>
 	</script>
@@ -103,7 +128,10 @@
 					'items': data.items
 				})
 				$('#totalReturns').text(data.total || data.items.length)
-				$('table#tblReturns tbody').append(rows).fadeIn()
+				$('table#tblReturns tbody').slideUp().append(rows).slideDown('slow')
+			} else {
+				var msg = '<tr><td colspan="5" class="alert alert-info"><div><strong>Hooray!</strong> No Items are returnable!</div></td></tr>'
+				$('table#tblReturns tbody').slideUp().append(msg).slideDown()
 			}
 		})
 		
@@ -114,7 +142,10 @@
 					'items': data.items
 				})
 				$('#totalLowStock').text(data.total || data.items.length)
-				$('table#tblLowStock tbody').append(rows).fadeIn()
+				$('table#tblLowStock tbody').slideUp().append(rows).slideDown('slow')
+			} else {
+				var msg = '<tr><td colspan="5" class="alert alert-info"><div><strong>Hooray!</strong> No Low Stock Items!</div></td></tr>'
+				$('table#tblLowStock tbody').slideUp().append(msg).slideDown()
 			}
 		})
 		
@@ -125,7 +156,24 @@
 					'items': data.items
 				})
 				$('#totalCreditPurchases').text(data.total || data.items.length)
-				$('table#tblCreditPurchases tbody').fadeOut().append(rows).fadeIn()
+				$('table#tblCreditPurchases tbody').slideUp().append(rows).slideDown('slow')
+			} else {
+				var msg = '<tr><td colspan="5" class="alert alert-info"><div><strong>Hooray!</strong> No Credit Purchases so far!</div></td></tr>'
+				$('table#tblCreditPurchases tbody').slideUp().append(msg).slideDown()
+			}
+		})
+		
+		$.post('reports/creditorders',{pageNo:0,pageSize:10},function(data){
+			if(data && data.status == true) {
+				var compiled = _.template($('#tdOrder').html())
+				var rows = compiled({
+					'items': data.items
+				})
+				$('#totalCreditOrders').text(data.total || data.items.length)
+				$('table#tblCreditOrders tbody').slideUp().append(rows).slideDown('slow')
+			} else {
+				var msg = '<tr><td colspan="5" class="alert alert-info"><div><strong>Hooray!</strong> No Credit Orders so far!</div></td></tr>'
+				$('table#tblCreditOrders tbody').slideUp().append(msg).slideDown()
 			}
 		})
 	})

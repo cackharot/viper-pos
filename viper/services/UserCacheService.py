@@ -1,8 +1,4 @@
 from ..library import CacheManager
-import uuid
-
-import logging
-log = logging.getLogger(__name__)
 
 userCacheKey = 'user:'	
 		

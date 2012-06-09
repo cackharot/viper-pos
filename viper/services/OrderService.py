@@ -8,7 +8,7 @@ from sqlalchemy import desc,func,cast,Date
 
 from ..models import DBSession
 from ..models.Product import Product
-from ..models.Customer import Customer
+from ..models.Customer import Customer, CustomerContactDetails
 from ..models.Order import Order
 from ..models.LineItem import LineItem
 from ..models.OrderPayment import OrderPayment
@@ -189,75 +189,69 @@ class OrderService(object):
 				PageNo (default=0)
 				PageSize (default=50)
 		"""
-		if searchParam:
-			query = DBSession.query(Order)
+		if not searchParam or not searchParam.TenantId:
+			return None
 			
-			if not searchParam.TenantId:
-				return None
+		osq = DBSession.query(LineItem.OrderId,func.count(LineItem.OrderId).label('ItemCount'),func.sum(LineItem.Quantity*LineItem.SellPrice).label('OrderAmount'))
+		osq = osq.join(Order,Order.Id==LineItem.OrderId).group_by(LineItem.OrderId).subquery()
+		
+		psq = DBSession.query(OrderPayment.OrderId,func.sum(OrderPayment.PaidAmount).label('PaidAmount'))
+		psq = psq.join(Order,Order.Id==OrderPayment.OrderId).group_by(OrderPayment.OrderId).subquery()
+		
+		query = DBSession.query(Order.Id,Order.OrderNo,Order.OrderDate,Order.CustomerId,Order.TenantId,Order.CreatedBy,Order.CreatedOn,Order.UpdatedBy,Order.UpdatedOn,Order.Status,Order.IpAddress,Order.ShipDate,CustomerContactDetails.FirstName.label('CustomerName'),osq.c.ItemCount,osq.c.OrderAmount,psq.c.PaidAmount)
+		query = query.join(osq,osq.c.OrderId==Order.Id).join(psq,psq.c.OrderId==Order.Id)
+		query = query.outerjoin(Customer,Customer.Id==Order.CustomerId)
+		query = query.outerjoin(CustomerContactDetails,Customer.Id==CustomerContactDetails.CustomerId)
+		
+		query = query.filter(Order.TenantId==searchParam.TenantId)
+		query = query.filter(Order.Status==True)
+		
+		if searchParam.Credit:
+			query = query.filter((func.ifnull(osq.c.OrderAmount,0) > func.ifnull(psq.c.PaidAmount,0)))
+		
+		if searchParam.UserId:
+			query = query.filter(Order.CreatedBy==searchParam.UserId, \
+									   Order.UpdatedBy==searchParam.UserId)
+		if searchParam.OrderNo:
+			query = query.filter(Order.OrderNo==searchParam.OrderNo)
+		if searchParam.CustomerId:
+			query = query.filter(Order.CustomerId==searchParam.CustomerId)
+		if searchParam.IpAddress:
+			query = query.filter(Order.IpAddress==searchParam.IpAddress)
 			
-			query = query.filter(Order.TenantId==searchParam.TenantId)
-			query = query.filter(Order.Status==True)
+		if searchParam.FromOrderDate and not searchParam.ToOrderDate:
+			query = query.filter(cast(Order.OrderDate,Date) > searchParam.FromOrderDate)
+		if not searchParam.FromOrderDate and searchParam.ToOrderDate:
+			query = query.filter(cast(Order.OrderDate,Date) < searchParam.ToOrderDate)
+		if searchParam.FromOrderDate and searchParam.ToOrderDate:
+			query = query.filter(cast(Order.OrderDate,Date) > searchParam.FromOrderDate, \
+									cast(Order.OrderDate,Date) <= searchParam.ToOrderDate)
+									
+		if searchParam.MinAmount and not searchParam.MaxAmount:
+			query = query.filter(Order.OrderAmount >= searchParam.MinAmount)
+		if not searchParam.MinAmount and searchParam.MaxAmount:
+			query = query.filter(Order.OrderAmount <= searchParam.MaxAmount)
+		if searchParam.MinAmount and searchParam.MaxAmount:
+			query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
+									Order.OrderAmount <= searchParam.MaxAmount)
+		
+		if not searchParam.PageNo:
+			searchParam.PageNo = 0
+		if not searchParam.PageSize and searchParam.PageSize <=0:
+			searchParam.PageSize = 50
 			
-			if searchParam.UserId:
-				query = query.filter(Order.CreatedBy==searchParam.UserId, \
-										   Order.UpdatedBy==searchParam.UserId)
-			if searchParam.OrderNo:
-				query = query.filter(Order.OrderNo==searchParam.OrderNo)
-			if searchParam.CustomerId:
-				query = query.filter(Order.CustomerId==searchParam.CustomerId)
-			if searchParam.IpAddress:
-				query = query.filter(Order.IpAddress==searchParam.IpAddress)
-				
-			if searchParam.FromOrderDate and not searchParam.ToOrderDate:
-				query = query.filter(cast(Order.OrderDate,Date) > searchParam.FromOrderDate)
-			if not searchParam.FromOrderDate and searchParam.ToOrderDate:
-				query = query.filter(cast(Order.OrderDate,Date) < searchParam.ToOrderDate)
-			if searchParam.FromOrderDate and searchParam.ToOrderDate:
-				query = query.filter(cast(Order.OrderDate,Date) > searchParam.FromOrderDate, \
-										cast(Order.OrderDate,Date) <= searchParam.ToOrderDate)
-										
-			if searchParam.MinAmount and not searchParam.MaxAmount:
-				query = query.filter(Order.OrderAmount >= searchParam.MinAmount)
-			if not searchParam.MinAmount and searchParam.MaxAmount:
-				query = query.filter(Order.OrderAmount <= searchParam.MaxAmount)
-			if searchParam.MinAmount and searchParam.MaxAmount:
-				query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
-										Order.OrderAmount <= searchParam.MaxAmount)
-			
-			if not searchParam.PageNo:
-				searchParam.PageNo = 0
-			
-			if not searchParam.PageSize and searchParam.PageSize <=0:
-				searchParam.PageSize = 50
-				
-			query = query.order_by(desc(Order.OrderDate))
-			query = query.limit(searchParam.PageSize).offset(searchParam.PageNo)
-			orders = query.all()
-			
-			if orders:
-				for order in orders:
-					if order:
-						cus = customerService.GetCustomer(order.CustomerId,order.TenantId)
-						if cus:
-							order.CustomerName = cus.Contacts[0].FirstName
-						else:
-							order.CustomerName = None
-						#fetch the line items here
-						order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId==order.Id).all()
-						if order.LineItems:
-							order.OrderAmount = sum([x.Amount for x in order.LineItems])
-						#fetch the payment details
-						order.Payments = DBSession.query(OrderPayment).filter(OrderPayment.OrderId==order.Id, OrderPayment.Status==True).all()
-						if order.Payments:
-							order.PaidAmount = sum([x.PaidAmount for x in order.Payments])
-			
+		query = query.order_by(desc(Order.OrderDate))
+		orders = query.limit(searchParam.PageSize).offset(searchParam.PageNo).all()
+		
+		if searchParam.Credit:
+			return orders, query.count()
+		else:
 			return orders
-		return None
 		
 	def GenerateOrderNo(self,tenantId):
 		tmp = DBSession.query(func.max(Order.OrderNo)).filter(Order.TenantId==tenantId).scalar()
 		if tmp != None: return int(tmp)+1 
-		else: return 1
+		else: return 1000
 		
 	pass
 

@@ -6,27 +6,40 @@ from datetime import datetime,date
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import desc,func,cast,Date
 from sqlalchemy import or_
+from sqlalchemy.orm import joinedload, subqueryload
 
 from ..models import DBSession
 from ..models.Customer import Customer, CustomerContactDetails
 from ..library.ViperLog import log
+
+from .CustomerCacheService import CustomerCacheService
 
 class CustomerService(object):
 	"""
 		Customer management service
 	"""
 	def GetCustomer(self,id,tenantId):
-		entity = DBSession.query(Customer).filter(Customer.Id==id,Customer.TenantId==tenantId,Customer.Status==True).one()
+		entity = CustomerCacheService.Get(id)
+		if entity and entity.TenantId == tenantId:
+			return entity
+		entity = DBSession.query(Customer).options(joinedload(Customer.Contacts))\
+						.filter(Customer.Id==id,Customer.TenantId==tenantId,Customer.Status==True).first()
+		CustomerCacheService.Add(entity)
 		return entity
 		
 	def GetDefaultCustomer(self,tenantId):
-		entity = DBSession.query(Customer).filter(Customer.TenantId==tenantId,Customer.CustomerNo==1,Customer.Status==True).first()
+		entity = CustomerCacheService.GetDefault(tenantId)
+		if entity and entity.TenantId == tenantId:
+			return entity
+		entity = DBSession.query(Customer).options(joinedload(Customer.Contacts)).filter(Customer.TenantId==tenantId,Customer.CustomerNo==1,Customer.Status==True).first()
+		CustomerCacheService.AddDefault(entity)
 		return entity
 		
 	def SearchCustomers(self,tenantId,pageNo=0,pageSize=50,searchField='name',searchValue=None):
 		if not tenantId:
 			return None
-		query = DBSession.query(Customer).filter(Customer.TenantId==tenantId,Customer.Status==True)\
+		query = DBSession.query(Customer).options(joinedload(Customer.Contacts))\
+							.filter(Customer.TenantId==tenantId,Customer.Status==True)\
 							.join(CustomerContactDetails)
 		
 		if searchValue and searchValue != '':
@@ -62,6 +75,7 @@ class CustomerService(object):
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
 			DBSession.add(entity)
+			CustomerCacheService.Add(entity)
 			return True
 		return False
 		
@@ -69,18 +83,23 @@ class CustomerService(object):
 		if entity and entity.Id and entity.TenantId and entity.UpdatedBy and len(entity.Contacts)>0:
 			DBSession.autoflush = False
 			cnt = entity.Contacts[0]
-			entity.Contacts[0].CustomerId = entity.Id
+			cnt.CustomerId = entity.Id
 			if self.CheckCustomerExists(entity.Id, entity.TenantId, entity.CustomerNo, cnt.Mobile, cnt.Email):
 				DBSession.expire(entity)
 				raise Exception('Customer Number or email or mobile already exists!')
 			entity.UpdatedOn = datetime.utcnow()
 			entity.Status = True
-			DBSession.add(entity)
+			if not entity in DBSession:
+				DBSession.add(entity)
+			CustomerCacheService.Add(entity)
+			if entity.CustomerNo == 1:
+				CustomerCacheService.AddDefault(entity)
 			return True
 		return False
 		
 	def DeleteCustomer(self,id,tenantId):
 		if id and tenantId:
+			CustomerCacheService.Remove(id)
 			return DBSession.query(Customer).filter(Customer.Id==id,\
 					Customer.TenantId==tenantId).delete()
 		return False

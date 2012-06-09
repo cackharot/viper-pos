@@ -56,10 +56,15 @@ def getTodayOrders(request):
 	searchParam.FromOrderDate = d.replace(day=d.day-1)
 	searchParam.ToOrderDate = d
 	searchParam.TenantId = request.user.TenantId
-	model = orderServiceProxy.SearchOrders(searchParam)
+	entities = orderServiceProxy.SearchOrders(searchParam)
 
-	if model:
-		items = [x.toDict() for x in model]
+	if entities:
+		items = [dict(OrderNo=x.OrderNo,Id=x.Id,
+								CustomerId=x.CustomerId,
+								CustomerName=x.CustomerName,
+								OrderDate=x.OrderDate,
+								OrderAmount=(x.OrderAmount),
+								PaidAmount=(x.PaidAmount)) for x in entities]
 		return items
 	return None
 	
