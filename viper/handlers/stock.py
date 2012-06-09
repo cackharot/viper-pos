@@ -40,6 +40,7 @@ def includeme(config):
 	config.add_handler('markreturnproduct', '/stock/markreturnproduct/{pid}',handler=StockController,action='markReturnProduct')
 
 	config.add_route('products', '/stock/products')
+	config.add_route('products_xhr', '/stock/products_xhr')
 	config.add_route('purchases', '/stock/purchases')
 	config.add_route('addproduct', '/stock/manageproduct')
 	config.add_route('addpurchase', '/stock/managepurchase')
@@ -71,6 +72,13 @@ class StockController(object):
 		
 	@action(renderer='templates/stock/products/index.jinja2')
 	def products(self):
+		return self.getproducts()
+		
+	@action(renderer='templates/stock/products/partialItemList.jinja2',xhr=True)
+	def products_xhr(self):
+		return self.getproducts()
+	
+	def getproducts(self):
 		pageNo = self.request.params.get('pageNo',0)
 		pageSize = self.request.params.get('pageSize', 50)
 		searchValue = self.request.params.get('searchValue', None)

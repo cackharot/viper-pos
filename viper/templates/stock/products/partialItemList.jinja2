@@ -1,0 +1,79 @@
+{% if model != None and (model | count) > 0 %} 
+<table id="prdTable" class="table table-bordered table-striped table-condensed">
+	<thead>
+		<tr>
+			<th><i class="icon-barcode"></i> Barcode</th>
+			<th>Name</th>
+			<th>Supplier</th>
+			<th style="text-align:right;">MRP</th>
+			<!--<th style="text-align:right;">BuyPrice</th>-->
+			<th style="text-align:right;">SellPrice</th>
+			<th style="text-align:right;">Discount</th>
+			<th style="text-align:center;">Created On</th>
+			<th style="text-align:center;">Updated On</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in model -%}
+			<tr data-id="{{item.Id}}" class="{{'alert alert-error' if not item.Status}}">
+				<td data-col="Barcode" class="edit">
+					{{item.Barcode}}
+				</td>
+				<td data-col="Name" class="edit">
+					{{item.Name}}
+				</td>
+				<td>
+					{{item.Supplier.Name}}
+				</td>
+				<td data-col="MRP" class="edit" style="text-align:right;">
+					{{item.MRP}}
+				</td>
+				<!--<td style="text-align:right;">
+					{{item.BuyPrice}}
+				</td>-->
+				<td data-col="SellPrice" class="edit" style="text-align:right;">
+					{{item.SellPrice}}
+				</td>
+				<td data-col="Discount" class="edit" style="text-align:right;">
+					{{item.Discount}}
+				</td>
+				<td style="text-align:center;">
+					{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}
+				</td>
+				<td style="text-align:center;">
+					{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}
+				</td>
+				<td>
+					<div class="btn-group">
+						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							Action <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="{{'editproduct' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
+							</li>
+							<li>
+								<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
+							</li>
+							{% if item.Status %}
+							<li>
+								<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Mark Return</a>
+							</li>
+							{% else %}
+							<li>
+								<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Make Active</a>
+							</li>
+							{% endif %}
+						</ul>
+					</div>
+				</td>
+			</tr>
+		{%- endfor %}
+	</tbody>
+</table>
+{% else %}
+	<div class="alert alert-info">
+		No products found!
+	</div>
+{% endif %}

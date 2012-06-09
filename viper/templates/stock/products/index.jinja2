@@ -11,87 +11,20 @@
 		 </h1>
 	</div> 	
 	<div class="row-fluid">
-		<div class="span12">&nbsp;</div>
-	</div>
-    {% if model != None and (model | count) > 0 %} 
-	<table id="prdTable" class="table table-bordered table-striped table-condensed">
-		<thead>
-			<tr>
-				<th><i class="icon-barcode"></i> Barcode</th>
-				<th>Name</th>
-				<th>Supplier</th>
-				<th style="text-align:right;">MRP</th>
-				<!--<th style="text-align:right;">BuyPrice</th>-->
-				<th style="text-align:right;">SellPrice</th>
-				<th style="text-align:right;">Discount</th>
-				<th style="text-align:center;">Created On</th>
-				<th style="text-align:center;">Updated On</th>
-				<th>Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for item in model %}
-				<tr class="{{'alert alert-error' if not item.Status}}">
-					<td>
-						{{item.Barcode}}
-					</td>
-					<td>
-						{{item.Name}}
-					</td>
-					<td>
-						{{item.Supplier.Name}}
-					</td>
-					<td style="text-align:right;">
-						{{item.MRP}}
-					</td>
-					<!--<td style="text-align:right;">
-						{{item.BuyPrice}}
-					</td>-->
-					<td style="text-align:right;">
-						{{item.SellPrice}}
-					</td>
-					<td style="text-align:right;">
-						{{item.Discount}}
-					</td>
-					<td style="text-align:center;">
-						{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}
-					</td>
-					<td style="text-align:center;">
-						{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}
-					</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-								Action <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="{{'editproduct' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
-								</li>
-								<li>
-									<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
-								</li>
-								{% if item.Status %}
-								<li>
-									<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Mark Return</a>
-								</li>
-								{% else %}
-								<li>
-									<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Make Active</a>
-								</li>
-								{% endif %}
-							</ul>
-						</div>
-					</td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	{% else %}
-		<div class="alert alert-info">
-			No products found!
+		<div class="span12">
+			<form id="searchForm" class="well form-inline" action="{{'products_xhr'|route_url}}">
+				<label for="searchValue">Search Value: </label>
+				<input type="text" name="searchValue" placeholder="Enter barcode or item name" id="searchValue" autofocus/>
+				<input type="radio" name="searchField" value="Barcode" checked/> Barcode
+				<input type="radio" name="searchField" value="Name"/> Name
+				<input type="submit" name="submit" value="Search" class="btn btn-success"/>
+				<input type="reset" name="reset" value="Reset" class="btn"/>
+			</form>
 		</div>
-	{% endif %}
+	</div>
+	<div id="result">
+    	{% include 'templates/stock/products/partialItemList.jinja2' with context %}
+	</div>
 </section>      
 {% endblock %}
 {% block footerscript %}
@@ -105,12 +38,58 @@ tr.alert-error td{
 <script>
 	$(function(){
 		//$('#prdTable').dataTable();
-		$('#prdTable a.pstatus').click(function(){
+		
+		$('form#searchForm').submit(function(){
+			var postdata = $(this).serialize()
+			$.post($(this).attr('action'),postdata,function(data){
+				if(data){
+					$('#result').html(data)
+				}else{
+					// search returns no value
+					$('#result').html('<div class="alert alert-info">No items found!</div>')
+				}
+			})
+			return false
+		})
+		
+		$('table#prdTable tbody td.edit').live('click', function(){
+			var w = $(this).width()-10
+			$(this).editable(function(value,settings){
+				var col = $(this).data('col')
+				var id = $(this).parent().data('id')
+				var val = null
+				if(col != 'Name' && col != 'Barcode') {
+					val = !isNaN(value) ? parseFloat(value) : null
+					value = val
+				}else{
+					val = value
+				}
+				if(val) {
+					var postdata = {id:id, field:col, value:val}
+					$.post('/stock/updateproduct_xhr',postdata,function(data){
+						if(data && data.status == true) {
+							//update success
+						}else{
+							// failed
+						}
+					},'json')
+					return value
+				}
+			},
+			{
+				event: 'edit',
+				height: 20,
+				width: w,
+				cssclass: 'inline-form',
+			})
+			$(this).trigger('edit')
+		})
+		
+		$('table#prdTable a.pstatus').live('click',function(){
 			var url = $(this).data('url')
 			var st = $(this).data('status')
 			var tr = $(this).closest('tr')
 			var that = $(this)
-						
 			$.post(url,{status:!(st == 'True')},function(data){
 				if(data && data.status == true) {
 					if(st == 'True') {
