@@ -17,11 +17,13 @@
 				<input type="text" name="searchValue" placeholder="Enter barcode or item name" id="searchValue" autofocus/>
 				<input type="radio" name="searchField" value="Barcode" checked/> Barcode
 				<input type="radio" name="searchField" value="Name"/> Name
+				<input type="hidden" name="pageSize" value="20"/>
 				<input type="submit" name="submit" value="Search" class="btn btn-success"/>
 				<input type="reset" name="reset" value="Reset" class="btn"/>
 			</form>
 		</div>
 	</div>
+	<div id="statusMessage"></div>
 	<div id="result">
     	{% include 'templates/stock/products/partialItemList.jinja2' with context %}
 	</div>
@@ -37,8 +39,6 @@ tr.alert-error td{
 </style>
 <script>
 	$(function(){
-		//$('#prdTable').dataTable();
-		
 		$('form#searchForm').submit(function(){
 			var postdata = $(this).serialize()
 			$.post($(this).attr('action'),postdata,function(data){
@@ -56,21 +56,53 @@ tr.alert-error td{
 			var w = $(this).width()-10
 			$(this).editable(function(value,settings){
 				var col = $(this).data('col')
-				var id = $(this).parent().data('id')
+				var tr = $(this).parent()
+				var id = tr.data('id')
 				var val = null
+				
+				value = value.trim()
+				
 				if(col != 'Name' && col != 'Barcode') {
 					val = !isNaN(value) ? parseFloat(value) : null
 					value = val
 				}else{
 					val = value
 				}
+				
 				if(val) {
-					var postdata = {id:id, field:col, value:val}
+					var postdata = {id:id}
+					if(col == 'SellPrice') {
+						var mrp = parseFloat(tr.children('td[data-col=MRP]').text())
+						var sellPrice = val
+						var discount = (((mrp-sellPrice)*100)/mrp)
+						postdata.SellPrice = sellPrice
+						postdata.Discount = discount
+						tr.children('td[data-col=Discount]').text(discount.toFixed(2))
+					} else if(col == 'Discount') {
+						var mrp = parseFloat(tr.children('td[data-col=MRP]').text())
+						var discount = val
+						var sellPrice = Math.round(mrp - (mrp * (discount/100.0)))
+						postdata.Discount = discount
+						postdata.SellPrice = sellPrice
+						tr.children('td[data-col=SellPrice]').text(sellPrice)
+					} else if(col == 'MRP') {
+						var discount = parseFloat(tr.children('td[data-col=Discount]').text())
+						var mrp = val
+						var sellPrice = Math.round(mrp - (mrp * (discount/100.0)))
+						postdata.MRP = mrp
+						postdata.SellPrice = sellPrice
+						tr.children('td[data-col=SellPrice]').text(sellPrice)
+					}else{
+						postdata[col] = val
+					}
+
 					$.post('/stock/updateproduct_xhr',postdata,function(data){
 						if(data && data.status == true) {
 							//update success
+							showMsg('info','Updated successfully!')
 						}else{
 							// failed
+							showMsg('error','Updated falied!')
 						}
 					},'json')
 					return value
@@ -108,5 +140,36 @@ tr.alert-error td{
 			return true
 		})
 	});
+	
+	function hideMsg() {
+		$('#statusMessage').slideUp('slow')
+	}
+
+	function showMsg(type, message, timeout) {
+		var ediv = '<div class="alert ';
+		if (type == "error") {
+			ediv += 'alert-error';
+		} else if (type == "info") {
+			ediv += 'alert-info';
+		} else if (type == "success") {
+			ediv += 'alert-success';
+		} else if (type == "warn") {
+			ediv += 'alert-warning';
+		} else {
+			ediv += '';
+		}
+		ediv += ' fade in">';
+		ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
+		ediv += message;
+		ediv += '</div>';
+		$('#statusMessage').html(ediv);
+		$('.alert', $('#statusMessage')).alert();
+
+		if (timeout || timeout == undefined) {
+			setTimeout(function () {
+				$('.alert', $('#statusMessage')).alert('close');
+			}, 10000);
+		}
+	}
 </script>
 {% endblock %}

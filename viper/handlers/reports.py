@@ -5,6 +5,7 @@ from pyramid.view import view_config
 from pyramid.response import Response
 
 from ..models.Order import OrderSearchParam
+from ..models.Purchase import PurchaseSearchParam
 
 from ..services.SecurityService import SecurityService
 from ..services.StockService import StockService
@@ -19,7 +20,7 @@ def includeme(config):
 
 class ReportController(object):
 	"""
-		User Authentication handler
+		Basic Report Handler
 	"""
 	def __init__(self, request):
 		self.request = request
@@ -47,12 +48,15 @@ class ReportController(object):
 		
 	@action(renderer='json')
 	def creditpurchases(self):
-		pageNo     = self.request.params.get('pageNo',0)
-		pageSize   = self.request.params.get('pageSize',10)
-		supplierId = self.request.params.get('supplierId',None)
+		param = PurchaseSearchParam()
+		param.TenantId   = self.TenantId
+		param.PageNo     = self.request.params.get('pageNo',0)
+		param.PageSize   = self.request.params.get('pageSize',10)
+		param.SupplierId = self.request.params.get('supplierId',None)
+		param.Credit 	 = True
 		
 		stockService = StockService()
-		items, total = stockService.SearchPurchases(self.TenantId,pageNo,pageSize,'Credit',None)
+		items, total = stockService.SearchPurchases(param)
 		
 		if items and len(items) > 0:
 			return dict(status=True,total=total,
@@ -65,14 +69,11 @@ class ReportController(object):
 	
 	@action(renderer='json')
 	def creditorders(self):
-		pageNo     = self.request.params.get('pageNo',0)
-		pageSize   = self.request.params.get('pageSize',10)
-		supplierId = self.request.params.get('customerId',None)
-		
 		param = OrderSearchParam()
 		param.TenantId = self.TenantId
-		param.PageNo = pageNo
-		param.PageSize = pageSize
+		param.CustomerId = self.request.params.get('customerId',None)
+		param.PageNo = self.request.params.get('pageNo',0)
+		param.PageSize = self.request.params.get('pageSize',10)
 		param.Credit = True
 		
 		service = OrderService()

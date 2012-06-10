@@ -58,7 +58,7 @@ class CustomerController(object):
 			searchField = self.request.params.get('field','name')
 			result = customerService.SearchCustomers(self.TenantId,0,10,searchField,searchValue)
 			if result:
-				lst = [dict(id=x.Id,name=x.Contacts[0].FirstName,mobile=x.Contacts[0].Mobile) for x in result]
+				lst = [dict(id=x.Id,customerno=x.CustomerNo,name=x.Contacts[0].FirstName,mobile=x.Contacts[0].Mobile) for x in result]
 				return dict(mylist=lst)
 			return dict(error='Not found!')
 		except Exception, e:

@@ -13,7 +13,7 @@ from ..models.Order import Order
 from ..models.LineItem import LineItem
 from ..models.Supplier import Supplier
 from ..library.ViperLog import log
-from ..models.Purchase import Purchase
+from ..models.Purchase import Purchase, PurchaseSearchParam
 from ..models.PurchaseLineItem import PurchaseLineItem
 from ..models.PurchasePayment import PurchasePayment
 
@@ -182,34 +182,40 @@ class StockService(object):
 					Purchase.TenantId==tenantId).delete()
 		return False
 		
-	def SearchPurchases(self,tenantId,pageNo=0,pageSize=50,searchField=None,searchValue=None):
-		if not tenantId:
+	def SearchPurchases(self,param):
+		if not (param and param.TenantId):
 			return None
-		query = DBSession.query(Purchase)
+			
+		a = DBSession.query(PurchaseLineItem.PurchaseId,PurchaseLineItem.BuyPrice,PurchaseLineItem.Quantity).subquery()
+		b = DBSession.query(PurchasePayment.PurchaseId,PurchasePayment.PaidAmount).subquery()
+			
+		query = DBSession.query(Purchase.Id,Purchase.PurchaseNo,Purchase.PurchaseDate,\
+					Supplier.Name.label('SupplierName'),\
+					func.count(a.c.PurchaseId).label('ItemCount'), \
+					func.sum(a.c.BuyPrice*a.c.Quantity).label('PurchaseAmount'), \
+					func.ifnull(func.sum(b.c.PaidAmount),0).label('PaidAmount'))
+		query = query.join(Supplier).join(a).outerjoin(b).group_by(Purchase.Id)
 		
-		if searchField:
-			if searchField == 'PurchaseNo' and searchValue:
-				query = query.filter(Purchase.PurchaseNo==searchValue)
-			elif searchField == 'SupplierId' and searchValue:
-				query = query.filter(Purchase.SupplierId==searchValue)
-			elif searchField == 'SupplierName' and searchValue:
-				query = query.join(Supplier).filter(Supplier.Name==searchValue)
-			elif searchField == 'Amount' and searchValue:
-				query = query.filter(Purchase.PurchaseAmount == searchValue)
-			elif searchField == 'Date' and searchValue:
-				query = query.filter(Purchase.PurchaseDate == searchValue)
-			elif searchField == 'Credit':
-				a = DBSession.query(PurchaseLineItem.PurchaseId,func.sum(PurchaseLineItem.BuyPrice*PurchaseLineItem.Quantity).label('tamt')).group_by(PurchaseLineItem.PurchaseId).subquery()
- 				b = DBSession.query(PurchasePayment.PurchaseId,func.sum(PurchasePayment.PaidAmount).label('pamt')).group_by(PurchasePayment.PurchaseId).subquery()
-				query = DBSession.query(Purchase.Id,Purchase.PurchaseNo,Purchase.PurchaseDate,Supplier.Name.label('SupplierName'),a.c.tamt.label('PurchaseAmount'),func.ifnull(b.c.pamt,0).label('PaidAmount'))
-				query = query.join(Supplier).join(a).outerjoin(b).group_by(Purchase.Id)
-				query = query.filter(func.ifnull(a.c.tamt,0) >  func.ifnull(b.c.pamt,0))
+		if param.PurchaseNo:
+			query = query.filter(Purchase.PurchaseNo==param.PurchaseNo)
+		elif param.SupplierId and len(param.SupplierId) > 0:
+			query = query.filter(Purchase.SupplierId==param.SupplierId)
+		elif param.SupplierName:
+			query = query.join(Supplier).filter(Supplier.Name.like('%%%s%%' % param.SupplierName))
+		elif param.PurchaseAmount:
+			query = query.filter(Purchase.PurchaseAmount == param.PurchaseAmount)
+		elif param.PurchaseDate:
+			query = query.filter(Purchase.PurchaseDate == param.PurchaseDate)
+		elif param.Credit:
+			#query = query.filter(func.ifnull(func.sum(a.c.BuyPrice*a.c.Quantity),0) >  func.ifnull(func.sum(b.c.PaidAmount),0))
+			smt = query.subquery()
+			query = DBSession.query(smt).filter(smt.c.PurchaseAmount>smt.c.PaidAmount)
 				
-		query = query.filter(Purchase.TenantId==tenantId,Purchase.Status==True)
+		query = query.filter(Purchase.TenantId==param.TenantId,Purchase.Status==True)
 		query = query.order_by(desc(Purchase.PurchaseDate))
 		
-		lstItems = query.offset(pageNo).limit(pageSize).all()
-		if searchField == 'Credit':
+		lstItems = query.offset(param.PageNo).limit(param.PageSize).all()
+		if param.Credit:
 			return lstItems, query.count()
 		else:
 			return lstItems

@@ -4,11 +4,11 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<title>Order #<%=order.get('orderno') %></title>
 	<style>
-		@page {
+		/*@page {
 			margin:0px;
 			padding:0px;
 			width:100%;
-		}
+		}*/
 		body{
 			font-size:14px;
 			margin:0px auto;
@@ -41,18 +41,22 @@
 <body>
 	<div>
 		<div class="heading">
-			<h2>Sri Durga Home Needs Super Market</h2>
-			<h4>#25, M.G.Road, Pondy-3. Ph: 2337517</h4>
+			<h3>Sri Durga Home Needs Super Market</h3>
+			<h5>#25, M.G.Road, Pondy-3. Ph: 2337517</h5>
 		</div>
 		<table border="0"> 
 			<tbody>
 				<tr>
-					<td width="50%">No# <b><%=order.get('orderno') %></b></td>
-					<td align="right">Date: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'dd-MM-yyyy') %> </td>
+					<td width="50px">No# </td>
+					<td width="51%"><b><%=order.get('orderno') %></b></td>
+					<td align="right" width="50px">Date: </td>
+					<td><%=$.format.date(ToLocalDate(order.get('orderdate')), 'dd-MM-yyyy') %></td>
 				</tr>
 				<tr>
-					<td>Bill To: <%=order.get('customername') || '' %> </td>
-					<td align="right">Time: <%=$.format.date(ToLocalDate(order.get('orderdate')), 'hh:mm a') %> </td>
+					<td width="50px">Bill To: </td>
+					<td width="51%"><%=order.get('customername') || '' %> </td>
+					<td align="right" width="50px">Time:</td>
+					<td><%=$.format.date(ToLocalDate(order.get('orderdate')), 'hh:mm a') %> </td>
 				</tr>
 			</tbody>
 		</table>

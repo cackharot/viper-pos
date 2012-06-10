@@ -1,0 +1,62 @@
+{% if model != None and (model | count) > 0 %} 
+<table id="purchaseTable" class="table table-bordered table-striped table-condensed">
+	<thead>
+		<tr>
+			<th>Bill No</th>
+			<th>Supplier Name</th>
+			<th>Total Items</th>
+			<th>Purchase Date</th>
+			<th>Purchase Amount</th>
+			<th>Paid Amount</th>
+			<th>Action</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in model %}
+			<tr>
+				<td>
+					{{item.PurchaseNo}}
+				</td>
+				<td>
+					{{item.SupplierName}}
+				</td>
+				<td>
+					{{item.ItemCount}}
+				</td>
+				<td>
+					{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}
+				</td>
+				<td>
+					{{item.PurchaseAmount | round}}
+				</td>
+				<td>
+					{{item.PaidAmount | round}}
+				</td>
+				<td>
+					<div class="btn-group">
+						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+							Action <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li>
+								<a href="{{'editpurchase' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
+							</li>
+							<li>
+								<a href="{{'deletepurchase' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
+							</li>
+							<li class="divider"></li>
+							<li>
+								<a href="#">$ View Payments</a>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% else %}
+	<div class="alert alert-info">
+		No Purchases found!
+	</div>
+{% endif %}

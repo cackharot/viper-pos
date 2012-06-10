@@ -5,7 +5,7 @@
        <h1> {{ 'Add Purchase' if not model.Id }}
 	        {{ 'Edit Purchase' if model.Id }}
 		 <small class="pull-right">
-		  	<a href="{{'purchases'|route_url}}" title="Back to Purchase listing!" class="btn btn-primary">
+		  	<a href="{{'purchases'|route_url}}" title="Back to Purchase listing!" class="btn btn-inverse">
 		  		<i class="icon-arrow-left icon-white"></i> Back
 		  	</a>
 		 </small></h1>
@@ -86,7 +86,7 @@
 		 				<tbody>
 		 				{% for item in model.LineItems -%}
 		 					<tr>
-		 						<td><a data-total="{{item.BuyAmount}}" data-quantity="{{item.Quantity}}" class="delitem" href="/stock/deletepurchaselineitem?purchaseId={{model.Id}}&lineItemId={{item.Id}}" alt="Delete this item!"><i class="icon-trash"></i> </a></td>
+		 						<td><a data-total="{{item.BuyAmount}}" data-quantity="{{item.Quantity}}" class="delitem" href="/stock/deletepurchaselineitem?purchaseId={{model.Id}}&lineItemId={{item.Id}}" title="Delete this item!"><i class="icon-trash"></i> </a></td>
 		 						<td>{{item.Barcode}}</td>
 		 						<td>{{item.Name}}</td>
 		 						<td>{{item.MRP}}</td>
@@ -109,7 +109,7 @@
 				{{ productForm.render(renderer,True) }}
 				<input type="hidden" name="ProductId" value=""/>
 				<div class="form-actions">
-					<input type="button" class="btn btn-primary" id="addlineItem" value="Add"/>
+					<input type="submit" class="btn btn-primary" id="addlineItem" value="Add"/>
 					<input type="reset" name="reset" class="btn" value="Reset"/>
 				</div>
 			</form>
@@ -139,9 +139,9 @@
 	$(function(){
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
 		
-		$('form#frmLineItem input[type=text]').val('')
+		$('form#frmLineItem input[type=reset]').trigger('click')
 		
-		$('#purchaseLineItemsDiv table tbody td a.delitem').on('click',function(){
+		$('#purchaseLineItemsDiv table tbody td a.delitem').live('click',function(){
 			var url = $(this).attr('href')
 			var quantity = parseFloat($(this).data('quantity'))
 			var total = parseFloat($(this).data('total'))
@@ -163,6 +163,44 @@
 				}
 			})
 			return false
+		})
+		
+		var $mrpInput 		= $('form#frmLineItem input[name=MRP]')
+		var $sellpriceInput	= $('form#frmLineItem input[name=SellPrice]')
+		var $buypriceInput 	= $('form#frmLineItem input[name=BuyPrice]')
+		var $discountInput 	= $('form#frmLineItem input[name=Discount]')
+		var $barcodeInput 	= $('form#frmLineItem input[name=Barcode]')
+		var $nameInput 		= $('form#frmLineItem input[name=Name]')
+		
+		var ips = [$mrpInput,$sellpriceInput,$discountInput]
+		
+		$.each(ips,function() {
+			$(this).blur(function(e) {
+				if($(this).val()=='') return
+				var col = $(this).attr('name')
+			
+				if(col == 'SellPrice') {
+					var mrp = parseFloat($mrpInput.val())
+					var sellPrice = parseFloat($(this).val())
+					var discount = (((mrp-sellPrice)*100.0)/mrp)
+				
+					$discountInput.val(discount.toFixed(2))
+				} else if(col == 'Discount') {
+					var mrp = parseFloat($mrpInput.val())
+					var discount = parseFloat($(this).val())
+					var sellPrice = (mrp - (mrp * (discount/100.0)))
+				
+					$sellpriceInput.val(sellPrice.toFixed(2))
+				} else if(col == 'MRP') {
+					var discount = parseFloat($discountInput.val())
+					var mrp = parseFloat($(this).val())
+					var sellPrice = (mrp - (mrp * (discount/100.0)))
+					var buyPrice  = (mrp - (mrp * (8.0/100.0)))
+				
+					$sellpriceInput.val(sellPrice.toFixed(2))
+					$buypriceInput.val(buyPrice.toFixed(2))
+				}
+			})
 		})
 		
 		$('form#frmLineItem input[name=Barcode]').blur(function(e){
@@ -207,7 +245,7 @@
 			})
 		})
 		
-		$('#addlineItem').click(function() {
+		$('form#frmLineItem').submit(function() {
 			var purchaseId = $('input#pid').val()
 			var supplierId = $('select[name=SupplierId]').val()
 			if(!purchaseId) {
@@ -262,7 +300,7 @@
 					var tr = '<tr>';
 					tr += '<td><a data-total="' + total + '"';
 					tr += ' data-quantity="'+jdata.Quantity+'" class="delitem" href="/stock/deletepurchaselineitem?purchaseId=' + purchaseId;
-					tr += '&lineItemId='+id +'" alt="Delete this item!"><i class="icon-trash"></i> </a></td>';
+					tr += '&lineItemId='+id +'" title="Delete this item!"><i class="icon-trash"></i> </a></td>';
 					tr += '<td>' + jdata.Barcode + '</td>';
 					tr += '<td>' + jdata.Name + '</td>';
 					tr += '<td>' + jdata.MRP + '</td>';
@@ -281,13 +319,16 @@
 					$('#totalAmount').text(ta+total)
 					$('#totalItems').text(ti+1)
 					$('#totalQuantity').text(tq+parseFloat(jdata.Quantity))
-					$('form#frmLineItem input[type=text]').val('')
+					
+					$('form#frmLineItem input[type=reset]').trigger('click')
+					
 					$('form#frmLineItem input[name=Barcode]')[0].focus()
 					showMsg('info', '<strong>"'+jdata.Barcode+'"</strong> added successfully!')
 				}else{
 					showMsg('error', data.message || 'Error while adding line item!')
 				}
 			},'json')
+			return false
 		});
 		
 		function hideMsg() {

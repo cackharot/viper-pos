@@ -44,9 +44,16 @@
 			  <a class="brand" href="/">Viper POS</a>
 			  <div class="nav-collapse">
 				<ul class="nav">
-				  <li class="active"><a href="#">Dashboard</a></li>
+				  <li class="active"><a href="/">Dashboard</a></li>
 				  <li><a href="/sales"><i class="icon-shopping-cart icon-large icon-white"></i> Sales</a></li>
-				  <li><a href="/stock"><i class="icon-book icon-large icon-white"></i> Stock</a></li>
+				  <li class="dropdown">
+				  	<a class="dropdown-toggle" data-toggle="dropdown" href="/stock"><i class="icon-book icon-large icon-white"></i> Stock<b class="caret"></b></a>
+					<ul class="dropdown-menu" id="stock-menu">
+						<li></li>
+						<li><a href="/stock/products">Products</a></li>
+						<li><a href="/stock/purchases">Purchases</a></li>
+					</ul>
+ 				  </li>
 				  <li><a href="/customers"><i class="icon-user icon-large icon-white"></i> Customers</a></li>
 				  <li><a href="/suppliers"><i class="icon-user icon-large icon-white"></i> Suppliers</a></li>
 				  <li><a href="/reports"><i class="icon-align-left icon-large icon-white"></i> Reports</a></li>
@@ -112,6 +119,14 @@
     	$(function(){
     		$('.dropdown-toggle').dropdown(); 
     	});
+    	
+		function ToLocalDate (inDate) {
+			if(_.isString(inDate))
+				inDate = new Date(inDate);
+			var date = new Date();
+			date.setTime(inDate.valueOf() - 60000 * inDate.getTimezoneOffset());
+			return date;
+		}	
     </script>
     {% block footerscript %}{% endblock %}
     <!--

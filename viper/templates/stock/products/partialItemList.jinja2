@@ -17,33 +17,15 @@
 	<tbody>
 		{% for item in model -%}
 			<tr data-id="{{item.Id}}" class="{{'alert alert-error' if not item.Status}}">
-				<td data-col="Barcode" class="edit">
-					{{item.Barcode}}
-				</td>
-				<td data-col="Name" class="edit">
-					{{item.Name}}
-				</td>
-				<td>
-					{{item.Supplier.Name}}
-				</td>
-				<td data-col="MRP" class="edit" style="text-align:right;">
-					{{item.MRP}}
-				</td>
-				<!--<td style="text-align:right;">
-					{{item.BuyPrice}}
-				</td>-->
-				<td data-col="SellPrice" class="edit" style="text-align:right;">
-					{{item.SellPrice}}
-				</td>
-				<td data-col="Discount" class="edit" style="text-align:right;">
-					{{item.Discount}}
-				</td>
-				<td style="text-align:center;">
-					{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}
-				</td>
-				<td style="text-align:center;">
-					{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}
-				</td>
+				<td data-col="Barcode" class="edit">{{item.Barcode}}</td>
+				<td data-col="Name" class="edit">{{item.Name}}</td>
+				<td>{{item.Supplier.Name}}</td>
+				<td data-col="MRP" class="edit" style="text-align:right;">{{item.MRP}}</td>
+				<!--<td style="text-align:right;">{{item.BuyPrice}}</td>-->
+				<td data-col="SellPrice" class="edit" style="text-align:right;">{{item.SellPrice}}</td>
+				<td data-col="Discount" class="edit" style="text-align:right;">{{item.Discount}}</td>
+				<td style="text-align:center;">{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}</td>
+				<td style="text-align:center;">{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}</td>
 				<td>
 					<div class="btn-group">
 						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">

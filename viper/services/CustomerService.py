@@ -49,7 +49,7 @@ class CustomerService(object):
 			elif searchField == 'mobile':
 				query = query.filter(CustomerContactDetails.Mobile.like(searchValue))
 			elif searchField == 'customerno':
-				query = query.filter(CustomerContactDetails.Mobile.like(searchValue))
+				query = query.filter(Customer.CustomerNo.like(searchValue))
 		
 		lstCustomers = query.offset(pageNo).limit(pageSize).all()
 		return lstCustomers

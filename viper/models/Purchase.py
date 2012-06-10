@@ -90,11 +90,14 @@ class PurchaseSearchParam(object):
 		self.PurchaseNo = None
 		self.SupplierId = None
 		self.SupplierName = None
+		self.PurchaseDate = None
+		self.PurchaseAmount = None
 		self.FromPurchaseDate = None
 		self.ToPurchaseDate = None
 		self.UserId = None
-		self.PageNo = None
-		self.PageSize = None
+		self.Credit = False
+		self.PageNo = 0
+		self.PageSize = 20
 		self.MinAmount = None
 		self.MaxAmount = None
 	pass

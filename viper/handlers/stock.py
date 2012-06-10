@@ -6,7 +6,7 @@ from ..models import DBSession
 from ..models.User import User
 from ..models.Tenant import Tenant
 from ..models.Product import Product
-from ..models.Purchase import Purchase
+from ..models.Purchase import Purchase, PurchaseSearchParam
 from ..models.PurchaseLineItem import PurchaseLineItem
 from ..models.PurchasePayment import PurchasePayment
 
@@ -42,6 +42,7 @@ def includeme(config):
 	config.add_route('products', '/stock/products')
 	config.add_route('products_xhr', '/stock/products_xhr')
 	config.add_route('purchases', '/stock/purchases')
+	config.add_route('purchases_xhr', '/stock/purchases_xhr')
 	config.add_route('addproduct', '/stock/manageproduct')
 	config.add_route('addpurchase', '/stock/managepurchase')
 	config.add_route('saveproduct', '/stock/manageproduct')
@@ -78,11 +79,44 @@ class StockController(object):
 	def products_xhr(self):
 		return self.getproducts()
 	
+	@action(renderer='json',xhr=True)
+	def updateproduct_xhr(self):
+		id = self.request.params.get('id',None)
+		if id:
+			entity = stockService.GetProduct(id,self.TenantId)
+			if entity:
+				barcode = self.request.params.get('Barcode',None)
+				if barcode:
+					entity.Barcode = barcode
+					
+				name = self.request.params.get('Name',None)
+				if name:
+					entity.Name = name
+					
+				mrp = self.request.params.get('MRP',None)
+				if mrp:
+					entity.MRP = float(mrp)
+					
+				sellPrice = self.request.params.get('SellPrice',None)
+				if sellPrice:
+					entity.SellPrice = float(sellPrice)
+					
+				discount = self.request.params.get('Discount',None)
+				if discount:
+					entity.Discount = float(discount)
+				
+				entity.UpdatedBy = self.UserId
+				stockService.SaveProduct(entity)
+				
+				return dict(status=True)
+				
+		return dict(status=False)
+	
 	def getproducts(self):
 		pageNo = self.request.params.get('pageNo',0)
-		pageSize = self.request.params.get('pageSize', 50)
-		searchValue = self.request.params.get('searchValue', None)
-		searchField = self.request.params.get('searchField', 'Name')
+		pageSize = self.request.params.get('pageSize',20)
+		searchValue = self.request.params.get('searchValue',None)
+		searchField = self.request.params.get('searchField',None)
 		
 		lstProducts = stockService.GetProducts(self.TenantId,\
 				pageNo,pageSize,searchField,searchValue)
@@ -158,8 +192,29 @@ class StockController(object):
 		
 	@action(renderer='templates/stock/purchase/index.jinja2')
 	def purchases(self):
-		lstPurchases = stockService.SearchPurchases(self.TenantId)
-		return dict(model=lstPurchases)
+		lstSuppliers = self.GetSuppliers()
+		lst = self.getPurchaseList()
+		return dict(model=lst,suppliers=lstSuppliers)
+		
+	@action(renderer='templates/stock/purchase/partialPurchaseList.jinja2',xhr=True)
+	def purchases_xhr(self):
+		lst = self.getPurchaseList()
+		return dict(model=lst)
+	
+	def getPurchaseList(self):
+		param = PurchaseSearchParam()
+		param.TenantId = self.TenantId
+		param.PurchaseNo = self.request.params.get('billNo',None)
+		param.SupplierId = self.request.params.get('supplierId',None)
+		param.PageSize = self.request.params.get('pageSize',20)
+		param.PageNo = self.request.params.get('pageNo',0)
+
+		bdate = self.request.params.get('billDate',None)
+		if bdate and len(bdate) > 0:
+			param.PurchaseDate = datetime.strptime(bdate.strip(),'%d-%m-%Y')
+
+		lstPurchases = stockService.SearchPurchases(param)
+		return lstPurchases
 		
 	def GetSuppliers(self):
 		lstSuppliers = SupplierService().GetSuppliers(self.TenantId)

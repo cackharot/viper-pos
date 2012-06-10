@@ -88,10 +88,10 @@
 			this.updateTotal()
 		},
 		updateTotal: function () {
-			var qas = this.getQAS();
-			$('#totalAmount').text(qas.totalAmount);
-			$('#savingsAmount').text(qas.savings);
-			$('#totalItemsQuantity').text(qas.totalItems + '/' + qas.totalQuantity);
+			var qas = this.getQAS()
+			$('#totalAmount').text(qas.totalAmount)
+			$('#savingsAmount').text(qas.savings)
+			$('#totalItemsQuantity').text(qas.totalItems + '/' + qas.totalQuantity)
 		},
 		getQAS: function () {
 			var totalItems = 0,
@@ -100,48 +100,48 @@
 				savings = 0;
 
 			for (i = 0; i < this.length; i++) {
-				var barcode = this.at(i).get('barcode');
-				var price = this.at(i).get('price');
-				var quantity = this.at(i).get('quantity');
-				var mrp = this.at(i).get('mrp');
-				var sbt = this.at(i).get('subtotal');
+				var barcode = this.at(i).get('barcode')
+				var price = this.at(i).get('price')
+				var quantity = this.at(i).get('quantity')
+				var mrp = this.at(i).get('mrp')
+				var sbt = this.at(i).get('subtotal')
 
 				if (!barcode.startsWith('.') && !barcode.startsWith('0.')) {
-					totalQuantity += quantity;
-					totalItems++;
+					totalQuantity += quantity
+					totalItems++
 				}
 
-				amt += sbt;
-				savings += ((mrp * quantity) - sbt);
+				amt += sbt
+				savings += ((mrp * quantity) - sbt)
 			}
 
-			totalQuantity = totalQuantity.toFixed(2);
-			amt = Math.round(amt);
-			savings = Math.round(savings);
+			totalQuantity = totalQuantity//.toFixed(2);
+			amt = Math.round(amt)
+			savings = Math.round(savings)
 			return {
 				totalItems: totalItems,
 				totalQuantity: totalQuantity,
 				totalAmount: amt,
 				savings: savings
-			};
+			}
 		},
 		resetRecords: function () {
 			$('#tblOrderLineItems tbody tr').each(function () {
-				$(this).remove();
-			});
-			$('#totalAmount').text(0.0);
-			$('#savingsAmount').text(0.0);
-			$('#totalItemsQuantity').text('0/0');
+				$(this).remove()
+			})
+			$('#totalAmount').text(0.0)
+			$('#savingsAmount').text(0.0)
+			$('#totalItemsQuantity').text('0/0')
 		},
 		hideUI: function (callback) {
 			$('#tblOrderLineItems tbody').slideUp('normal',function (e) {
-				if (callback) callback();
-			});
+				if (callback) callback()
+			})
 		},
 		showUI: function (callback) {
 			$('#tblOrderLineItems tbody').slideDown('slow',function (e) {
-				if (callback) callback();
-			});
+				if (callback) callback()
+			})
 		}
 	});
 
@@ -258,40 +258,39 @@
 			}
 		},
 		removeorderitem: function (item) {
-			if (!item) return;
-			var orderid = item.get('orderid');
-			var $tr = $('tr[data-orderid=' + orderid + ']', $('#tblTodayOrders tbody'));
-			if ($tr.length > 0) $tr.remove();
+			if (!item) return
+			var orderid = item.get('orderid')
+			var $tr = $('tr[data-orderid=' + orderid + ']', $('#tblTodayOrders tbody'))
+			if ($tr.length > 0) $tr.remove()
 		},
 		updateorderitem: function (orderid) {
-			if (!orderid) return;
+			if (!orderid) return
 			var item = this.model.find(function (x) {
-				return x.get('orderid') == orderid;
+				return x.get('orderid') == orderid
 			});
 			if (item) {
-				var orderno = item.get('orderno');
-				var odate = item.get('orderdate');
-				var amt = item.getOrderAmount();
+				var orderno = item.get('orderno')
+				var odate = item.get('orderdate')
+				var amt = item.getOrderAmount()
 
 				item.set({
 					'orderamount': amt
 				})
 
-				var $tr = $('tr[data-orderid="' + orderid + '"]', $('#tblTodayOrders tbody'));
+				var $tr = $('tr[data-orderid="' + orderid + '"]', $('#tblTodayOrders tbody'))
 				if ($tr.length > 0) {
-					$('.o', $tr).text(orderno);
-					$('.c', $tr).text(ToLocalDate(odate));
-					$('.a', $tr).text(amt.toFixed(2));
+					$('.o', $tr).text(orderno)
+					$('.c', $tr).text(ToLocalDate(odate))
+					$('.a', $tr).text(amt.toFixed(2))
 				}
 			}
 		},
 		resetUI: function () {
-			$('#tblTodayOrders tbody tr').each(function () {
-				$(this).remove();
-			});
+			$('#tblTodayOrders tbody tr').remove()
 		},
 		loadTodayOrders: function () {
 			this.resetUI()
+			$('#tblTodayOrders tbody').slideUp()
 			var model = this.model
 			model.reset()
 			$.ajax({
@@ -323,13 +322,15 @@
 							});
 							model.add(o)
 						}
-					};
+					}
 				} else {
-					showMsg('info', '<strong>Hmmm!</strong> No orders made today.', false);
+					showMsg('info', '<strong>Hmmm!</strong> No orders made today.', false)
 				}
+				$('#tblTodayOrders tbody').slideDown('slow')
 			}).fail(function () {
-				showMsg('warn', '<strong>Oops!</strong> Error in loading todays order details.', false);
-			});
+				showMsg('warn', '<strong>Oops!</strong> Error in loading todays order details.', false)
+				$('#tblTodayOrders tbody').slideDown('slow')
+			})
 		}
 	});
 
@@ -341,6 +342,7 @@
 			this.lstOrders = window.TodayOrderList
 
 			_.bindAll(this, "editOrder");
+			_.bindAll(this, "payOrder");
 			_.bindAll(this, "updateLineItem");
 
 			this.vent.bind('editOrder', this.editOrder)
@@ -450,44 +452,40 @@
 						}
 					},
 					preProcess: function (data) {
-						if (!data) return false;
-						if (data.success === false) {
-							return false;
-						}
-						if (typeof (data) == "string") data = eval('(' + data + ')');
-						return data;
+						if (!data) return false
+						if (data.success === false)	return false
+						return data
 					}
 				}
 			});
 		},
 		findAndUpdateItem: function (barcode, quantity) {
 			var item = this.model.get('lineItems').find(function (x) {
-				return x.get('barcode') == barcode;
-			});
-
+				return x.get('barcode') == barcode
+			})
 			if (item) {
-				var q = item.get('quantity');
+				var q = item.get('quantity')
 				item.set({
 					'quantity': q + quantity
-				});
+				})
 				$('input[name=itemName]').val(item.get('name'))
 				this.vent.trigger('updateOrder', this.model.get('orderid'))
-				return true;
+				return true
 			}
-			return false;
+			return false
 		},
 		addLineItem: function () {
 			if (!this.model) {
 				this.newOrder(function () {
-					$('#add-item').trigger('click');
-				});
-				return;
+					$('#add-item').trigger('click')
+				})
+				return
 			}
-			var $txtBarcode = $('input[name=barcode]');
-			var barcode = $txtBarcode.val();
-			var tmp = $('input[name=quantity]').val();
-			var quantity = 1.0;
-			if (tmp && tmp.length > 0) quantity = parseFloat(tmp);
+			var $txtBarcode = $('input[name=barcode]')
+			var barcode = $txtBarcode.val()
+			var tmp = $('input[name=quantity]').val()
+			var quantity = 1.0
+			if (tmp && tmp.length > 0) quantity = parseFloat(tmp)
 
 			if (barcode && barcode.length > 0 && quantity > 0) {
 				var found = this.findAndUpdateItem(barcode, quantity)
@@ -495,35 +493,32 @@
 					var that = this
 
 					remote.searchItem(barcode, function (data) {
-						if (typeof (data) == "string") data = eval('(' + data + ')');
 						if (data) {
 							if (data.length > 1) {
-								var compl = _.template($('#tpl-selectitem').html());
-								var tr = compl({
-									'items': data
-								});
-								$('#tblSelectItem tbody').html(tr);
+								var compl = _.template($('#tpl-selectitem').html())
+								var tr = compl({'items': data})
+								$('#tblSelectItem tbody').html(tr)
 
 								$('#tblSelectItem tbody td button').each(function () {
 									$(this).click(function () {
-										var id = parseInt($(this).data('id'));
-										data[id].Quantity = quantity;
-										that.addItemToUI(data[id], that);
+										var id = parseInt($(this).data('id'))
+										data[id].Quantity = quantity
+										that.addItemToUI(data[id], that)
 
-										$('#tblSelectItem tbody').html('');
-										$('#selectItemModal').modal('hide');
+										$('#tblSelectItem tbody').html('')
+										$('#selectItemModal').modal('hide')
 										$('input[name=itemName]').val(data[id].Name)
 										$txtBarcode[0].select(0, barcode.length)
 									});
 								});
 
 								// show pop to select the item
-								$('#selectItemModal').modal('show');
+								$('#selectItemModal').modal('show')
 							} else {
-								data[0].Quantity = quantity;
-								that.addItemToUI(data[0], that);
+								data[0].Quantity = quantity
+								that.addItemToUI(data[0], that)
 								$('input[name=itemName]').val(data[0].Name)
-								$txtBarcode[0].select(0, $txtBarcode.val().length);
+								$txtBarcode[0].select(0, $txtBarcode.val().length)
 							}
 						} else {
 							if (!isNaN(barcode)) {
@@ -539,30 +534,30 @@
 									d.Id = null
 									that.addItemToUI(d, that)
 								} else {
-									showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
+									showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.')
 								}
 							} else {
-								showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.');
+								showMsg('warn', '<strong>Oops!</strong> There are no items with barcode <span class="label label-info">' + barcode + '</span>.')
 							}
 
-							$txtBarcode[0].select(0, barcode.length);
+							$txtBarcode[0].select(0, barcode.length)
 						}
 					});
 				} else {
-					$txtBarcode[0].select(0, $txtBarcode.val().length);
+					$txtBarcode[0].select(0, $txtBarcode.val().length)
 				}
 			} else {
-				showMsg('warn', '<strong>Enter a valid barcode!</strong>');
-				$txtBarcode[0].select(0, $txtBarcode.val().length);
+				showMsg('warn', '<strong>Enter a valid barcode!</strong>')
+				$txtBarcode[0].select(0, $txtBarcode.val().length)
 			}
 		},
 		addItemToUI: function (data, that) {
-			var barcode = data.Barcode;
-			var itemName = data.Name;
-			var price = Math.round(data.SellPrice);
-			var discount = data.Discount;
-			var mrp = data.MRP;
-			var quantity = data.Quantity;
+			var barcode = data.Barcode
+			var itemName = data.Name
+			var price = data.SellPrice
+			var discount = data.Discount
+			var mrp = data.MRP
+			var quantity = data.Quantity
 
 			var item = new LineItem({
 				id: uuid(),
@@ -583,23 +578,23 @@
 		},
 		newOrderClick: function (e) {
 			this.newOrder(function () {
-				var $txtBarcode = $('input[name=barcode]');
-				$txtBarcode[0].select(0, $txtBarcode.val().length);
-			});
+				var $txtBarcode = $('input[name=barcode]')
+				$txtBarcode[0].select(0, $txtBarcode.val().length)
+			})
 		},
 		newOrder: function (callback) {
 			if (this.model) {
-				var items = this.model.get('lineItems');
-				items.resetRecords();
+				var items = this.model.get('lineItems')
+				items.resetRecords()
 			}
 
-			this.model = new Order;
-			this.model.bind("change", this.render, this);
-			this.model.get('lineItems').reset();
-			this.model.get('payments').reset();
+			this.model = new Order
+			this.model.bind("change", this.render, this)
+			this.model.get('lineItems').reset()
+			this.model.get('payments').reset()
 
-			var lstorders = this.lstOrders;
-			var currentOrder = this.model;
+			var lstorders = this.lstOrders
+			var currentOrder = this.model
 
 			remote.newOrder(function (data) {
 				if (data) {
@@ -613,7 +608,7 @@
 						'paidamount': data.PaidAmount,
 						'orderamount': data.OrderAmount,
 						'isNew': true,
-					});
+					})
 					lstorders.add(currentOrder)
 					hideMsg()
 					if (callback) callback()
@@ -624,8 +619,8 @@
 			if (!orderid || (this.model && orderid == this.model.get('orderid'))) return
 
 			found = this.lstOrders.find(function (x) {
-				return x.get('orderid') == orderid;
-			});
+				return x.get('orderid') == orderid
+			})
 
 			if (found) {
 				this.model = found
@@ -649,10 +644,10 @@
 			
 			$.post('/sales/getorder/' + orderid, null, function (data) {
 				if (data) {
-					var o = data.order;
-					var orderid = o.Id;
-					var lineitems = data.lineitems;
-					var payments = data.payments;
+					var o = data.order
+					var orderid = o.Id
+					var lineitems = data.lineitems
+					var payments = data.payments
 
 					currentOrder.set({
 						'id': o.Id,
@@ -664,12 +659,12 @@
 						'paidamount': o.PaidAmount,
 						'orderamount': o.OrderAmount,
 						'isloaded': true,
-					});
+					})
 
 					if (lineitems) {
 						for (var i = 0; i < lineitems.length; i++) {
-							var price = Math.round(lineitems[i].SellPrice);
-							var quantity = lineitems[i].Quantity;
+							var price = lineitems[i].SellPrice
+							var quantity = lineitems[i].Quantity
 							var item = new LineItem({
 								id: uuid(),
 								productid: lineitems[i].ProductId,
@@ -680,34 +675,34 @@
 								price: price,
 								discount: lineitems[i].Discount,
 								subtotal: Math.round(price * quantity)
-							});
-							currentOrder.get('lineItems').add(item);
+							})
+							currentOrder.get('lineItems').add(item)
 						}
 					}
 
 					if (payments) {
 						for (var i = 0; i < payments.length; i++) {
-							var no = i + 1;
+							var no = i + 1
 							var item = new OrderPayment({
 								slno: no,
 								orderid: orderid,
 								paidamount: payments[i].PaidAmount,
 								paymenttype: payments[i].PaymentType,
 								paymentdate: payments[i].PaymentDate,
-							});
-							currentOrder.get('payments').add(item);
+							})
+							currentOrder.get('payments').add(item)
 						}
 					}
 
 					currentOrder.set({
 						'paidamount': currentOrder.getPaidAmount(),
 						'orderamount': currentOrder.getOrderAmount(),
-					});
+					})
 
 					items.refreshUI()
 					
-					var $txtBarcode = $('input[name=barcode]');
-					$txtBarcode[0].select(0, $txtBarcode.val().length);
+					var $txtBarcode = $('input[name=barcode]')
+					$txtBarcode[0].select(0, $txtBarcode.val().length)
 				}
 			});
 		},
@@ -723,29 +718,35 @@
 		},
 		checkOutOrder: function () {
 			if (!this.model || this.model.get('lineItems').length < 1) {
-				showMsg('warn', '<strong>Oops!</strong> Order contains no items. Cannot <span class="label label-info">checkout</span>.', false);
-				return;
+				showMsg('warn', '<strong>Oops!</strong> Order contains no items. Cannot <span class="label label-info">checkout</span>.', false)
+				return
 			}
 
-			var orderamt = this.model.getOrderAmount();
-			var paidamt = this.model.getPaidAmount();
+			var orderamt = this.model.getOrderAmount()
+			var paidamt = this.model.getPaidAmount()
 			var balanceamt = paidamt > orderamt ? 0.0 : (orderamt - paidamt)
 			this.model.set({
 				'orderamount': orderamt,
 				'balanceamount': balanceamt,
-			});
+			})
 
-			var cmpl = _.template($('#tpl-chkoutorder').html());
+			var cmpl = _.template($('#tpl-chkoutorder').html())
 			var html = cmpl({
 				'item': this.model
-			});
-			$('#checkoutOrderModel table tbody').html(html);
+			})
+			$('#checkoutOrderModel table tbody').html(html)
 
-			$('#checkoutOrderModel').modal('show');
+			$('#checkoutOrderModel').modal('show')
 
 			$('input[name=customername]', $('#checkoutOrderModel')).typeahead({
 				idField: 'id',
 				idControl: $('input[name=customerid]', $('#checkoutOrderModel')),
+				formatter: function (displayValue, item) {
+					if (this.displayField != 'name')
+						return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.name + '</span></div>';
+					else
+						return displayValue
+				},
 				ajax: {
 					url: "/customers/search",
 					timeout: 500,
@@ -756,8 +757,8 @@
 					loadingClass: "loading-circle icon-refresh",
 					preDispatch: function (query) {
 						//showLoadingMask(true);
-						var fieldName = $('input[type=radio][name=searchfield]:checked').val();
-						this.displayField = fieldName;
+						var fieldName = $('input[type=radio][name=searchfield]:checked').val()
+						this.displayField = fieldName
 						return {
 							search: query,
 							field: fieldName || 'name'
@@ -765,12 +766,9 @@
 					},
 					preProcess: function (data) {
 						//showLoadingMask(false);
-						if (!data || !data.mylist) return false;
-						if (data.success === false) {
-							return false;
-						}
-						// We good!
-						return data.mylist;
+						if (!data || !data.mylist) return false
+						if (data.success === false) return false
+						return data.mylist
 					}
 				}
 			});
@@ -780,45 +778,49 @@
 			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder)
 		},
 		payOrder: function () {
-			var customerid = $('input[name=customerid]', $('#checkoutOrderModel')).val();
+			var customerid = $('input[name=customerid]', $('#checkoutOrderModel')).val()
 
 			if (customerid) {
-				var orderid = salesappview.model.get('orderid');
-				var paidamount = parseFloat($('input[name=paidamount]', $('#checkoutOrderModel')).val());
-				var customername = $('input[name=customername]', $('#checkoutOrderModel')).val();
-				var paymenttype = $('select[name=paymenttype] option:selected', $('#checkoutOrderModel')).val();
-				var orderamount = salesappview.model.getOrderAmount();
-				var prevpaidamt = salesappview.model.getPaidAmount();
+				var orderid = this.model.get('orderid')
+				var paidamount = parseFloat($('input[name=paidamount]', $('#checkoutOrderModel')).val())
+				var customername = $('input[name=customername]', $('#checkoutOrderModel')).val()
+				var paymenttype = $('select[name=paymenttype] option:selected', $('#checkoutOrderModel')).val()
+				var canprint = $('input[name=printTicket]', $('#checkoutOrderModel')).val()
+				var orderamount = this.model.getOrderAmount()
+				var prevpaidamt = this.model.getPaidAmount()
 
 				if ((paymenttype == 'Cash' && (prevpaidamt + paidamount >= orderamount)) || (paymenttype == 'Credit' && paidamount < orderamount) || (paymenttype == 'Card' && paidamount > 0.0) || (paymenttype == 'Cheque' && paidamount > 0.0)) {
-					salesappview.model.set({
+					this.model.set({
 						'paidamount': prevpaidamt + paidamount,
 						'customerid': customerid,
 						'customername': customername,
 						'isloaded': true,
-					});
+					})
 
 					var payment = new OrderPayment({
 						'orderid': orderid,
 						'paidamount': paidamount,
 						'paymenttype': paymenttype,
 						'paymentdate': new Date().toUTCString(),
-					});
+					})
 
-					salesappview.model.get('payments').add(payment);
-					salesappview.model.save();
-					showMsg('success', '<strong>Hooray!</strong> Payment Successfull &amp; Order is saved.');
+					this.model.get('payments').add(payment)
+					this.model.save()
+					showMsg('success', '<strong>Hooray!</strong> Payment Successfull &amp; Order is saved.')
+					
+					if(canprint)
+						this.printOrder()
 				} else if (paymenttype == 'Credit' && paidamount >= orderamount) {
-					showMsg('warn', '<strong>Oops!</strong> Wrong Payment Type. Please choose <span class="label label-info">Cash</span> as payment type if the paid amount is greater than order amount.');
+					showMsg('warn', '<strong>Oops!</strong> Wrong Payment Type. Please choose <span class="label label-info">Cash</span> as payment type if the paid amount is greater than order amount.')
 				} else {
-					showMsg('warn', 'Paid amount should be greater than or equal to <strong>' + orderamount + '</strong>. Please choose <span class="label label-info">Credit</span> as payment type if the paid amount is lesser than order amount.');
+					showMsg('warn', 'Paid amount should be greater than or equal to <strong>' + orderamount + '</strong>. Please choose <span class="label label-info">Credit</span> as payment type if the paid amount is lesser than order amount.')
 				}
 			} else {
-				showMsg('error', '<strong>Oops!</strong> Please enter a valid customer to save this order.');
+				showMsg('error', '<strong>Oops!</strong> Please enter a valid customer to save this order.')
 			}
 
-			$(this).unbind('click', salesappview.payOrder);
-			$('#checkoutOrderModel').modal('hide');
+			$(this).unbind('click', this.payOrder)
+			$('#checkoutOrderModel').modal('hide')
 		},
 		printOrder: function () {
 			this.showPrintableOrder(function (w) {
@@ -856,16 +858,6 @@
 	})
 
 	templateLoader.clearLocalStorage();
-
-
-/*$('#tblTodayOrders tbody').on('dblclick', "tr", function (e) {
-		$('#tblTodayOrders tbody').find('.active').removeClass('active')
-		$(this).addClass('active')
-		var orderid = $(this).data('orderid')
-		//if (orderid) salesappview.editOrder(orderid)
-		if(orderid) vent.trigger('editOrder',orderid)
-		//e.preventDefault()
-	});*/
 	
 	$('table#tblOrderLineItems tbody td.edit').live('click', function(){
 		var w = $(this).width()-10
@@ -981,5 +973,6 @@
 		if (isHandled) e.preventDefault()
 	}
 
-	$(document).bind('keypress', listen);
+	$(document).bind('keypress', listen)
+	//$(document).bind('keyup', listen);
 })(jQuery);
