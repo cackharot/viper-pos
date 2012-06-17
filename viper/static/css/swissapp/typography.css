@@ -20,7 +20,7 @@ em, .em         { font-style:italic; }
 .small  { font-size:0.820em; }   /* 11px */
 .big    { font-size:1.250em; }   /* 15px */
 .bigger { font-size:1.500em; }   /* 18px */
-.right  {}
+.right  { padding-right:5px !important;}
 
 h1 { /* Reserved */ }
 h2 { font-size:1.833em; } /* 22px */

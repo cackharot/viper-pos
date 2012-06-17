@@ -20,13 +20,16 @@
 			<th>Supplier Name</th>
 			<th>Total Items</th>
 			<th>Purchase Date</th>
+			<th>Due Date</th>
 			<th>Purchase Amount</th>
-			<th>Paid Amount</th>
+			<th>Due Amount</th>
+			<th>Status</th>
 			<th class="noborder"></th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for item in model %}
+		{% set dueAmount = item.PurchaseAmount - item.PaidAmount %}
 		<tr class="{{ loop.cycle('odd', 'even') }}" data-id="{{item.Id}}">
 		    <td class="check">
                       <input type="checkbox" name="ids" value="{{item.Id}}">
@@ -35,8 +38,18 @@
 			<td>{{item.SupplierName}}</td>
 			<td>{{item.ItemCount}}</td>
 			<td>{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}</td>
+			<td>{{item.DueDate | datetimeformat('%d-%m-%Y')}}</td>
 			<td>{{item.PurchaseAmount | round}}</td>
-			<td>{{item.PaidAmount | round}}</td>
+			<td>{{ ((dueAmount) | round) if dueAmount > 0.0 else 0.0 }}</td>
+			<td>
+				{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
+					<span class="status overdue"> Overdue </span>
+				{% elif (dueAmount > 0) %}
+					<span class="status opened"> Opened </span>
+				{% else %}
+					<span class="status closed"> Closed </span>
+				{% endif %}
+			</td>
 			<td class="action payments">
                 <button class="btn payment action-clear" 
                     onclick="document.location.href='{{'purchasespayments' | route_url(pid=item.Id)}}'"

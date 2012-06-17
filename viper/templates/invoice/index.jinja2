@@ -1,0 +1,157 @@
+{% extends "templates/layout.jinja2" %}
+{% block specialNav %}
+	<a id="new-invoice-button" href="{{'addinvoice'|route_url}}"><span>New Invoice</span></a>
+{% endblock %} 
+{% block topcontent %}
+<form id="searchForm" action="{{'searchinvoices_xhr'|route_url}}">
+	<div id="searchFilters">
+		<div class="searchSection">
+			<ul>
+				<li>
+					<label for="invoiceNo">Invoice No# </label> 
+					<input type="text" name="invoiceNo" value="{{searchValue| d('',true)}}"/>
+				</li>
+				<li>
+					<label for="fromDate">From: </label> 
+					<input type="text" name="fromDate" class="datetime" />
+					<img class="ui-datepicker-trigger" src="/static/images/icons/calendar.png" alt="..." title="...">
+				</li>
+				<li>
+					<label for="toDate">To: </label> 
+					<input type="text" name="toDate" class="datetime" />
+					<img class="ui-datepicker-trigger" src="/static/images/icons/calendar.png" alt="..." title="...">
+				</li>
+			</ul>
+		</div>
+		<hr class="searchSeparator">
+		<div class="searchSection">
+			<ul class="filters">
+				<li>Status: </li>
+				<li><a class="status #1#" href="#">Opened</a> |</li>
+				<li><a class="status #2#" href="#">Closed</a> |</li>
+				<li><a class="status #3#" href="#">Overdue</a> |</li>
+				<li><a class="status #4#" href="#">Drafts</a></li>
+			</ul>
+			<ul>
+				<li>
+					<label for="customerId">Customer: </label> 
+					<input type="text" name="customerName" value="{{ customerName | d('',true) }}"/>
+				</li>
+			</ul>			
+		</div>
+	</div>
+	<span class="buttons">
+		<input	type="hidden" name="pageSize" value="20" />
+		<button id="search-form-submit" class="btn" type="submit">
+			<span><span>Search</span></span>
+		</button>
+		<button id="search-form-reset" class="btn" type="reset">
+			<span><span>Reset</span></span>
+		</button>
+	</span>
+</form>
+{% endblock %}
+{% block content %}
+<script>
+	window.swizapp.urls = {
+		edit	: '{{ 'editproduct'| route_url(pid='')}}',
+		add		: '{{ 'addproduct' | route_url }}',
+		delete	: '{{ 'deleteinvoice'| route_url(invoiceid='')}}',
+		list	: '{{ 'invoices' | route_url }}'
+	};
+</script>
+<div id="invoice-container" class="content">
+	<div id="result">
+	{% if model != None and (model | count) > 0 %} 
+	<table id="prdTable" class="listing noedit">
+		<thead>
+			<tr class="empty noborder listing-options">
+				<td colspan="10">
+					<a class="btn batch delete action-clear"
+						href="#"
+						onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
+						confirm="Are you sure?"> <span><span>Delete</span></span>
+					</a>
+				</td>
+			</tr>
+			<tr class="empty noborder">
+				<td colspan="1000"></td>
+			</tr>
+			<tr>
+				<th class="xs"><input id="select_all" type="checkbox"
+				name="select_all" rel="all" /></th>
+				<th>Invoice No#</th>
+				<th>Customer</th>
+				<th>Invoice Date</th>
+				<th>Due Date</th>
+				<!--<th>Total Items</th>-->
+				<th>Status</th>
+				<th class="gross_amount">Total</th>
+				<th class="due_amount"> Due</th>
+				<th class="noborder"></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for item in model %}
+				{% set dueAmount = (item.OrderAmount - item.PaidAmount) | round %}
+				<tr class="{{ loop.cycle('odd', 'even') }}" data-id="{{item.Id}}">
+				    <td class="check">
+		                      <input type="checkbox" name="ids" value="{{item.Id}}">
+		            </td>
+					<td>
+						{{item.OrderNo}}
+					</td>
+					<td>
+						{{item.CustomerName | d('--',true)}}
+					</td>
+					<td>
+						{{item.OrderDate | datetimeformat}}
+					</td>
+					<td>
+						{{item.DueDate | datetimeformat | d('--',true)}}
+					</td>
+					<!--<td>
+						{{item.ItemCount}}
+					</td>-->
+					<td>
+						{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
+							<span class="status overdue"> Overdue </span>
+						{% elif (dueAmount > 0) %}
+							<span class="status opened"> Opened </span>
+						{% elif (item.ItemCount == 0) %}
+							<span class="status draft"> Draft </span>
+						{% else %}
+							<span class="status closed"> Closed </span>
+						{% endif %}
+					</td>
+					<td class="right">
+						{{item.OrderAmount | round | currency }}
+					</td>
+					<td class="right" style="{{ 'color:red;font-weight:bold;' if dueAmount > 0.0 }}">
+						{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency}}
+					</td>
+					<td class="action payments">
+		                <button class="btn payment action-clear" 
+		                    onclick="document.location.href='{{'invoicepayments' | route_url(invoiceid=item.Id)}}'"
+		                    href="#" type="button">
+		                    <span><span>Payments</span></span>
+		                </button>
+		            </td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	{% else %}
+		<div class="alert alert-info">
+			No records found!
+		</div>
+	{% endif %}
+</section>      
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+	});
+</script>
+{% endblock %}

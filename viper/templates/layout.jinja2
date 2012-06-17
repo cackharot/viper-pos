@@ -54,11 +54,11 @@
 			<ul id="hd-navbar-menu" class="negative">
 				<li class="{{'active' if request.path == '/'}}"><a href="/">Dashboard</a></li>
 				<li class="{{'active' if request.path == '/sales'}}"><a href="/sales">Sales</a></li>
-				<li class="{{'active' if request.path == '/sales/listorders'}}"><a href="/sales/listorders">Invoices</a></li>
-				<li class="{{'active' if request.path.startswith('/stock/products')}}"><a href="/stock/products">Products</a></li>
-				<li class="{{'active' if request.path.startswith('/stock/purchases')}}"><a href="/stock/purchases">Purchases</a></li>
-				<li class="{{'active' if request.path.startswith('/customers')}}"><a href="/customers">Customers</a></li>
-				<li class="{{'active' if request.path.startswith('/suppliers')}}"><a href="/suppliers">Suppliers</a></li>
+				<li class="{{'active' if request.path.startswith('/invoice')}}"><a href="{{'invoices' | route_url}}">Invoices</a></li>
+				<li class="{{'active' if request.path.startswith('/stock/products')}}"><a href="{{'products' | route_url}}">Products</a></li>
+				<li class="{{'active' if request.path.startswith('/stock/purchases')}}"><a href="{{'purchases' | route_url}}">Purchases</a></li>
+				<li class="{{'active' if request.path.startswith('/customers')}}"><a href="{{'customers' | route_url}}">Customers</a></li>
+				<li class="{{'active' if request.path.startswith('/suppliers')}}"><a href="{{'suppliers' | route_url}}">Suppliers</a></li>
 				<li class="{{'active' if request.path.startswith('/reports')}}"><a href="/reports">Reports</a></li>
 				<li class="{{'active' if request.path.startswith('/admin')}}"><a href="/admin">Admin</a></li>
 			</ul>
@@ -80,6 +80,7 @@
     <script src="{{request.static_url('viper:static/js/jquery-ui.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/json2.js')}}"></script>
+    <script src="{{request.static_url('viper:static/js/bootstrap.min.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/underscore.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/backbone.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/jquery.jeditable.js')}}"></script>

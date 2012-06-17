@@ -19,7 +19,6 @@ orderServiceProxy = OrderService()
 
 def includeme(config):
     config.add_route('sales', '/sales')
-    config.add_route('listorders', '/sales/listorders')
     config.add_route('neworder', '/sales/neworder', xhr=True)
     config.add_route('saveorder', '/sales/saveorder/{orderid}', xhr=True)
     config.add_route('savelineitems', '/sales/savelineitems', xhr=True)
@@ -35,14 +34,6 @@ def includeme(config):
 def salesPage(request):
     d = datetime.utcnow()
     return { 'date': d.date(), 'time': d.time() }
-
-@view_config(route_name='listorders', renderer="sales/orderlist.jinja2")
-def listOrders(request):
-    searchParam = OrderSearchParam()
-    searchParam.TenantId = request.user.TenantId
-    model = orderServiceProxy.SearchOrders(searchParam)
-    return {'model':model}
-
 
 @view_config(route_name='todayorders', renderer="json")
 def getTodayOrders(request):

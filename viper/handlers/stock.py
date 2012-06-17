@@ -325,7 +325,7 @@ class StockController(object):
 					model.UpdatedBy = self.UserId
 					model.Status = True
 					if stockService.SavePurchase(model):
-						return HTTPFound(location=self.request.route_url('purchases')+'/'+model.Id)
+							return HTTPFound(location=self.request.route_url('purchases'))					
 					else:
 						errors = 'Unable to save purchase details!'
 			else:
@@ -338,7 +338,7 @@ class StockController(object):
 					model.CreatedBy = self.UserId
 					model.Status = True
 					if stockService.AddPurchase(model):
-						return HTTPFound(location=self.request.route_url('purchases'))
+						return HTTPFound(location=self.request.route_url('purchases')+'/'+model.Id)
 					else:
 						errors = 'Unable to save purchase details!'
 		except Exception, e:

@@ -9,6 +9,19 @@
 	<h2>
 		{{ 'Add Purchase' if not model.Id }} 
 		{{ 'Edit Purchase' if model.Id }}
+		{% set totalAmount = model.GetTotalAmount() %}
+		{% set paidAmount = model.GetPaidAmount() %}
+		{% set dueAmount =  totalAmount - paidAmount %}
+		
+		{% if model.Id %}
+			{% if (model.DueDate | comptoday) == 1 %}
+				<span style="float: right;" class="status overdue"> Overdue </span>
+			{% elif (dueAmount > 0 or totalAmount == 0) %}
+				<span style="float: right;" class="status opened"> Opened </span>
+			{% else %}
+				<span style="float: right;" class="status closed"> Closed </span>
+			{% endif %}
+		{% endif %}
 	</h2>
 	<div id="statusMessage">
 	</div>
@@ -35,13 +48,13 @@
 							Total Items/Quantity: <span id="totalItems">{{model.TotalItems}}</span>/<span id="totalQuantity">{{model.TotalQuantity}}</span>
 						</span>
 						<span class="_50" style="line-height:23px;font-weight:bold;color:Green;"> 
-							Total Amount: {{'' | currency}}<span id="totalAmount">{{model.GetTotalAmount()}}</span>
+							Total Amount: {{'' | currency}}<span id="totalAmount">{{totalAmount}}</span>
 						</span>
 						<span class="_50" style="line-height:23px;font-weight:bold;color:Brown">
-							Paid Amount: {{'' | currency}}<span id="paidAmount">{{model.GetPaidAmount()}}</span>
+							Paid Amount: {{'' | currency}}<span id="paidAmount">{{paidAmount}}</span>
 						</span>
 						<span class="_50" style="line-height:23px;font-weight:bold;color:Red">
-							Due Amount: {{'' | currency}}<span id="dueAmount">{{model.GetTotalAmount() - model.GetPaidAmount()}}</span>
+							Due Amount: {{'' | currency}}<span id="dueAmount">{{dueAmount}}</span>
 						</span>
 					</li>
 				</ul>
@@ -279,7 +292,7 @@
 				if(data && data.status == true) {
 					//added success
 					var id = data.id;
-					var total = jdata.Quantity*jdata.BuyPrice;
+					var total = (jdata.Quantity*jdata.BuyPrice).toFixed(2);
 					var tr = '<tr>';
 					tr += '<td><a data-total="' + total + '"';
 					tr += ' data-quantity="'+jdata.Quantity+'" class="delitem" href="/stock/deletepurchaselineitem?purchaseId=' + purchaseId;
@@ -299,7 +312,7 @@
 					var tq = parseFloat($('#totalQuantity').text())
 					var ta = parseFloat($('#totalAmount').text())
 					
-					$('#totalAmount').text((ta+total).toFixed(2))
+					$('#totalAmount').text((ta+total))
 					$('#totalItems').text(ti+1)
 					$('#totalQuantity').text((tq+parseFloat(jdata.Quantity)).toFixed(2))
 					

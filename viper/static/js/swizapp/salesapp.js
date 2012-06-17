@@ -20,7 +20,7 @@
 		initialize: function (model, options) {
 			this.bind("change:name", this.updateUI);
 			this.bind("change:quantity", this.updateUI);
-			this.bind("change:mrp", this.updateUI);
+			this.bind("change:mrp", this.updateUI);		
 			this.bind("change:price", this.updateUI);
 			this.bind("change:barcode", this.updateUI);
 		},
@@ -126,9 +126,8 @@
 			}
 		},
 		resetRecords: function () {
-			$('#tblOrderLineItems tbody tr').each(function () {
-				$(this).remove()
-			})
+			$('#tblOrderLineItems tbody tr').remove()
+			$('#tblOrderLineItems tbody').html('<tr><td style="padding:0em;display: none;" class="noborder" colspan="7"></td></tr>')
 			$('#totalAmount').text(0.0)
 			$('#savingsAmount').text(0.0)
 			$('#totalItemsQuantity').text('0/0')
@@ -335,7 +334,7 @@
 	});
 
 	window.SalesAppView = Backbone.View.extend({
-		el: $("#sales-page"),
+		el: $("#invoice-container"),
 		model: null,
 		initialize: function (options) {
 			this.vent = options.vent
@@ -401,7 +400,9 @@
 			}
 		},
 		deleteLineItem: function (e) {
-			var slno = $(e.target).parent().data('slno')
+			e.preventDefault()
+			var slno = $(e.target).data('slno')
+			//console.log(slno)
 			if (slno) {
 				var items = this.model.get('lineItems')
 				var item = items.find(function (x) {
@@ -436,7 +437,7 @@
 					$('input[name=itemName]')[0].select(0, $('input[name=itemName]').val().length);
 				},
 				formatter: function (displayValue, item) {
-					return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.MRP.toFixed(2) + '</span></div>';
+					return '<div style="width:220px;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.MRP.toFixed(2) + '</span></div>';
 				},
 				ajax: {
 					url: "/sales/searchitem",
@@ -734,7 +735,7 @@
 			var html = cmpl({
 				'item': this.model
 			})
-			$('#checkoutOrderModel table tbody').html(html)
+			$('#checkoutOrderModel .modal-body').html(html)
 
 			$('#checkoutOrderModel').modal('show')
 
@@ -884,37 +885,6 @@
 		})
 		$(this).trigger('edit')
 	})
-
-	function hideMsg() {
-		$('#statusMessage').fadeOut();
-	}
-
-	function showMsg(type, message, timeout) {
-		var ediv = '<div class="alert ';
-		if (type == "error") {
-			ediv += 'alert-error';
-		} else if (type == "info") {
-			ediv += 'alert-info';
-		} else if (type == "success") {
-			ediv += 'alert-success';
-		} else if (type == "warn") {
-			ediv += 'alert-warning';
-		} else {
-			ediv += '';
-		}
-		ediv += ' fade in">';
-		ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
-		ediv += message;
-		ediv += '</div>';
-		$('#statusMessage').html(ediv);
-		$('.alert', $('#statusMessage')).alert();
-
-		if (timeout || timeout == undefined) {
-			setTimeout(function () {
-				$('.alert', $('#statusMessage')).alert('close');
-			}, 10000);
-		}
-	}
 
 	String.prototype.startsWith = function (needle) {
 		return (this.indexOf(needle) == 0);

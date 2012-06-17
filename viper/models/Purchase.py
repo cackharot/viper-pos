@@ -41,7 +41,7 @@ class Purchase(AuditMixin, Base):
 		self.PurchaseAmount = self.PaidAmount = 0.0
 		d = datetime.utcnow()
 		self.PurchaseDate = d.strftime('%d-%m-%Y')
-		self.DueDate = d.strftime('%d-%m-%Y')
+		self.DueDate = None
 		self.CreatedOn = d
 		self.LineItems = []
 		self.Payments = []

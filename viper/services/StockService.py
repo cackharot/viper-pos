@@ -167,6 +167,8 @@ class StockService(object):
 				raise Exception('Duplicate Purchase entry!')
 			if entity.PurchaseDate and isinstance(entity.PurchaseDate, unicode):
 				entity.PurchaseDate = datetime.strptime(entity.PurchaseDate, '%d-%m-%Y')
+			if entity.DueDate and isinstance(entity.DueDate, unicode):
+				entity.DueDate = datetime.strptime(entity.DueDate, '%d-%m-%Y')
 			entity.UpdatedOn = datetime.utcnow()
 			if not entity in DBSession:
 				DBSession.add(entity)
@@ -187,6 +189,7 @@ class StockService(object):
 		b = DBSession.query(PurchasePayment.PurchaseId, PurchasePayment.PaidAmount).subquery()
 
 		query = DBSession.query(Purchase.Id, Purchase.PurchaseNo, Purchase.PurchaseDate, \
+					Purchase.DueDate, \
 					Supplier.Name.label('SupplierName'), \
 					func.count(a.c.PurchaseId).label('ItemCount'), \
 					func.ifnull(func.sum(a.c.BuyPrice * a.c.Quantity), 0).label('PurchaseAmount'), \

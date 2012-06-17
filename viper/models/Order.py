@@ -25,7 +25,7 @@ class Order(AuditMixin, Base):
 	OrderAmount = Column(Float, default=0)
 	PaidAmount = Column(Float, default=0)
 	OrderDate = Column(DateTime)
-	ShipDate = Column(DateTime, nullable=True)
+	DueDate = Column(DateTime, nullable=True)
 	IpAddress = Column(String(30), nullable=True)
 
 	def __init__(self):
@@ -35,7 +35,7 @@ class Order(AuditMixin, Base):
 		self.OrderAmount = self.PaidAmount = 0.0
 		d = datetime.utcnow()
 		self.OrderDate = d
-		self.ShipDate = None
+		self.DueDate = None
 		self.IpAddress = '0.0.0.0'
 		self.LineItems = []
 		self.Payments = []

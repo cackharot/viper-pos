@@ -192,14 +192,18 @@ class OrderService(object):
 		if not searchParam or not searchParam.TenantId:
 			return None
 
-		osq = DBSession.query(LineItem.OrderId, func.count(LineItem.OrderId).label('ItemCount'), func.sum(LineItem.Quantity * LineItem.SellPrice).label('OrderAmount'))
+		osq = DBSession.query(LineItem.OrderId, func.count(LineItem.OrderId).label('ItemCount'), \
+							func.sum(LineItem.Quantity * LineItem.SellPrice).label('OrderAmount'))
 		osq = osq.join(Order, Order.Id == LineItem.OrderId).group_by(LineItem.OrderId).subquery()
 
 		psq = DBSession.query(OrderPayment.OrderId, func.sum(OrderPayment.PaidAmount).label('PaidAmount'))
 		psq = psq.join(Order, Order.Id == OrderPayment.OrderId).group_by(OrderPayment.OrderId).subquery()
 
-		query = DBSession.query(Order.Id, Order.OrderNo, Order.OrderDate, Order.CustomerId, Order.TenantId, Order.CreatedBy, Order.CreatedOn, Order.UpdatedBy, Order.UpdatedOn, Order.Status, Order.IpAddress, Order.ShipDate, CustomerContactDetails.FirstName.label('CustomerName'), osq.c.ItemCount, osq.c.OrderAmount, psq.c.PaidAmount)
-		query = query.join(osq, osq.c.OrderId == Order.Id).join(psq, psq.c.OrderId == Order.Id)
+		query = DBSession.query(Order.Id, Order.OrderNo, Order.OrderDate, Order.CustomerId, Order.TenantId, Order.CreatedBy, \
+							 Order.CreatedOn, Order.UpdatedBy, Order.UpdatedOn, Order.Status, Order.IpAddress, Order.DueDate,\
+							 CustomerContactDetails.FirstName.label('CustomerName'), osq.c.ItemCount,\
+							 func.ifnull(osq.c.OrderAmount,0).label('OrderAmount'), func.ifnull(psq.c.PaidAmount,0).label('PaidAmount'))
+		query = query.outerjoin(osq, osq.c.OrderId == Order.Id).outerjoin(psq, psq.c.OrderId == Order.Id)
 		query = query.outerjoin(Customer, Customer.Id == Order.CustomerId)
 		query = query.outerjoin(CustomerContactDetails, Customer.Id == CustomerContactDetails.CustomerId)
 
@@ -207,7 +211,7 @@ class OrderService(object):
 		query = query.filter(Order.Status == True)
 
 		if searchParam.Credit:
-			query = query.filter((func.ifnull(osq.c.OrderAmount, 0) > func.ifnull(psq.c.PaidAmount, 0)))
+			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount)
 
 		if searchParam.UserId:
 			query = query.filter(Order.CreatedBy == searchParam.UserId, \

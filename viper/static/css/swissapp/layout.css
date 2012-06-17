@@ -19,9 +19,9 @@ a.xit {
   float:left;
   width:10px;
   height:10px;
-  overflow:hidden;
+  /*overflow:hidden;*/
   line-height:10px;
-  
+  text-indent: 12px;
   background:transparent url(../../images/icons/xit.gif) no-repeat 0 0;
   cursor:pointer;
 }
@@ -325,10 +325,6 @@ form.payments-form .buttons { margin:0; padding:0; }
 #invoice-container table.listing .taxes span a { bottom: 0em; }
 
 #invoice-container table.listing a.remove-item { 
-  margin-right: -5em;
-  position:relative;
-  left:-2.5em;
-  top:0.5em;
 }
 
 #invoice-container table.listing tbody td { cursor:default; }
