@@ -1,62 +1,53 @@
-{% if model != None and (model | count) > 0 %} 
-<table id="purchaseTable" class="table table-bordered table-striped table-condensed">
+{% if model != None and (model | count) > 0 %}
+<table id="purchaseTable" class="listing">
 	<thead>
+		<tr class="empty noborder listing-options">
+			<td colspan="10">
+				<a class="btn batch delete action-clear"
+					href="#"
+					onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
+					confirm="Are you sure?"> <span><span>Delete</span></span>
+				</a>
+			</td>
+		</tr>
+		<tr class="empty noborder">
+			<td colspan="1000"></td>
+		</tr>
 		<tr>
+			<th class="xs"><input id="select_all" type="checkbox"
+				name="select_all" rel="all" /></th>
 			<th>Bill No</th>
 			<th>Supplier Name</th>
 			<th>Total Items</th>
 			<th>Purchase Date</th>
 			<th>Purchase Amount</th>
 			<th>Paid Amount</th>
-			<th>Action</th>
+			<th class="noborder"></th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for item in model %}
-			<tr>
-				<td>
-					{{item.PurchaseNo}}
-				</td>
-				<td>
-					{{item.SupplierName}}
-				</td>
-				<td>
-					{{item.ItemCount}}
-				</td>
-				<td>
-					{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}
-				</td>
-				<td>
-					{{item.PurchaseAmount | round}}
-				</td>
-				<td>
-					{{item.PaidAmount | round}}
-				</td>
-				<td>
-					<div class="btn-group">
-						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-							Action <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="{{'editpurchase' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
-							</li>
-							<li>
-								<a href="{{'deletepurchase' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
-							</li>
-							<li class="divider"></li>
-							<li>
-								<a href="#">$ View Payments</a>
-							</li>
-						</ul>
-					</div>
-				</td>
-			</tr>
+		<tr class="{{ loop.cycle('odd', 'even') }}" data-id="{{item.Id}}">
+		    <td class="check">
+                      <input type="checkbox" name="ids" value="{{item.Id}}">
+            </td>
+			<td>{{item.PurchaseNo}}</td>
+			<td>{{item.SupplierName}}</td>
+			<td>{{item.ItemCount}}</td>
+			<td>{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}</td>
+			<td>{{item.PurchaseAmount | round}}</td>
+			<td>{{item.PaidAmount | round}}</td>
+			<td class="action payments">
+                <button class="btn payment action-clear" 
+                    onclick="document.location.href='{{'purchasespayments' | route_url(pid=item.Id)}}'"
+                    href="#" type="button">
+                    <span><span>Payments</span></span>
+                </button>
+            </td>
+		</tr>
 		{% endfor %}
 	</tbody>
 </table>
 {% else %}
-	<div class="alert alert-info">
-		No Purchases found!
-	</div>
+<div class="alert alert-info">No Purchases found!</div>
 {% endif %}

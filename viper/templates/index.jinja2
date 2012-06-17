@@ -1,9 +1,6 @@
 {% extends "templates/layout.jinja2" %}
 {% block content %}
-<section id="home-page">
-	 <div class="page-header">
-      <h1>Welcome {{ user.UserName}},</h1>
-     </div> 
+<div id="content-wrapper" class="content">
 	<div class="row-fluid">
 		<div class="span6">
 	    	<h3>Return Products
@@ -81,7 +78,7 @@
 	    	</div>
 	    </div>
 	</div>
-</section>
+</div>
 <section style="display:none;" id="templates">
 	<script type="text/template"  id="tdReturnProduct">
 		<% _.each(items,function(item) { %>

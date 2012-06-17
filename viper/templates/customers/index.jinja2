@@ -1,22 +1,63 @@
 {% extends "templates/layout.jinja2" %}
+{% block specialNav %}
+	<a id="new-invoice-button" href="{{'addcustomer'|route_url}}"><span>New Customer</span></a>
+{% endblock %}
+{% block topcontent %}
+	<form id="searchForm" class="searchform" method="post" action="{{'customers'|route_url}}" name="searchForm">
+		<div id="searchFilters">
+			<div class="searchSection">
+				<ul>
+					<li>
+						<label for="search_query">Search</label>
+						<input id="search_query" type="text" name="searchValue" value={{searchValue | d('',true)}}>
+					</li>
+					<li>
+						<select name="searchField" style="width:105px">
+							<option value="name">Name</option>
+							<option value="mobile">Mobile</option>
+							<option value="customerno">Customer No</option>
+						</select>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<span class="buttons">
+			<button id="search-form-submit" class="btn" type="submit">
+				<span><span>Search</span></span>
+			</button>
+			<button id="search-form-reset" class="btn" type="reset">
+				<span><span>Reset</span></span>
+			</button>
+		</span>
+	</form>
+{% endblock %}
 {% block content %}
-<section id="manage-customers">
-	<div class="page-header">
-		<h1>Customer Management
-			 <small class="pull-right">
-			  	<a href="{{'addcustomer'|route_url}}" title="Add new customer!" class="btn btn-primary">
-			  		<i class="icon-plus icon-white"></i> Add Customer
-			  	</a>
-			 </small>
-		 </h1>
-	</div> 	
-	<div class="row-fluid">
-		<div class="span12">&nbsp;</div>
-	</div>
+<script>
+	window.swizapp.urls = {
+		edit	: '{{ 'editcustomer'| route_url(cid='')}}',
+		add		: '{{ 'addcustomer' | route_url }}',
+		delete	: '{{ 'deletecustomer'| route_url(cid='')}}',
+		list	: '{{ 'customers' | route_url }}'
+	};
+</script>
+<div id="customer-container" class="content">
     {% if model != None and (model | count) > 0 %} 
-	<table id="customerTable" class="table table-bordered table-striped table-condensed">
+	<table class="listing" id="customerTable">
 		<thead>
+			<tr class="empty noborder listing-options">
+				<td colspan="10">
+					<a class="btn batch delete action-clear" href="#" onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;" confirm="Are you sure?">
+						<span><span>Delete</span></span>
+					</a>
+				</td>
+			</tr>
+			<tr class="empty noborder">
+				<td colspan="1000"></td>
+			</tr>
 			<tr>
+				<th class="xs">
+					<input id="select_all" type="checkbox" name="select_all" rel="all"/>
+				</th>
 				<th>Customer No</th>
 				<th>First Name</th>
 				<th>Last Name</th>
@@ -25,13 +66,16 @@
 				<th>Mobile</th>
 				<th>Address</th>
 				<th>City</th>
-				<th>Action</th>
+				<th class="noborder"></th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for item in model %}
 				{% set cnt = item.Contacts[0] %}
-				<tr>
+				<tr data-id="{{item.Id}}" class="{{ loop.cycle('odd', 'even') }}">
+					<td class="check">
+						<input type="checkbox" name="ids" value="{{item.Id}}">
+					</td>
 					<td>
 						{{item.CustomerNo}}
 					</td>
@@ -56,27 +100,12 @@
 					<td>
 						{{cnt.City | d('---',True)}}
 					</td>
-					<td>
-						<div class="btn-group">
-							<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-								Action <span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu">
-								<li>
-									<a href="{{'editcustomer' | route_url(cid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
-								</li>
-								<li>
-									<a href="{{'deletecustomer' | route_url(cid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
-								</li>
-								<li class="divider"></li>
-								<li>
-									<a href="#"> Orders History</a>
-								</li>
-								<li>
-									<a href="#"> Payment History</a>
-								</li>
-							</ul>
-						</div>
+					<td class="action payments">
+						<button class="btn invoices action-clear" 
+							onclick="document.location.href='{{'searchinvoices' | route_url(searchField='CustomerId',searchValue=item.Id)}}'"
+							href="#" type="button">
+							<span><span>Invoices</span></span>
+						</button>
 					</td>
 				</tr>
 			{% endfor %}
@@ -87,12 +116,11 @@
 			No records found!
 		</div>
 	{% endif %}
-</section>      
+</div>
 {% endblock %}
 {% block footerscript %}
 <script>
-	$(function(){
-		//$('#prdTable').dataTable();
-	});
+
 </script>
 {% endblock %}
+

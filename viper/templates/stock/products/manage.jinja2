@@ -1,42 +1,38 @@
 {% extends "templates/layout.jinja2" %}
+{% block specialNav %}
+<a id="new-invoice-button" href="{{'addproduct'|route_url}}"><span>New	Product</span></a>
+{% endblock %} 
 {% block content %}
-<section id="manage-products">
-	 <div class="page-header">
-       <h1> {{ 'Add Product' if not model.Id }}
+<div id="customer-container" class="content">
+    <h2> {{ 'Add Product' if not model.Id }}
 	        {{ 'Edit Product' if model.Id }}
-		 <small class="pull-right">
-		  	<a href="{{'products'|route_url}}" title="Back to Product listing!" class="btn btn-primary">
-		  		<i class="icon-arrow-left icon-white"></i> Back
-		  	</a>
-		 </small></h1>
-     </div> 	
-     <div class="row-fluid">
-     	<div class="span12">&nbsp;</div>
-     </div>
-     <div class="span8">
-		 {% if errors or renderer.errorlist() -%} 
-		 	<div class="alert alert-error">
-		 		<strong>Please correct the errors and submit again:</strong>
-		 		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
-		 		{{renderer.errorlist(name=None,class='')}}
-		 	</div>
-		 {%- endif %}
-		 <form action="{{'saveproduct'|route_url}}" method="post" class="form-horizontal">
+	</h2>
+	<form action="{{'saveproduct'|route_url}}" method="post">
+		<div id="customer-data" class="global-data block">
 			{% import 'shared/productform.jinja2' as productForm with context %}
 			{{ productForm.render(renderer) }}
-			<div class="form-actions">
-				<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>
-				<input type="submit" class="btn btn-primary" value="Save"/>
-				<input type="reset" name="reset" class="btn" value="Reset"/>
-			</div>
-		 </form>
-     </div>
-</section>      
+		</div>
+		<div id="saving-options" class="block">
+			<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>
+			{% if model.Id %} 
+			<a class="btn action delete"
+				onclick="return confirm('Are you sure?');"
+				href="{{ 'deleteproduct' | route_url(pid=model.Id)}}"
+				confirm="Are you sure?" post="1"> <span><span>Delete</span></span>
+			</a> 
+			{% endif %}
+			<button class="btn action save" type="submit">
+				<span><span>Save</span></span>
+			</button>
+		</div>
+	 </form>
+</div>
 {% endblock %}
 {% block footerscript %}
 <script>
 	$(function(){
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+		$('#customer-data input[type=text], #customer-data textarea').SwizappFormTips()
 	});
 </script>
 {% endblock %}

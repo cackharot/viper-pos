@@ -1,41 +1,59 @@
-{% extends "templates/layout.jinja2" %}
-{% block content %}
-<section id="manage-purchase">
-	<div class="page-header">
-		<h1>Purchase Management
-			 <small class="pull-right">
-			  	<a href="{{'addpurchase'|route_url}}" title="Add New Purchase!" class="btn btn-primary">
-			  		<i class="icon-plus icon-white"></i> Add 
-			  	</a>
-			 </small>
-		 </h1>
-	</div> 	
-	<div class="row-fluid">
-		<div class="span12">
-			<form id="searchForm" class="well form-inline" action="{{'purchases_xhr'|route_url}}">
-				<label for="billNo">Bill No# </label>
-				<input type="text" name="billNo" placeholder="Enter bill no" autofocus/>
-				<label for="billDate">Bill Date: </label>
-				<input type="text" name="billDate" class="datetime" placeholder="Enter bill date"/>
-				<label for="supplierId">Supplier: </label>
-				<select name="supplierId">
-					<option value="">--Select--</option>
-					{% for item in suppliers if suppliers -%}
-						<option value="{{item[0]}}">{{item[1]}}</option>
-					{%- endfor %}
-				</select>
-				<input type="hidden" name="pageSize" value="20"/>
-				<input type="submit" name="submit" value="Search" class="btn btn-success"/>
-				<input type="reset" name="reset" value="Reset" class="btn"/>
-			</form>
+{% extends "templates/layout.jinja2" %} 
+{% block specialNav %}
+	<a id="new-invoice-button" href="{{'addpurchase'|route_url}}"><span>New	Purchase</span></a>
+{% endblock %} 
+{% block topcontent %}
+<form id="searchForm" action="{{'purchases_xhr'|route_url}}">
+	<div id="searchFilters">
+		<div class="searchSection">
+			<ul>
+				<li>
+					<label for="billNo">Bill No# </label> 
+					<input type="text" name="billNo" value="{{searchValue| d('',true)}}"/>
+				</li>
+				<li>
+					<label for="supplierId">Supplier: </label> 
+					<select	name="supplierId">
+						<option value="">--Select--</option> 
+						{% for item in suppliers if suppliers %}
+						<option value="{{item[0]}}">{{item[1]}}</option> 
+						{% endfor %}
+					</select>
+				</li>
+				<li>
+					<label for="billDate">Bill Date: </label> 
+					<input type="text" name="billDate" class="datetime" placeholder="Enter bill date" />
+				</li>
+			</ul>
 		</div>
 	</div>
+	<span class="buttons">
+		<input	type="hidden" name="pageSize" value="20" />
+		<button id="search-form-submit" class="btn" type="submit">
+			<span><span>Search</span></span>
+		</button>
+		<button id="search-form-reset" class="btn" type="reset">
+			<span><span>Reset</span></span>
+		</button>
+	</span>
+</form>
+{% endblock %} 
+{% block content %}
+<script>
+	window.swizapp.urls = {
+		edit	: '{{ 'editpurchase'| route_url(pid='')}}',
+		add		: '{{ 'addpurchase' | route_url }}',
+		delete	: '{{ 'deletepurchase'| route_url(pid='')}}',
+		list	: '{{ 'purchases' | route_url }}'
+	};
+</script>
+<div id="customer-container" class="content">
 	<div id="statusMessage"></div>
-    <div id="result">
-    	{% include 'templates/stock/purchase/partialPurchaseList.jinja2' with context %}
+	<div id="result">
+	{% include	'templates/stock/purchase/partialPurchaseList.jinja2' with context %}
 	</div>
-</section>      
-{% endblock %}
+</div>
+{% endblock %} 
 {% block footerscript %}
 <script>
 	$(function(){

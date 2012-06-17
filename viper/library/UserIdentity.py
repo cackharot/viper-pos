@@ -7,7 +7,7 @@ class FormUserIdentity(object):
 	"""
 		Holds the authenticated user details
 	"""
-	
+
 	def __init__(self):
 		self._UserId = TestUserId
 		self._TenantId = TestTenantId
@@ -16,35 +16,35 @@ class FormUserIdentity(object):
 		self._Privileges = None
 		self._OperatorTenantId = None
 		self._ipAddress = None
-		
+
 	@property
 	def UserId(self):
 		return self._UserId
-	
+
 	@property
 	def TenantId(self):
 		return self._TenantId
-	
+
 	@property
 	def Name(self):
 		return self._Name
-	
+
 	@property
 	def Roles(self):
 		return self._Roles
-		
+
 	@property
 	def Privileges(self):
 		return self._Privileges
-	
-	@property	
+
+	@property
 	def OperatorTenantId(self):
 		return self._OperatorTenantId
-	
+
 	@property
 	def IpAddress(self):
 		return self._ipAddress
-	
+
 	pass
-	
-UserIdentity = FormUserIdentity()	
+
+UserIdentity = FormUserIdentity()

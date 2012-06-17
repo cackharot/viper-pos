@@ -6,8 +6,8 @@ class TenantSchema(Schema):
 	filter_extra_fields = True
 	allow_extra_fields = True
 	ignore_key_missing = True
-	Name  = validators.MinLength(4,not_empty=True,messages=dict(empty='Enter a valid Tenant Name!'))
+	Name = validators.MinLength(4, not_empty=True, messages=dict(empty='Enter a valid Tenant Name!'))
 	Description = validators.MinLength(4, not_empty=False)
-	Website  = validators.URL(not_empty=True,messages=dict(empty='Enter tenant\'s Website!'))
-	Url  = validators.URL(not_empty=True,messages=dict(empty='Enter tenant\'s Url to access this application!'))
+	Website = validators.URL(not_empty=True, messages=dict(empty='Enter tenant\'s Website!'))
+	Url = validators.URL(not_empty=True, messages=dict(empty='Enter tenant\'s Url to access this application!'))
 	pass

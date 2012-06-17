@@ -26,13 +26,13 @@ def add_global(event):
 
 
 def auth_tween_factory(handler, registry):
-    if registry.settings.get('useauth','1') == '1':
+    if registry.settings.get('useauth', '1') == '1':
         def auth_tween(request):
 			userid = None
 			#log.debug('request url: %s' % request.url)#route_url('login',request))
 			tokens = request.url.split('/')
 			skip = False
-			for x in ['admin','login','static','_debug_toolbar']:
+			for x in ['admin', 'login', 'static', '_debug_toolbar']:
 				if x in tokens:
 					skip = True
 					break
@@ -41,7 +41,7 @@ def auth_tween_factory(handler, registry):
 				userid = authenticated_userid(request)
 				if userid is None:
 					#raise HTTPForbidden()
-					return HTTPFound(location=route_url('login',request))
+					return HTTPFound(location=route_url('login', request))
 			response = handler(request)
 			return response
         return auth_tween
@@ -67,16 +67,16 @@ class SaaSAuthTktAuthenticationPolicy(object):
 	"""
 	def __init__(self, settings):
 		self.cookie = AuthTktCookieHelper(
-            settings.get('auth.secret','v1p3R53cr3t'),
+            settings.get('auth.secret', 'v1p3R53cr3t'),
             cookie_name=settings.get('auth.token') or 'auth_tkt',
-            secure=asbool(settings.get('auth.secure',False)),
-            timeout=int(settings.get('auth.timeout',3600)),
-            reissue_time=int(settings.get('auth.reissue_time',360)),
-            max_age=int(settings.get('auth.max_age',3600)))
+            secure=asbool(settings.get('auth.secure', False)),
+            timeout=int(settings.get('auth.timeout', 3600)),
+            reissue_time=int(settings.get('auth.reissue_time', 360)),
+            max_age=int(settings.get('auth.max_age', 3600)))
         pass
 
 	def remember(self, request, principal, **kw):
-		return self.cookie.remember(request, str(principal),**kw)
+		return self.cookie.remember(request, str(principal), **kw)
 
 	def forget(self, request):
 		return self.cookie.forget(request)
@@ -99,21 +99,21 @@ class SaaSAuthTktAuthenticationPolicy(object):
 		user = request.user
 		if user:
 			principals += [Authenticated, 'u:%s' % user.Id]
-			principals.extend(('g:%s' % g for g in ['admin','user']))
+			principals.extend(('g:%s' % g for g in ['admin', 'user']))
 			log.info(principals)
 			#principals.extend(('g:%s' % g.name for g in user.groups))
 		return principals
-	
-	
+
+
 class UserAuthorizationPolicy(object):
 	implements(IAuthorizationPolicy)
 	"""
 		Custom User authorization policy
 	"""
-	def permits(self,context,principals,permission):
+	def permits(self, context, principals, permission):
 		return True
-		
-	def principals_allowed_by_permission(self,context,permission):
+
+	def principals_allowed_by_permission(self, context, permission):
 		raise NotImplementedError('Method Not Implemented.')
-		
+
 	pass

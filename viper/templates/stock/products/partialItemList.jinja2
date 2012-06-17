@@ -1,55 +1,61 @@
 {% if model != None and (model | count) > 0 %} 
-<table id="prdTable" class="table table-bordered table-striped table-condensed">
+<table id="prdTable" class="listing noedit">
 	<thead>
+		<tr class="empty noborder listing-options">
+			<td colspan="10">
+				<a class="btn batch delete action-clear"
+					href="#"
+					onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
+					confirm="Are you sure?"> <span><span>Delete</span></span>
+				</a>
+			</td>
+		</tr>
+		<tr class="empty noborder">
+			<td colspan="1000"></td>
+		</tr>
 		<tr>
-			<th><i class="icon-barcode"></i> Barcode</th>
+			<th class="xs"><input id="select_all" type="checkbox"
+				name="select_all" rel="all" /></th>
+			<th>Barcode</th>
 			<th>Name</th>
 			<th>Supplier</th>
 			<th style="text-align:right;">MRP</th>
 			<!--<th style="text-align:right;">BuyPrice</th>-->
 			<th style="text-align:right;">SellPrice</th>
 			<th style="text-align:right;">Discount</th>
-			<th style="text-align:center;">Created On</th>
-			<th style="text-align:center;">Updated On</th>
-			<th>Action</th>
+			<!--
+			<th style="text-align:center;">Status</th>
+			<th style="text-align:center;">Updated On</th> 
+			-->
+			<th class="noborder"></th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for item in model -%}
-			<tr data-id="{{item.Id}}" class="{{'alert alert-error' if not item.Status}}">
+			<tr data-id="{{item.Id}}" title="Created On {{item.CreatedOn | datetimeformat('%d-%m-%Y')}}" 
+				data-id="{{item.Id}}" class="{{ loop.cycle('odd', 'even') }}">
+			    <td class="check">
+                      <input type="checkbox" name="ids" value="{{item.Id}}">
+            	</td>
 				<td data-col="Barcode" class="edit">{{item.Barcode}}</td>
 				<td data-col="Name" class="edit">{{item.Name}}</td>
-				<td>{{item.Supplier.Name}}</td>
+				<td><div style="float:left;position:relative;left:-45px;"><a href="{{'editproduct' | route_url(pid=item.Id)}}" title="Edit!">Edit</a></div>{{item.Supplier.Name}}</td>
 				<td data-col="MRP" class="edit" style="text-align:right;">{{item.MRP}}</td>
 				<!--<td style="text-align:right;">{{item.BuyPrice}}</td>-->
 				<td data-col="SellPrice" class="edit" style="text-align:right;">{{item.SellPrice}}</td>
 				<td data-col="Discount" class="edit" style="text-align:right;">{{item.Discount}}</td>
-				<td style="text-align:center;">{{item.CreatedOn | datetimeformat('%d-%m-%Y')}}</td>
-				<td style="text-align:center;">{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}</td>
-				<td>
-					<div class="btn-group">
-						<button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-							Action <span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu">
-							<li>
-								<a href="{{'editproduct' | route_url(pid=item.Id)}}"><i class="icon-pencil"></i> Edit</a>
-							</li>
-							<li>
-								<a href="{{'deleteproduct' | route_url(pid=item.Id)}}"><i class="icon-trash"></i> Delete</a>
-							</li>
-							{% if item.Status %}
-							<li>
-								<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Mark Return</a>
-							</li>
-							{% else %}
-							<li>
-								<a data-status="{{item.Status}}" class="pstatus" href="#" data-url="{{'markreturnproduct' | route_url(pid=item.Id)}}"> Make Active</a>
-							</li>
-							{% endif %}
-						</ul>
-					</div>
-				</td>
+				<!-- <td style="text-align:center;">{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}</td>-->
+				<td class="action payments">
+					{% if item.Status %}
+						<a title="Click to return the item!" data-status="{{item.Status}}" class="pstatus" href="{{'markreturnproduct' | route_url(pid=item.Id)}}?status={{(not item.Status) | lower}}"> 
+							<span class="status closed"> Return </span>
+						</a>
+					{% else %}
+						<a title="Click to activate the item!" data-status="{{item.Status}}" class="pstatus" href="{{'markreturnproduct' | route_url(pid=item.Id)}}?status={{(not item.Status) | lower}}">
+							<span class="status overdue"> Active </span>
+						</a>
+					{% endif %}
+            	</td>
 			</tr>
 		{%- endfor %}
 	</tbody>

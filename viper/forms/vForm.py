@@ -13,11 +13,11 @@ import logging
 log = logging.getLogger(__name__)
 
 class vForm(Form):
-	def __init__(self,prefix=None,**kw):
+	def __init__(self, prefix=None, **kw):
 		self.prefix = prefix
-		super(vForm,self).__init__(**kw)
+		super(vForm, self).__init__(**kw)
 		pass
-		
+
 	def validate(self):
 		assert self.schema or self.validators, \
 		        "validators and/or schema required"
@@ -32,14 +32,14 @@ class vForm(Form):
 			params = self.request.POST
 		else:
 			params = self.request.params
-			
+
 		if self.prefix:
 			new = {}
-			for k,v in params.items():
-				new[k.replace(self.prefix,'')] = v
+			for k, v in params.items():
+				new[k.replace(self.prefix, '')] = v
 			params = new
 			#log.info('Updated Params: %s' % params)
-	
+
 		if self.variable_decode:
 			decoded = variabledecode.variable_decode(
 			            params, self.dict_char, self.list_char)
@@ -65,9 +65,9 @@ class vForm(Form):
 
 				except Invalid, e:
 					self.errors[field] = unicode(e)
-					
+
 		#log.debug('Errors: %s' % (self.errors))
-		
+
 		self.is_validated = True
 		return not(self.errors)
 	pass

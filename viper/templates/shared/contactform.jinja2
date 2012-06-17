@@ -1,79 +1,54 @@
 {% macro render(renderer) -%}
-<table class="table">
-	<tbody>
-		<tr>
-			<td><div class="control-group {{ 'error' if renderer.is_error('FirstName') }}">
-				{{renderer.label('FirstName','First Name',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('FirstName',size=20,class='input-xlarge',autofocus=True)}}
-				</div>
-			</div></td>
-			<td><div class="control-group {{ 'error' if renderer.is_error('LastName') }}">
-				{{renderer.label('LastName','Last Name',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('LastName',size=20,class='input-xlarge')}}
-				</div>
-			</div></td>
-		</tr>
-		<tr>
-			<td><div class="control-group {{ 'error' if renderer.is_error('Email') }}">
-				{{renderer.label('Email','Email',class='control-label')}}
-				<div class="controls">
-					<div class="input-prepend">
-						<span class="add-on">
-							<i class="icon-envelope"></i>
-						</span>{{renderer.text('Email',size=255,class='input',style='width:242px')}}
-					</div>
-				</div>
-			</div></td>
-			<td><div class="control-group {{ 'error' if renderer.is_error('Phone') }}">
-				{{renderer.label('Phone','Phone',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('Phone',size=15,class='input-xlarge')}}
-				</div>
-			</div></td>
-		</tr>
-		<tr>
-			<td><div class="control-group {{ 'error' if renderer.is_error('Mobile') }}">
-				{{renderer.label('Mobile','Mobile',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('Mobile',size=15,class='input-xlarge')}}
-				</div>
-			</div></td>
-			<td><div class="control-group {{ 'error' if renderer.is_error('Address') }}">
-				{{renderer.label('Address','Address',class='control-label')}}
-				<div class="controls">
-					{{renderer.textarea('Address',class='input-xlarge')}}
-				</div>
-			</div></td>
-		</tr>
-		<tr>
-			<td><div class="control-group {{ 'error' if renderer.is_error('City') }}">
-				{{renderer.label('City','City',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('City',size=30,class='input-xlarge')}}
-				</div>
-			</div></td>
-			<td><div class="control-group {{ 'error' if renderer.is_error('Country') }}">
-				{{renderer.label('Country','Country',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('Country',size=30,class='input-xlarge')}}
-				</div>
-			</div></td>
-		</tr>
-		<tr>
-			<td><div class="control-group {{ 'error' if renderer.is_error('Zipcode') }}">
-				{{renderer.label('Zipcode','Zipcode',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('Zipcode',size=10,class='input-xlarge')}}
-				</div>
-			</div></td>
-			<td>
-				
-			</td>
-		</tr>
-	</tbody>
-</table>
+<ul>
+	<li>
+		<span class="_50">
+			{{renderer.label('FirstName','First Name',class='tip')}}
+			{{renderer.text('FirstName',size=20,class='error wrong' if renderer.is_error('FirstName'),title='First name')}}
+		</span>
+		<span class="_50">
+			{{renderer.label('LastName','Last Name',class='tip')}}
+			{{renderer.text('LastName',size=20,class='error wrong' if renderer.is_error('LastName'),title='Last name')}}
+		</span>
+	</li>
+	<li>
+		<span class="_75  ">
+			{{renderer.label('Email','Email',class='tip')}}
+			{{renderer.text('Email',size=255,class='error wrong' if renderer.is_error('Email'),title='Email')}}
+		</span>
+	</li>
+	<li>
+		<span class="_50  ">
+			{{renderer.label('Phone','Phone',class='tip')}}
+			{{renderer.text('Phone',size=15,class='error wrong' if renderer.is_error('Phone'),title='Landline')}}
+		</span>
+		<span class="_50  ">
+			{{renderer.label('Mobile','Mobile',class='tip')}}
+			{{renderer.text('Mobile',size=15,class='error wrong' if renderer.is_error('Mobile'),title='Mobile')}}
+		</span>
+	</li>
+	<li>
+		<span class="_50  ">
+			{{renderer.label('City','City',class='tip')}}
+			{{renderer.text('City',size=30,class='error wrong' if renderer.is_error('City'),title='City')}}
+		</span>
+		<span class="_50 ">
+			{{renderer.label('Country','Country',class='tip')}}
+			{{renderer.text('Country',size=30,class='error wrong' if renderer.is_error('Country'),title='Country')}}
+		</span>
+	</li>
+	<li>
+		<span class="_50">
+			{{renderer.label('Zipcode','Zipcode',class='tip')}}
+			{{renderer.text('Zipcode',size=10,class='error wrong' if renderer.is_error('Zipcode'),title='Zipcode')}}
+		</span>
+	</li>
+	<li>
+		<span class="_75">
+			{{renderer.label('Address','Address',class='tip')}}
+			{{renderer.textarea('Address',class='error wrong' if renderer.is_error('Address'),title='Address')}}
+		</span>
+	</li>
+</ul>
 {% if caller %}
 	caller()
 {% endif%}

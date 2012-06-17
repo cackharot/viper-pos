@@ -1,88 +1,73 @@
 {% macro render(renderer,quantity=False) -%}
-<fieldset>
-	<div class="control-group {{ 'error' if renderer.is_error('Barcode') }}">
-		{{renderer.label('Barcode',None,class='control-label')}}
-		<div class="controls">
-			<div class="input-prepend">
-				<span class="add-on">
-					<i class="icon-barcode"></i>
-				</span>{{renderer.text('Barcode',size=50,class='input',style='width:242px',autofocus=True)}}
-			</div>
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('Name') }}">
-		{{renderer.label('Name',None,class='control-label')}}
-		<div class="controls">
-			{{renderer.text('Name',size=50,class='input-xlarge')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('CategoryId') }}">
-		<label class="control-label" for="CategoryId">Category</label>
-		<div class="controls">
-			{{renderer.select('CategoryId',[['2512571362BE49278623B784C49CB01A','Default']],prompt='Choose a category',class='input-xlarge')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('TaxCategoryId') }}">
-		<label class="control-label" for="TaxCategoryId">Tax Category</label>
-		<div class="controls">
-			{{renderer.select('TaxCategoryId',[['8CD9785EF59C40138C9CFDDE4B144738','Tax 12.5%']],prompt='Choose a Tax category',class='input-xlarge')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('MRP') }}">
-		{{renderer.label('MRP','MRP',class='control-label')}}
-		<div class="controls">
-			{{renderer.text('MRP',size=6,class='input-xlarge')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('Discount') }}">
-		{{renderer.label('Discount',None,class='control-label')}}
-		<div class="controls">
-			{{renderer.text('Discount',size=6,class='input-xlarge')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('BuyPrice') }}">
-		{{renderer.label('BuyPrice','Buy Price',class='control-label')}}
-		<div class="controls">
-			{{renderer.text('BuyPrice',size=6,class='input-xlarge')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('SellPrice') }}">
-		{{renderer.label('SellPrice','Sell Price',class='control-label')}}
-		<div class="controls">
-			{{renderer.text('SellPrice',size=6,class='input-xlarge')}}
-		</div>
-	</div>
+<ul>
+	<li>
+		<span class="_50">
+			{{renderer.text('Barcode',title='Barcode',size=50,class='error wrong' if renderer.is_error('Barcode'),autofocus=True)}}
+		</span>
+		<span class="_50">
+			{{renderer.text('Name',title='Product Name',size=50,class='error wrong' if renderer.is_error('Name'))}}
+		</span>
+	</li>
+	<li>
+		<span class="_50">
+			{{renderer.select('CategoryId',[['2512571362BE49278623B784C49CB01A','Default']],prompt='Choose a category',class='error wrong' if renderer.is_error('CategoryId'))}}
+		</span>
+		<span class="_50">
+			{{renderer.select('TaxCategoryId',[['8CD9785EF59C40138C9CFDDE4B144738','Tax 12.5%']],prompt='Choose a Tax category',class='error wrong' if renderer.is_error('TaxCategoryId'))}}
+		</span>
+	</li>
+	<li>
+		<span class="_50">
+			{{renderer.text('MRP',title='MRP',size=6,class='error wrong' if renderer.is_error('MRP'))}}
+		</span>
+		<span class="_50">
+			{{renderer.text('Discount',title='Discount',size=6,class='error wrong' if renderer.is_error('Discount'))}}
+		</span>
+	</li>
+	<li>
+		<span class="_50">
+			{{renderer.text('BuyPrice',title='Buy Price',size=6,class='error wrong' if renderer.is_error('BuyPrice'))}}
+		</span>
+		<span class="_50">
+			{{renderer.text('SellPrice',title='Sell Price',size=6,class='error wrong' if renderer.is_error('SellPrice'))}}
+		</span>
+	</li>
 	{% if quantity -%}
-	<div class="control-group">
-		<lable>Quantity</label>
-		<div class="controls">
-			<input type="text" class="input-xlarge" name="Quantity" value="0.0"/>
-		</div>
-	</div>
+	<li>
+		<span class="_50">
+			<input type="text" title="Quantity" id="Quantity" name="Quantity" size="6" value="0.0"/>
+		</span>
+		<span class="_50">
+		</span>
+	</li>
 	{% else %}
-	<div class="control-group">
-		{{renderer.label('Status','Active',class='control-label')}}
-		<div class="controls">
-			{{renderer.checkbox('Status')}}
+	<li>
+		<span class="_50">
+			{{renderer.checkbox('Status',title='Active')}}
 			{{renderer.hidden('SupplierId')}}
-		</div>
-	</div>
+		</span>
+		<span class="_50">
+		</span>
+	</li>
 	{%- endif %}
-	<div class="control-group {{ 'error' if renderer.is_error('MfgDate') }}">
-		{{renderer.label('MfgDate','Mfg. Date',class='control-label')}}
-		<div class="controls">
-			{{renderer.date('MfgDate',class='input-xlarge datetime')}}
-		</div>
-	</div>
-	<div class="control-group {{ 'error' if renderer.is_error('ExpiryDate') }}">
-		{{renderer.label('ExpiryDate','Expiry Date',class='control-label')}}
-		<div class="controls">
-			{{renderer.date('ExpiryDate',class='input-xlarge datetime')}}
-		</div>
-	</div>
-</fieldset>
+	<li>
+		<span class="_50">
+			{{renderer.date('MfgDate',title='Mfg Date',class='datetime')}}
+		</span>
+		<span class="_50">
+			{{renderer.date('ExpiryDate',title='Expire Date',class='datetime')}}
+		</span>
+	</li>
+	<!-- 
+	<li>
+		<span class="_50">
+		</span>
+		<span class="_50">
+		</span>
+	</li>
+	-->
+</ul>
 	{% if caller %}
 		caller()
 	{% endif%}
-</fieldset>
 {%- endmacro %}

@@ -37,10 +37,10 @@ class UUID(TypeDecorator):
 
     def is_mutable(self):
         return False
- 
- 
+
+
 id_column_name = "Id"
- 
+
 def id_column():
 	from sqlalchemy import Column
-	return Column(id_column_name,UUID(),primary_key=True,default=uuid.uuid4)
+	return Column(id_column_name, UUID(), primary_key=True, default=uuid.uuid4)

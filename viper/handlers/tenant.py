@@ -27,7 +27,7 @@ securityService = SecurityService()
 tenantService = TenantService()
 
 def includeme(config):
-	config.add_handler('tenant','tenant/{action}', TenantController)
+	config.add_handler('tenant', 'tenant/{action}', TenantController)
 	pass
 
 class TenantController(object):
@@ -36,32 +36,32 @@ class TenantController(object):
 	"""
 	def __init__(self, request):
 		self.request = request
-		
+
 	@action(renderer='templates/tenant/index.jinja2')
 	def index(self):
 		lstTenants = tenantService.GetActiveTenants()
 		return dict(model=lstTenants)
 		pass
-	
-	@action(renderer='templates/tenant/manage.jinja2')	
+
+	@action(renderer='templates/tenant/manage.jinja2')
 	def manage(self):
 		errors = None
-		tenantId = self.request.params.get('tenantId',None)
+		tenantId = self.request.params.get('tenantId', None)
 		#log.info('TenantId: %s' % tenantId)
 		if tenantId: #edit
 			tenant = tenantService.GetTenantDetails(tenantId)
-			
+
 			if not tenant:
 				return HTTPFound(location='/tenant/index')
-			
+
 			if len(tenant.AdminUser.Contacts) <= 0:
 				tenant.AdminUser.Contacts.append(UserContactDetails())
-				
-			tenantForm = Form(self.request,schema=TenantSchema,obj=tenant)
-			adminUserForm = Form(self.request,schema=UserSchema,obj=tenant.AdminUser)
-			contactForm = vForm(request=self.request,prefix='tenantcontact-',schema=ContactSchema,obj=tenant.Contacts[0])
-			userContactForm = vForm(request=self.request,prefix='usercontact-',schema=ContactSchema,obj=tenant.AdminUser.Contacts[0])
-			
+
+			tenantForm = Form(self.request, schema=TenantSchema, obj=tenant)
+			adminUserForm = Form(self.request, schema=UserSchema, obj=tenant.AdminUser)
+			contactForm = vForm(request=self.request, prefix='tenantcontact-', schema=ContactSchema, obj=tenant.Contacts[0])
+			userContactForm = vForm(request=self.request, prefix='usercontact-', schema=ContactSchema, obj=tenant.AdminUser.Contacts[0])
+
 			valid = tenantForm.validate()
 			valid = adminUserForm.validate() and valid
 			valid = contactForm.validate() and valid
@@ -71,20 +71,20 @@ class TenantController(object):
 				adminUserForm.bind(tenant.AdminUser)
 				contactForm.bind(tenant.Contacts[0])
 				userContactForm.bind(tenant.AdminUser.Contacts[0])
-				
+
 				tenant.AdminUser.TenantId = tenant.Id
 				tenant.UpdatedBy = tenant.AdminUser.UpdatedBy = self.request.user.Id
 				tenant.UpdatedOn = tenant.AdminUser.UpdatedOn = datetime.utcnow()
-				
+
 				tenantService.SaveTenant(tenant)
 				return HTTPFound(location='/tenant/index')
 
 		else: #new
-			tenantForm = Form(self.request,schema=TenantSchema,defaults={})
-			adminUserForm = Form(self.request,schema=UserSchema,defaults={})
-			contactForm = vForm(request=self.request,prefix='tenantcontact-',schema=ContactSchema,defaults={})
-			userContactForm = vForm(request=self.request,prefix='usercontact-',schema=ContactSchema,defaults={})
-			
+			tenantForm = Form(self.request, schema=TenantSchema, defaults={})
+			adminUserForm = Form(self.request, schema=UserSchema, defaults={})
+			contactForm = vForm(request=self.request, prefix='tenantcontact-', schema=ContactSchema, defaults={})
+			userContactForm = vForm(request=self.request, prefix='usercontact-', schema=ContactSchema, defaults={})
+
 			valid = tenantForm.validate()
 			valid = adminUserForm.validate() and valid
 			valid = contactForm.validate() and valid
@@ -94,7 +94,7 @@ class TenantController(object):
 				adminUser = adminUserForm.bind(User())
 				contact = contactForm.bind(TenantContactDetails())
 				userContact = userContactForm.bind(UserContactDetails())
-				
+
 				adminUser.Contacts.append(userContact)
 				adminUser.TenantId = tenant.Id
 				adminUser.Password = EncryptPassword(tenant.Name)
@@ -102,14 +102,14 @@ class TenantController(object):
 				tenant.CreatedBy = adminUser.CreatedBy = self.request.user.Id
 				tenant.CreatedOn = adminUser.CreatedOn = datetime.utcnow()
 				tenant.Status = True
-				
+
 				tenant.AdminUser = adminUser
 				tenant.Contacts.append(contact)
-				
+
 				try:
 					if tenantService.ProvisionTenant(tenant):
 						return HTTPFound(location='/tenant/index')
-				except Exception,e:
+				except Exception, e:
 					errors = e
 			else:
 				tenant = Tenant()
@@ -117,15 +117,15 @@ class TenantController(object):
 				tenant.Contacts.append(TenantContactDetails())
 				tenant.AdminUser.Contacts.append(UserContactDetails())
 
-		return dict(model=tenant,tfr=vFormRenderer(tenantForm),
+		return dict(model=tenant, tfr=vFormRenderer(tenantForm),
 					ufr=vFormRenderer(adminUserForm),
 					cfr=vFormRenderer(contactForm),
-					ucfr=vFormRenderer(userContactForm),errors=errors)
+					ucfr=vFormRenderer(userContactForm), errors=errors)
 		pass
-		
+
 	@action()
 	def delete(self):
-		tenantId = self.request.params.get('tenantId',None)
+		tenantId = self.request.params.get('tenantId', None)
 		if tenantId:
 			tenant = tenantService.DeleteTenant(tenantId)
 		return HTTPFound(location='tenant/index')

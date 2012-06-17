@@ -1,73 +1,64 @@
-{% extends "templates/layout.jinja2" %}
-{% block content %}
-<section id="manage-suplier">
-	 <div class="page-header">
-       <h1> {% if model.Id == None %}
-       			Add Supplier
-       		{% else %}
-       			Edit Supplier
-       		{% endif %}
-		 <small class="pull-right">
-		  	<a href="/suppliers" title="Back to Supplier listing!" class="btn btn-primary">
-		  		<i class="icon-arrow-left icon-white"></i> Back
-		  	</a>
-		 </small></h1>
-	</div> 	
-	<div class="row">
-		<div class="span12">&nbsp;</div>
-	</div>
-	<div class="span8">
-		{% if errors or renderer.errorlist() or cfr.errorlist() %} 
-		 	<div class="alert alert-error">
-		 		<strong>Please correct the errors and submit again:</strong>
-		 		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
-		 		{{renderer.errorlist(name=None,class='')}}
-		 		{{cfr.errorlist(name=None,class='')}}
-		 	</div>
-		 {% endif %}
-		<form action="{{'savesupplier'|route_url}}" method="post" class="form-horizontal">
+{% extends "templates/layout.jinja2" %} {% block head %}
+<style>
+#customer-data label {
+	display: none;
+}
+</style>
+{% endblock %} {% block specialNav %}
+<a id="new-invoice-button" href="{{'addsupplier'|route_url}}"><span>New
+		Supplier</span></a>
+{% endblock %} {% block content %}
+<div id="customer-container" class="content">
+	<h2>{% if model.Id == None %} Add Supplier {% else %} Edit
+		Supplier {% endif %}</h2>
+	<!--
+     {% if errors or renderer.errorlist() or cfr.errorlist() %} 
+         <div class="alert alert-error">
+             <strong>Please correct the errors and submit again:</strong>
+             {{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
+             {{renderer.errorlist(name=None,class='')}}
+             {{cfr.errorlist(name=None,class='')}}
+         </div>
+     {% endif %}
+     -->
+	<form action="{{'savesupplier'|route_url}}" method="post">
+		<div id="customer-data" class="global-data block">
 			{% import 'shared/contactform.jinja2' as contactForm with context %}
-			<h3>Agency Details</h3>
-			<table class="table">
-				<tbody>
-					<tr>
-						<td>
-							<div class="control-group {{ 'error' if renderer.is_error('Name') }}">
-								{{renderer.label('Name','Agency Name',class='control-label')}}
-								<div class="controls">
-									{{renderer.text('Name',size=100,class='input-xlarge',autofocus=True)}}
-								</div>
-							</div>
-						</td>
-						<td>
-							<div class="control-group {{ 'error' if renderer.is_error('Description') }}">
-								{{renderer.label('Description','Agency Description',class='control-label')}}
-								<div class="controls">
-									{{renderer.textarea('Description',class='input-xlarge')}}
-								</div>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div class="control-group {{ 'error' if renderer.is_error('Address') }}">
-								{{renderer.label('Address','Agency Address',class='control-label')}}
-								<div class="controls">
-									{{renderer.textarea('Address',class='input-xlarge')}}
-								</div>
-							</div>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			<h3>Contact Details</h3>
+			<h3>Agency Info</h3>
+			<ul>
+				<li><span class="_50">
+						{{renderer.text('Name',size=100,class='error wrong' if
+						renderer.is_error('Name'),title='Supplier Name',autofocus=True)}} </span></li>
+				<li><span class="_50">
+						{{renderer.textarea('Description',class='error wrong' if
+						renderer.is_error('Description'),title='Description')}} </span> <span class="_50">
+						{{renderer.textarea('Address',class='error wrong' if
+						renderer.is_error('Address'),title='Address')}} </span></li>
+			</ul>
+			<div class="clear"></div>
+			<h3>Contact Info</h3>
 			{{ contactForm.render(cfr) }}
-			<div class="form-actions">
-				<input type="hidden" name="sid" value="{{model.Id|d('',True)}}"/>
-				<input type="submit" class="btn btn-primary" value="Save"/>
-				<input type="reset" name="reset" class="btn" value="Reset"/>
-			</div>
-		 </form>
-     </div>
-</section>      
+		</div>
+		<div id="saving-options" class="block">
+			<input type="hidden" name="sid" value="{{model.Id|d('',True)}}" />
+			{% if model.Id %} 
+			<a class="btn action delete"
+				onclick="return confirm('Are you sure?');"
+				href="{{ 'deletecustomer' | route_url(cid=model.Id)}}"
+				confirm="Are you sure?" post="1"> <span><span>Delete</span></span>
+			</a> 
+			{% endif %}
+			<button class="btn action save" type="submit">
+				<span><span>Save</span></span>
+			</button>
+		</div>
+	</form>
+</div>
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		$('#customer-data input[type=text], #customer-data textarea').SwizappFormTips()
+	})
+</script>
 {% endblock %}

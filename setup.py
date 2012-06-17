@@ -23,11 +23,12 @@ requires = [
     'docutils',
     'pastescript',
     ]
-    
-setup(name='viper',
+
+setup(name='swizapp',
       version='1.0',
-      description='viper',
-      long_description=README + '\n\n' +  CHANGES,
+      description='The perfect invoice system',
+      culture='en',
+      long_description=README + '\n\n' + CHANGES,
       classifiers=[
         "Programming Language :: Python",
         "Framework :: Pylons",
@@ -36,8 +37,8 @@ setup(name='viper',
         ],
       author='cackharot',
       author_email='cackharot@gmail.com',
-      url='http://pos.vipersuites.in',
-      keywords='pos sales online point of sales openpos python pos erp viper',
+      url='http://theswizapp.in',
+      keywords='pos sales online point of sales openpos python pos erp swizapp',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,

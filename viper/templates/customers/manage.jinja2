@@ -1,47 +1,69 @@
 {% extends "templates/layout.jinja2" %}
-{% block content %}
-<section id="manage-customers">
-	 <div class="page-header">
-       <h1> {% if model.Id == None %}
-       			Add Customer
-       		{% else %}
-       			Edit Customer
-       		{% endif %}
-		 <small class="pull-right">
-		  	<a href="/customers" title="Back to Customer listing!" class="btn btn-primary">
-		  		<i class="icon-arrow-left icon-white"></i> Back
-		  	</a>
-		 </small></h1>
-	</div> 	
-	<div class="row">
-		<div class="span12">&nbsp;</div>
-	</div>
-	<div class="span8">
-		{% if errors or renderer.errorlist() or cfr.errorlist() %} 
-		 	<div class="alert alert-error">
-		 		<strong>Please correct the errors and submit again:</strong>
-		 		{{ ('<ul><li>'+ errors + '</li></ul>') | safe if errors }}
-		 		{{renderer.errorlist(name=None,class='')}}
-		 		{{cfr.errorlist(name=None,class='')}}
-		 	</div>
-		 {% endif %}
-		<form action="{{'savecustomer'|route_url}}" method="post" class="form-horizontal">
-			{% import 'shared/contactform.jinja2' as contactForm with context %}
-			<h3>Customer Details</h3>
-			<div class="control-group {{ 'error' if renderer.is_error('CustomerNo') }}">
-				{{renderer.label('CustomerNo','Customer Number',class='control-label')}}
-				<div class="controls">
-					{{renderer.text('CustomerNo',size=20,class='input-xlarge')}}
-				</div>
-			</div>
-			<h3>Contact Details</h3>
-			{{ contactForm.render(cfr) }}
-			<div class="form-actions">
-				<input type="hidden" name="cid" value="{{model.Id|d('',True)}}"/>
-				<input type="submit" class="btn btn-primary" value="Save"/>
-				<input type="reset" name="reset" class="btn" value="Reset"/>
-			</div>
-		 </form>
-     </div>
-</section>      
+{% block head %}
+	<style>
+		#customer-data label{ display:none; }
+	</style>
 {% endblock %}
+{% block specialNav %}
+	<a id="new-invoice-button" href="{{'addcustomer'|route_url}}"><span>New Customer</span></a>
+{% endblock %}
+{% block content %}
+<div id="customer-container" class="content">
+	<h2> {% if model.Id == None %}
+			Add Customer
+		{% else %}
+			Edit Customer
+		{% endif %}
+	</h2>
+	<!--
+	{% if errors or renderer.errorlist() or cfr.errorlist() %} 
+		<div>
+			<strong>Please correct the errors and submit again:</strong>
+			{{ ('<ul class="error_list"><li>'+ errors + '</li></ul>') | safe if errors }}
+			{{renderer.errorlist(name=None,class='error_list')}}
+			{{cfr.errorlist(name=None,class='error_list')}}
+		</div>
+	{% endif %}
+	-->
+	<form action="{{'savecustomer'|route_url}}" method="post">
+		<div id="customer-data" class="global-data block">
+			<h3>Customer Info</h3>
+			<ul>
+				<li>
+					<span class="_75">
+						{{renderer.label('CustomerNo','Customer Number',class='tip')}}
+						{{renderer.text('CustomerNo',size=20,class='error wrong' if renderer.is_error('CustomerNo'),title='Customer Number')}}
+					</span>
+				</li>
+			</ul>
+			<div class="clear"></div>
+			<h3>Contact Info</h3>
+			{% import 'shared/contactform.jinja2' as contactForm with context %}
+			{{ contactForm.render(cfr) }}
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+		<div id="saving-options" class="block">
+			<input type="hidden" name="cid" value="{{model.Id|d('',True)}}"/>
+			{% if model.Id %}
+			<a class="btn action delete" onclick="return confirm('Are you sure?');" 
+				href="{{ 'deletecustomer' | route_url(cid=model.Id)}}"
+				confirm="Are you sure?" post="1">
+				<span><span>Delete</span></span>
+			</a>
+			{% endif %}
+			<button class="btn action primary save" type="submit">
+				<span><span>Save</span></span>
+			</button>
+		</div>
+	</form>
+</div>
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		$('#customer-data input[type=text], #customer-data textarea').SwizappFormTips()
+	})
+</script>
+{% endblock %}
+

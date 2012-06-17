@@ -1,33 +1,50 @@
 {% extends "templates/layout.jinja2" %}
-{% block content %}
-<section id="manage-products">
-	<div class="page-header">
-		<h1>Product Management
-			 <small class="pull-right">
-			  	<a href="{{'addproduct'|route_url}}" title="Add New Product to stock!" class="btn btn-primary">
-			  		<i class="icon-plus icon-white"></i> Add Item
-			  	</a>
-			 </small>
-		 </h1>
-	</div> 	
-	<div class="row-fluid">
-		<div class="span12">
-			<form id="searchForm" class="well form-inline" action="{{'products_xhr'|route_url}}">
-				<label for="searchValue">Search Value: </label>
-				<input type="text" name="searchValue" placeholder="Enter barcode or item name" id="searchValue" autofocus/>
-				<input type="radio" name="searchField" value="Barcode" checked/> Barcode
-				<input type="radio" name="searchField" value="Name"/> Name
-				<input type="hidden" name="pageSize" value="20"/>
-				<input type="submit" name="submit" value="Search" class="btn btn-success"/>
-				<input type="reset" name="reset" value="Reset" class="btn"/>
-			</form>
+{% block specialNav %}
+	<a id="new-invoice-button" href="{{'addproduct'|route_url}}"><span>New Product</span></a>
+{% endblock %} 
+{% block topcontent %}
+<form id="searchForm" action="{{'products_xhr'|route_url}}">
+	<div id="searchFilters">
+		<div class="searchSection">
+			<ul>
+				<li>
+					<label for="searchValue">Search Value: </label>
+					<input type="text" placeholder="Enter barcode or item name" 
+						name="searchValue" value="{{searchValue| d('',true)}}"/>
+				</li>
+				<li>
+					<label for="searchField">Search Field: </label>
+					<input type="radio" name="searchField" value="Barcode" checked/> Barcode
+					<input type="radio" name="searchField" value="Name"/> Name
+				</li>
+			</ul>
 		</div>
 	</div>
-	<div id="statusMessage"></div>
+	<span class="buttons">
+		<input	type="hidden" name="pageSize" value="20" />
+		<button id="search-form-submit" class="btn" type="submit">
+			<span><span>Search</span></span>
+		</button>
+		<button id="search-form-reset" class="btn" type="reset">
+			<span><span>Reset</span></span>
+		</button>
+	</span>
+</form>
+{% endblock %}
+{% block content %}
+<script>
+	window.swizapp.urls = {
+		edit	: '{{ 'editproduct'| route_url(pid='')}}',
+		add		: '{{ 'addproduct' | route_url }}',
+		delete	: '{{ 'deleteproduct'| route_url(pid='')}}',
+		list	: '{{ 'products' | route_url }}'
+	};
+</script>
+<div id="invoice-container" class="content">
 	<div id="result">
     	{% include 'templates/stock/products/partialItemList.jinja2' with context %}
 	</div>
-</section>      
+</div>      
 {% endblock %}
 {% block footerscript %}
 <style>
@@ -63,14 +80,14 @@ tr.alert-error td{
 				value = value.trim()
 				
 				if(col != 'Name' && col != 'Barcode') {
-					val = !isNaN(value) ? parseFloat(value) : null
+					val = !isNaN(value) ? parseFloat(value).toFixed(2) : null
 					value = val
 				}else{
 					val = value
 				}
 				
 				if(val) {
-					var postdata = {id:id}
+					var postdata = {productId:id}
 					if(col == 'SellPrice') {
 						var mrp = parseFloat(tr.children('td[data-col=MRP]').text())
 						var sellPrice = val
@@ -117,7 +134,7 @@ tr.alert-error td{
 			$(this).trigger('edit')
 		})
 		
-		$('table#prdTable a.pstatus').live('click',function(){
+		/*$('table#prdTable a.pstatus').live('click',function(){
 			var url = $(this).data('url')
 			var st = $(this).data('status')
 			var tr = $(this).closest('tr')
@@ -138,38 +155,7 @@ tr.alert-error td{
 				}
 			})
 			return true
-		})
+		})*/
 	});
-	
-	function hideMsg() {
-		$('#statusMessage').slideUp('slow')
-	}
-
-	function showMsg(type, message, timeout) {
-		var ediv = '<div class="alert ';
-		if (type == "error") {
-			ediv += 'alert-error';
-		} else if (type == "info") {
-			ediv += 'alert-info';
-		} else if (type == "success") {
-			ediv += 'alert-success';
-		} else if (type == "warn") {
-			ediv += 'alert-warning';
-		} else {
-			ediv += '';
-		}
-		ediv += ' fade in">';
-		ediv += '<a class="close" data-dismiss="alert" href="#">&times;</a>';
-		ediv += message;
-		ediv += '</div>';
-		$('#statusMessage').html(ediv);
-		$('.alert', $('#statusMessage')).alert();
-
-		if (timeout || timeout == undefined) {
-			setTimeout(function () {
-				$('.alert', $('#statusMessage')).alert('close');
-			}, 10000);
-		}
-	}
 </script>
 {% endblock %}

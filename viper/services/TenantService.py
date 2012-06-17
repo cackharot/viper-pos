@@ -1,10 +1,10 @@
 import json
 import uuid
 import random
-from datetime import datetime,date
+from datetime import datetime, date
 
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc,func,cast,Date
+from sqlalchemy import desc, func, cast, Date
 
 from ..models import DBSession
 from ..models.User import User
@@ -16,35 +16,35 @@ class TenantService(object):
 	"""
 		Tenant service class
 	"""
-	
-	def GetTenantDetails(self,tenantId):
+
+	def GetTenantDetails(self, tenantId):
 		if tenantId:
 			return DBSession.query(Tenant).get(tenantId)
 		return None
-	
-	def GetTenantDetailsByName(self,name):
+
+	def GetTenantDetailsByName(self, name):
 		if name:
-			return DBSession.query(Tenant).filter(Tenant.Name==name,Tenant.Status==True).first()
+			return DBSession.query(Tenant).filter(Tenant.Name == name, Tenant.Status == True).first()
 		return None
-	
+
 	def GetActiveTenants(self):
-		return DBSession.query(Tenant).filter(Tenant.Status==True).all()
-	
+		return DBSession.query(Tenant).filter(Tenant.Status == True).all()
+
 	def GetInActiveTenants(self):
-		return DBSession.query(Tenant).filter(Tenant.Status==False).all()
-		
-	def DeleteTenant(self,tenantId):
+		return DBSession.query(Tenant).filter(Tenant.Status == False).all()
+
+	def DeleteTenant(self, tenantId):
 		DBSession.query(Tenant).get(tenantId).delete()
 		return True
-		
-	def CheckTenantNameExists(self,name):
+
+	def CheckTenantNameExists(self, name):
 		if name:
-			t = DBSession.query(Tenant.Id).filter(Tenant.Name==name).count()
+			t = DBSession.query(Tenant.Id).filter(Tenant.Name == name).count()
 			if t:
 				return True
 		return False
-		
-	def ProvisionTenant(self,tenant):
+
+	def ProvisionTenant(self, tenant):
 		DBSession.autoflush = False
 		if self.CheckTenantNameExists(tenant.Name):
 			raise Exception('Tenant Name already exists! Please use different name.')
@@ -53,8 +53,8 @@ class TenantService(object):
 		if tenant.AdminUser and not tenant.AdminUser.TenantId:
 			tenant.AdminUser.TenantId = tenant.Id
 		return True
-	
-	def SaveTenant(self,tenant):
+
+	def SaveTenant(self, tenant):
 		DBSession.add(tenant)
 		pass
 	pass
