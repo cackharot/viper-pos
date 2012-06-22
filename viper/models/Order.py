@@ -56,9 +56,11 @@ class OrderSearchParam(object):
 		self.TenantId = None
 		self.OrderId = None
 		self.OrderNo = None
+		self.LoadStats = True
 		self.CustomerId = None
 		self.CustomerName = None
 		self.FromOrderDate = None
+		self.InvoiceStatus = None
 		self.ToOrderDate = None
 		self.UserId = None
 		self.PageNo = None

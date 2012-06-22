@@ -144,33 +144,36 @@ class OrderService(object):
 			DBSession.query(Order).filter(Order.Id == orderid, Order.TenantId == tenantId).delete()
 		pass
 
-	def UpdateOrderPayment(self, orderid, orderpayment, userId):
+	def UpdateOrderPayment(self, orderid, paymentid, details, userId):
 		"""
-			Saves the order payment details in db
+			Adds or Saves the order payment details in db
 		"""
-		if orderpayment:
-			if orderpayment.Id:
-				o = DBSession.query(OrderPayment).get(orderpayment.Id)
-				if o:
-					o.UpdatedBy = userId
-					o.UpdatedOn = datetime.utcnow()
+		if orderid and details and userId:
+			if paymentid:
+				payment = DBSession.query(OrderPayment).get(paymentid)
 			else:
-				orderpayment.OrderId = orderid
-				orderpayment.CreatedBy = userId
-				orderpayment.CreatedOn = datetime.utcnow()
-				DBSession.add(orderpayment)
-
-		pass
+				payment = OrderPayment()
+				payment.OrderId = orderid
+				payment.CreatedBy  = userId
+				payment.CreatedOn  = datetime.utcnow()
+			
+			if payment and payment.OrderId:
+				if payment.Id:
+					payment.UpdatedBy  = userId
+					payment.UpdatedOn  = datetime.utcnow()
+					
+				payment.PaidAmount = details['paidAmount']
+				payment.PaymentType= details['paymentType']
+				payment.PaymentDate= datetime.strptime(details['paymentDate'].strip(),'%d-%m-%Y')
+				payment.Status     = True
+				DBSession.add(payment)
 
 	def DeleteOrderPayment(self, orderpaymentid):
 		"""
 			Deletes the order payment details from db
 		"""
 		if orderpaymentid:
-			o = DBSession.query(OrderPayment).get(orderpaymentid)
-			if o:
-				DBSession.delete(o)
-		pass
+			DBSession.query(OrderPayment).filter(OrderPayment.Id==orderpaymentid).delete()
 
 	def SearchOrders(self, searchParam):
 		"""
@@ -210,7 +213,33 @@ class OrderService(object):
 		query = query.filter(Order.TenantId == searchParam.TenantId)
 		query = query.filter(Order.Status == True)
 
-		if searchParam.Credit:
+		query = self.formQueryFromParam(query, osq, psq, searchParam)
+
+		if not searchParam.PageNo:
+			searchParam.PageNo = 0
+		if not searchParam.PageSize and searchParam.PageSize <= 0:
+			searchParam.PageSize = 50
+
+		query = query.order_by(desc(Order.OrderDate))
+		orders = query.limit(searchParam.PageSize).offset(searchParam.PageNo).all()
+		
+		if not searchParam.LoadStats:
+			return orders
+		
+		tquery = DBSession.query(func.count(Order.Id).label('ItemsCount'), \
+								func.sum(osq.c.OrderAmount).label('TotalAmount'),\
+								func.sum(func.IF(psq.c.PaidAmount>=osq.c.OrderAmount,osq.c.OrderAmount,psq.c.PaidAmount)).label('TotalPaidAmount'))
+		tquery = tquery.outerjoin(osq, osq.c.OrderId == Order.Id)\
+					   .outerjoin(psq, psq.c.OrderId == Order.Id)
+		tquery = tquery.outerjoin(Customer, Customer.Id == Order.CustomerId)
+		tquery = tquery.outerjoin(CustomerContactDetails, Customer.Id == CustomerContactDetails.CustomerId)
+		
+		tquery = self.formQueryFromParam(tquery, osq, psq, searchParam)
+
+		return orders, tquery.first()
+	
+	def formQueryFromParam(self,query,osq,psq, searchParam):
+		if searchParam.Credit or searchParam.InvoiceStatus == 'opened':
 			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount)
 
 		if searchParam.UserId:
@@ -220,6 +249,8 @@ class OrderService(object):
 			query = query.filter(Order.OrderNo == searchParam.OrderNo)
 		if searchParam.CustomerId:
 			query = query.filter(Order.CustomerId == searchParam.CustomerId)
+		if searchParam.CustomerName:
+			query = query.filter(CustomerContactDetails.FirstName.like('%%%s' % searchParam.CustomerName))
 		if searchParam.IpAddress:
 			query = query.filter(Order.IpAddress == searchParam.IpAddress)
 
@@ -238,19 +269,21 @@ class OrderService(object):
 		if searchParam.MinAmount and searchParam.MaxAmount:
 			query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
 									Order.OrderAmount <= searchParam.MaxAmount)
-
-		if not searchParam.PageNo:
-			searchParam.PageNo = 0
-		if not searchParam.PageSize and searchParam.PageSize <= 0:
-			searchParam.PageSize = 50
-
-		query = query.order_by(desc(Order.OrderDate))
-		orders = query.limit(searchParam.PageSize).offset(searchParam.PageNo).all()
-
-		if searchParam.Credit:
-			return orders, query.count()
-		else:
-			return orders
+			
+		if searchParam.InvoiceStatus:
+			if searchParam.InvoiceStatus == 'closed':
+				query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount)
+			elif searchParam.InvoiceStatus == 'overdue':
+				query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate < func.now())
+		return query
+		
+	def GetOrderPayments(self,orderId,tenantId):
+		if orderId and tenantId:
+			query = DBSession.query(OrderPayment).join(Order,OrderPayment.OrderId==orderId)\
+							 .filter(Order.Status==True,Order.TenantId==tenantId)
+			payments = query.all()
+			return payments						
+		return None
 
 	def GenerateOrderNo(self, tenantId):
 		tmp = DBSession.query(func.max(Order.OrderNo)).filter(Order.TenantId == tenantId).scalar()

@@ -40,7 +40,11 @@ $.fn.rowClick = function(f){
       preventOn: 'a, button, input'
     }, arguments[1]||{});
     var tr = $(this).filter('tr');
-    tr.click(f).find(options.preventOn).click(function(e){ e.stopPropagation(); });
+    tr.click(f).find(options.preventOn).click(function(e){
+    	//console.log(e.target) 
+    	e.stopPropagation();
+    	//e.preventDefault() 
+    });
     return $(this);
 };
 
@@ -48,16 +52,21 @@ $(function() {
 	var showMsg = showMsg;
 	var hideMsg = hideMsg;
 	
-	if(window.swizapp.urls.edit)
-	{
-		var tr = $('table.listing:not(".noedit") tbody tr');
-		
-		tr.rowClick(function() {
-			var id = $(this).data('id');
-			if (id)
-	 			window.location.href =	window.swizapp.urls.edit + id;
-		});
-	}
+	$(window).bind("unload", function() {$('button,a').die('click');});
+	
+	$(document).bind('AjaxRefreshEvent',function(e,data){
+		if(window.swizapp.urls.edit)
+		{
+			var tr = $('table.listing:not(".noedit") tbody tr:not(".payments-row")');
+			
+			tr.rowClick(function() {
+				var id = $(this).data('id');
+				if (id)
+		 			window.location.href =	window.swizapp.urls.edit + id;
+			});
+		}
+	});
+	$(document).trigger('AjaxRefreshEvent');
 });
 
 // ---------- SwizappFormTips------------------------------

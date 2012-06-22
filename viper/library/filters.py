@@ -2,9 +2,14 @@ from datetime import datetime
 prefix = 'Rs.'
 
 def datetimeformat(value, format='%d-%m-%Y %H:%M %p'):
-	if value != None and type(value) is datetime:
+	if value and type(value) is datetime:
 		return value.strftime(format)
 	return ''
+
+def todatetime(value, format='%d-%m-%Y'):
+	if value and (isinstance(value, str) or isinstance(value,unicode)):
+		return datetime.strptime(value,format)
+	return None
 
 def comptoday(value):
 	if not value and not isinstance(value, datetime):

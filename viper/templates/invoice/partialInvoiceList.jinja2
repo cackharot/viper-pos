@@ -1,0 +1,95 @@
+{% if model != None and (model | count) > 0 %} 
+<table id="invoiceTable" class="listing noedit">
+	<thead>
+		<tr class="empty noborder listing-options">
+			<td colspan="5">
+				<a class="btn batch delete action-clear"
+					href="#"
+					onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
+					confirm="Are you sure?"> <span><span>Delete</span></span>
+				</a>
+				<a class="btn batch print action-clear" href="#" onclick=";return false;" rel="print:html">
+					<span><span>Print</span></span>
+				</a>
+				<a class="btn batch pdf action-clear" href="#" onclick=";return false;" rel="print:pdf">
+					<span><span>Pdf</span></span>
+				</a>
+				<a class="btn batch send action-clear" href="#" onclick=";return false;" rel="batch:email">
+					<span><span>Email</span></span>
+				</a>
+			</td>
+			<td class="strong noborder" title="Total Invoices">Total ({{totalInvoices | d('0',true)}})</td>
+			<td class="strong noborder right" title="Total invoice amounts">{{ totalAmount | d(0.00,true) | round | currency }}</td>
+			<td class="totalDue strong noborder right" title="Total due amounts">{{ totalDueAmount | d(0.00,true) | round | currency }}</td>
+			<td class="noborder" colspan="1000"></td>
+		</tr>
+		<tr class="empty noborder">
+			<td colspan="1000"></td>
+		</tr>
+		<tr>
+			<th class="xs"><input id="select_all" type="checkbox"
+			name="select_all" rel="all" /></th>
+			<th>Invoice No#</th>
+			<th>Customer</th>
+			<th>Invoice Date</th>
+			<th>Due Date</th>
+			<!--<th>Total Items</th>-->
+			<th>Status</th>
+			<th class="gross_amount">Total</th>
+			<th class="due_amount"> Due</th>
+			<th class="noborder"></th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for item in model -%}
+			{% set dueAmount = (item.OrderAmount - item.PaidAmount) | round %}
+			<tr class="{{ loop.cycle('odd', 'even') }}" data-invoiceno="{{item.OrderNo}}" data-id="{{item.Id}}">
+			    <td class="check">
+	                      <input type="checkbox" name="ids" value="{{item.Id}}">
+	            </td>
+				<td>
+					{{item.OrderNo}}
+				</td>
+				<td>
+					{{item.CustomerName | d('--',true)}}
+				</td>
+				<td>
+					{{item.OrderDate | datetimeformat}}
+				</td>
+				<td>
+					{{item.DueDate | datetimeformat | d('--',true)}}
+				</td>
+				<!--<td>
+					{{item.ItemCount}}
+				</td>-->
+				<td>
+					{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
+						<span class="status overdue"> Overdue </span>
+					{% elif (dueAmount > 0) %}
+						<span class="status opened"> Opened </span>
+					{% elif (item.ItemCount == 0) %}
+						<span class="status draft"> Draft </span>
+					{% else %}
+						<span class="status closed"> Closed </span>
+					{% endif %}
+				</td>
+				<td class="right">
+					{{item.OrderAmount | round | currency }}
+				</td>
+				<td class="right" style="{{ 'color:red;font-weight:bold;' if dueAmount > 0.0 }}"  title="Paid Amount: {{item.PaidAmount|round|currency}}">
+					{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency}}
+				</td>
+				<td class="action payments">
+	                <button class="btn payment action-clear" href="#" type="button">
+	                    <span><span>Payments</span></span>
+	                </button>
+	            </td>
+			</tr>
+		{%- endfor %}
+	</tbody>
+</table>
+{% else %}
+	<div class="alert alert-info">
+		No records found!
+	</div>
+{% endif %}

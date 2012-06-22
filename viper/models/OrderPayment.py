@@ -29,7 +29,6 @@ class OrderPayment(AuditMixin, Base):
 		self.PaymentType = u'Cash'
 		d = datetime.utcnow()
 		self.PaymentDate = d
-		self.CreatedOn = d
 		pass
 
 	def toDict(self):

@@ -185,17 +185,41 @@ class StockService(object):
 		if not (param and param.TenantId):
 			return None
 
-		a = DBSession.query(PurchaseLineItem.PurchaseId, PurchaseLineItem.BuyPrice, PurchaseLineItem.Quantity).subquery()
-		b = DBSession.query(PurchasePayment.PurchaseId, PurchasePayment.PaidAmount).subquery()
+		a = DBSession.query(PurchaseLineItem.PurchaseId, func.count(PurchaseLineItem.PurchaseId).label('ItemCount'),\
+						func.sum(PurchaseLineItem.BuyPrice * PurchaseLineItem.Quantity).label('PurchaseAmount'))
+		a = a.join(Purchase,Purchase.Id==PurchaseLineItem.PurchaseId).group_by(PurchaseLineItem.PurchaseId).subquery()
+		
+		b = DBSession.query(PurchasePayment.PurchaseId, func.sum(PurchasePayment.PaidAmount).label('PaidAmount'))
+		b = b.join(Purchase,Purchase.Id==PurchasePayment.PurchaseId).group_by(PurchasePayment.PurchaseId).subquery()
 
 		query = DBSession.query(Purchase.Id, Purchase.PurchaseNo, Purchase.PurchaseDate, \
 					Purchase.DueDate, \
 					Supplier.Name.label('SupplierName'), \
-					func.count(a.c.PurchaseId).label('ItemCount'), \
-					func.ifnull(func.sum(a.c.BuyPrice * a.c.Quantity), 0).label('PurchaseAmount'), \
-					func.ifnull(func.sum(b.c.PaidAmount), 0).label('PaidAmount'))
-		query = query.join(Supplier).outerjoin(a).outerjoin(b).group_by(Purchase.Id)
+					a.c.ItemCount, \
+					func.ifnull(a.c.PurchaseAmount, 0).label('PurchaseAmount'), \
+					func.ifnull(b.c.PaidAmount, 0).label('PaidAmount'))
+		query = query.join(Supplier).outerjoin(a,a.c.PurchaseId==Purchase.Id).outerjoin(b,b.c.PurchaseId==Purchase.Id).group_by(Purchase.Id)
 
+		query = self.formQueryFromParam(query, a, b, param)
+		query = query.order_by(desc(Purchase.PurchaseDate))
+
+		lstItems = query.offset(param.PageNo).limit(param.PageSize).all()
+		
+		if not param.LoadStats:
+			return lstItems
+		
+		tquery = DBSession.query(func.count(Purchase.Id).label('ItemsCount'), \
+								func.sum(a.c.PurchaseAmount).label('TotalAmount'),\
+								func.sum(func.IF(b.c.PaidAmount>=a.c.PurchaseAmount,a.c.PurchaseAmount,b.c.PaidAmount)).label('TotalPaidAmount'))
+		tquery = tquery.join(Supplier)\
+					.outerjoin(a,a.c.PurchaseId==Purchase.Id)\
+					.outerjoin(b,b.c.PurchaseId==Purchase.Id)
+		
+		tquery = self.formQueryFromParam(tquery, a, b, param)
+
+		return lstItems, tquery.first()
+	
+	def formQueryFromParam(self,query,a,b,param):
 		if param.PurchaseNo:
 			query = query.filter(Purchase.PurchaseNo == param.PurchaseNo)
 		elif param.SupplierId and len(param.SupplierId) > 0:
@@ -207,19 +231,13 @@ class StockService(object):
 		elif param.PurchaseDate:
 			query = query.filter(Purchase.PurchaseDate == param.PurchaseDate)
 		elif param.Credit:
-			#query = query.filter(func.ifnull(func.sum(a.c.BuyPrice*a.c.Quantity),0) >  func.ifnull(func.sum(b.c.PaidAmount),0))
-			smt = query.subquery()
-			query = DBSession.query(smt).filter(smt.c.PurchaseAmount > smt.c.PaidAmount)
+			#smt = query.subquery()
+			#query = DBSession.query(smt).filter(a.c.PurchaseAmount > b.c.PaidAmount)
+			query = query.filter(a.c.PurchaseAmount > b.c.PaidAmount)
 
 		query = query.filter(Purchase.TenantId == param.TenantId, Purchase.Status == True)
-		query = query.order_by(desc(Purchase.PurchaseDate))
-
-		lstItems = query.offset(param.PageNo).limit(param.PageSize).all()
-		if param.Credit:
-			return lstItems, query.count()
-		else:
-			return lstItems
-
+		return query
+	
 	def AddPurchaseLineItem(self, entity, tenantId):
 		if tenantId and entity and entity.PurchaseId:
 			DBSession.autoflush = False
@@ -228,6 +246,41 @@ class StockService(object):
 				purchase.LineItems.append(entity)
 				DBSession.flush()
 				return True
+		return False
+	
+	def GetPurchasePayments(self, purchaseId, tenantId):
+		if purchaseId and tenantId:
+			payments = DBSession.query(PurchasePayment).filter(PurchasePayment.PurchaseId==purchaseId).all()
+			return payments
+		return None
+	
+	def DeletePurchasePayment(self,paymentId):
+		if paymentId:
+			DBSession.query(PurchasePayment).filter(PurchasePayment.Id==paymentId).delete()
+			return False
+		return True
+	
+	def UpdatePurchasePayment(self,purchaseId,paymentId,details,userId):
+		if purchaseId and details and userId:
+			if paymentId:
+				payment = DBSession.query(PurchasePayment).get(paymentId)
+			else:
+				payment = PurchasePayment()
+				payment.PurchaseId = purchaseId
+				payment.CreatedBy  = userId
+				payment.CreatedOn  = datetime.utcnow()
+				
+			if payment:
+				if payment.Id:
+					payment.UpdatedBy = userId
+					payment.UpdatedOn = datetime.utcnow()
+				
+				payment.PaidAmount = details['paidAmount']
+				payment.PaymentType= details['paymentType']
+				payment.PaymentDate= datetime.strptime(details['paymentDate'].strip(),'%d-%m-%Y')
+				payment.Status     = True
+				DBSession.add(payment)
+			return True
 		return False
 
 	def DeletePurchaseLineItem(self, purchaseId, lineItemId, tenantId):

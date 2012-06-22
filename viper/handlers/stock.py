@@ -3,6 +3,7 @@ from pyramid_handlers import action
 #from pyramid.response import Response
 
 from ..models import DBSession
+import json
 #from ..models.User import User
 #from ..models.Tenant import Tenant
 from ..models.Product import Product
@@ -40,14 +41,14 @@ def includeme(config):
 	config.add_handler('savepurchase', '/stock/purchases/manage', handler=StockController, action='managepurchase',request_method='POST')
 	config.add_handler('editpurchase', '/stock/purchases/manage/{pid}', handler=StockController, action='managepurchase')
 	config.add_handler('deletepurchase', '/stock/purchases/delete/{pid}', handler=StockController, action='deletePurchase')
-	config.add_handler('purchasespayments','/stock/purchases/payments/{pid}', handler=StockController, action='purchasePayments')
-
+	config.add_handler('purchasepayments','/stock/purchases/payments/{purchaseId}', handler=StockController, action='purchasePayments')
+		
 	config.add_route('products', '/stock/products')
 	config.add_route('products_xhr', '/stock/products_xhr')
 	config.add_route('purchases', '/stock/purchases')
 	config.add_route('purchases_xhr', '/stock/purchases_xhr')
-	pass
-
+	config.add_route('savepurchasepayments', '/stock/savepurchasepayments', xhr=True)
+	
 class StockController(object):
 	"""
 		Stock Management Controller/View
@@ -194,13 +195,13 @@ class StockController(object):
 	@action(renderer='templates/stock/purchase/index.jinja2')
 	def purchases(self):
 		lstSuppliers = self.GetSuppliers()
-		lst = self.getPurchaseList()
-		return dict(model=lst, suppliers=lstSuppliers)
+		data = self.getPurchaseList()
+		data['suppliers']=lstSuppliers
+		return data
 
 	@action(renderer='templates/stock/purchase/partialPurchaseList.jinja2', xhr=True)
 	def purchases_xhr(self):
-		lst = self.getPurchaseList()
-		return dict(model=lst)
+		return self.getPurchaseList()
 
 	def getPurchaseList(self):
 		param = PurchaseSearchParam()
@@ -214,8 +215,11 @@ class StockController(object):
 		if bdate and len(bdate) > 0:
 			param.PurchaseDate = datetime.strptime(bdate.strip(), '%d-%m-%Y')
 		
-		lstPurchases = stockService.SearchPurchases(param)
-		return lstPurchases
+		lstPurchases, stat = stockService.SearchPurchases(param)
+		totalPurchases = stat.ItemsCount
+		totalAmount = stat.TotalAmount
+		totalDueAmount = stat.TotalAmount - stat.TotalPaidAmount        
+		return dict(model=lstPurchases,totalPurchases=totalPurchases,totalAmount=totalAmount,totalDueAmount=totalDueAmount)
 
 	def GetSuppliers(self):
 		lstSuppliers = SupplierService().GetSuppliers(self.TenantId)
@@ -223,9 +227,32 @@ class StockController(object):
 			lstSuppliers = [[str(x.Id), x.Name] for x in lstSuppliers]
 		return lstSuppliers
 	
-	@action(renderer='/templates/stock/purchase/payments.jinja2')
+	@action(renderer='json',xhr=True)
 	def purchasePayments(self):
-		return dict(model=[])
+		purchaseId = self.request.matchdict['purchaseId']
+		if purchaseId:
+			stockService = StockService()
+			payments = stockService.GetPurchasePayments(purchaseId, self.TenantId)
+			if payments:
+				return dict(payments=[x.toDict() for x in payments])
+		return dict(payments=None)
+	
+	@action(renderer='json')
+	def savepurchasepayments(self):
+		data = json.loads(self.request.body)
+		#log.info(data)
+		if data and data['purchaseId']:
+			purchaseId = data['purchaseId']
+			stockService = StockService()
+			purchase = stockService.GetPurchase(purchaseId, self.TenantId)
+			if purchase:
+				for item in data['payments']:
+					if item['remove'] == '1':
+						stockService.DeletePurchasePayment(item['paymentId'])
+					else:    
+						stockService.UpdatePurchasePayment(purchaseId, item['paymentId'], item, self.UserId)
+				return dict(status=True, message='Payment details saved successfully!')
+		return dict(status=False, message='Error while saving payment details!')
 
 	@action(renderer='json')
 	def deletepurchaselineitem(self):

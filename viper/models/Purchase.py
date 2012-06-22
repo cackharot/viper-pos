@@ -90,6 +90,7 @@ class PurchaseSearchParam(object):
 		self.TenantId = None
 		self.PurchaseId = None
 		self.PurchaseNo = None
+		self.LoadStats = True
 		self.SupplierId = None
 		self.SupplierName = None
 		self.PurchaseDate = None

@@ -102,7 +102,7 @@
 					</td>
 					<td class="action payments">
 						<button class="btn invoices action-clear" 
-							onclick="document.location.href='{{'searchinvoices' | route_url(searchField='CustomerId',searchValue=item.Id)}}'"
+							onclick="document.location.href='{{'searchinvoices' | route_url}}?customerId={{item.Id}}'"
 							href="#" type="button">
 							<span><span>Invoices</span></span>
 						</button>
@@ -112,7 +112,7 @@
 		</tbody>
 	</table>
 	{% else %}
-		<div class="alert alert-info">
+		<div class="error wrong">
 			No records found!
 		</div>
 	{% endif %}

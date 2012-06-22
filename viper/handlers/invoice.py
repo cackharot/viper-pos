@@ -19,17 +19,20 @@ from datetime import datetime
 from ..forms.vFormRenderer import vFormRenderer
 from ..library.ViperLog import log
 
+import json
+
 def includeme(config):
     config.add_handler('invoice', 'invoice/{action}', InvoiceController)
-    config.add_handler('invoicepayments','/invoice/payments/{invoiceid}', InvoiceController, action='payments')
+    config.add_handler('invoicepayments', '/invoice/payments/{invoiceid}', InvoiceController, action='payments')
+
+    config.add_handler('addinvoice', '/invoice/new', InvoiceController, action='newInvoice')
+    config.add_handler('deleteinvoice', '/invoice/delete/{invoiceid}', InvoiceController, action='delete')
+    config.add_handler('editinvoice', '/invoice/edit/{invoiceid}', InvoiceController, action='edit')
     
-    config.add_handler('addinvoice','/invoice/new', InvoiceController, action='newInvoice')
-    config.add_handler('deleteinvoice','/invoice/delete/{invoiceid}', InvoiceController, action='delete')
-    config.add_handler('editinvoice','/invoice/edit/{invoiceid}', InvoiceController, action='edit')
-    config.add_handler('searchinvoices', '/invoice/index/{searchField}/{searchValue}', InvoiceController, action='index')
-    
-    config.add_route('invoices','/invoice/index')
-    config.add_route('searchinvoices_xhr','/invoice/index',xhr=True)
+    config.add_route('searchinvoices', '/invoice/index')
+    config.add_route('invoices', '/invoice/index')
+    config.add_route('searchinvoices_xhr', '/invoice/searchinvoices_xhr', xhr=True)
+    config.add_route('saveinvoicepayments', '/invoice/savepayments', xhr=True)
 
 class InvoiceController(object):
     """
@@ -42,16 +45,68 @@ class InvoiceController(object):
 
     @action(renderer='templates/invoice/index.jinja2')
     def index(self):
+        invoices = self.getInvoices()
+        return invoices
+    
+    @action(renderer='templates/invoice/partialInvoiceList.jinja2', xhr=True)
+    def searchinvoices_xhr(self):
+        invoices = self.getInvoices()
+        return invoices
+    
+    def getDateFmt(self,value):
+        from ..library.filters import todatetime
+        return todatetime(value)
+    
+    def getInvoices(self):
         searchParam = OrderSearchParam()
         searchParam.TenantId = self.request.user.TenantId
-        orderService = OrderService()
-        model = orderService.SearchOrders(searchParam)
-        return dict(model=model)
+        searchParam.CustomerName = self.request.params.get('customerName', None)
+        searchParam.CustomerId = self.request.params.get('customerId', None)
+        searchParam.OrderNo = self.request.params.get('invoiceNo',None)
+        searchParam.FromOrderDate = self.getDateFmt(self.request.params.get('fromDate',None))
+        searchParam.ToOrderDate = self.getDateFmt(self.request.params.get('toDate',None))
+        searchParam.InvoiceStatus = self.request.params.get('invoicestatus',None)
+        
+        searchParam.PageSize = self.request.params.get('pageSize',None)
+        searchParam.PageNo = self.request.params.get('pageNo',None)
 
-    @action(renderer='templates/invoice/payments.jinja2')
+        orderService = OrderService()
+        invoices, stat  = orderService.SearchOrders(searchParam)
+        totalInvoices = stat.ItemsCount
+        totalAmount = stat.TotalAmount
+        totalDueAmount = stat.TotalAmount - stat.TotalPaidAmount        
+        return dict(model=invoices,totalInvoices=totalInvoices,totalAmount=totalAmount,totalDueAmount=totalDueAmount)
+
+
+    #@action(renderer='templates/invoice/payments.jinja2',xhr=True)
+    @action(renderer='json', xhr=True)
     def payments(self):
-        return dict(status=True)
-    
+        orderId = self.request.matchdict['invoiceid']
+        if orderId:
+            orderService = OrderService()
+            payments = orderService.GetOrderPayments(orderId, self.TenantId)
+            if payments:
+                return dict(payments=[x.toDict() for x in payments])
+        return dict(payments=None)
+
+    @action(renderer='json')
+    def savepayments(self):
+        data = json.loads(self.request.body)
+        #log.info(data)
+        if data and data['invoiceId']:
+            orderid = data['invoiceId']
+            orderService = OrderService()
+            order = orderService.GetOrderById(orderid, self.TenantId)
+            if order:
+                for item in data['payments']:
+                    if item['remove'] == '1':
+                        orderService.DeleteOrderPayment(item['paymentId'])
+                    else:    
+                        orderService.UpdateOrderPayment(orderid, item['paymentId'], item, self.UserId)
+
+                return dict(status=True, message='Payment details saved successfully!')
+        return dict(status=False, message='Error while saving payment details!')
+
     @action()
     def delete(self):
         return HTTPFound(location=self.request.route_url('invoices'))

@@ -2,13 +2,26 @@
 <table id="purchaseTable" class="listing">
 	<thead>
 		<tr class="empty noborder listing-options">
-			<td colspan="10">
+			<td colspan="6">
 				<a class="btn batch delete action-clear"
 					href="#"
 					onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
 					confirm="Are you sure?"> <span><span>Delete</span></span>
 				</a>
+				<a class="btn batch print action-clear" href="#" onclick=";return false;" rel="print:html">
+					<span><span>Print</span></span>
+				</a>
+				<a class="btn batch pdf action-clear" href="#" onclick=";return false;" rel="print:pdf">
+					<span><span>Pdf</span></span>
+				</a>
+				<a class="btn batch send action-clear" href="#" onclick=";return false;" rel="batch:email">
+					<span><span>Email</span></span>
+				</a>
 			</td>
+			<td class="strong noborder" title="Total Invoices">Total ({{totalPurchases | d('0',true)}})</td>
+			<td class="strong noborder right" title="Total invoice amounts">{{ totalAmount | d(0.00,true) | round | currency }}</td>
+			<td class="totalDue strong noborder right" title="Total due amounts">{{ totalDueAmount | d(0.00,true) | round | currency }}</td>
+			<td class="noborder" colspan="1000"></td>
 		</tr>
 		<tr class="empty noborder">
 			<td colspan="1000"></td>
@@ -21,16 +34,16 @@
 			<th>Total Items</th>
 			<th>Purchase Date</th>
 			<th>Due Date</th>
-			<th>Purchase Amount</th>
-			<th>Due Amount</th>
 			<th>Status</th>
+			<th class="right">Purchase Amount</th>
+			<th class="right">Due Amount</th>
 			<th class="noborder"></th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for item in model %}
-		{% set dueAmount = item.PurchaseAmount - item.PaidAmount %}
-		<tr class="{{ loop.cycle('odd', 'even') }}" data-id="{{item.Id}}">
+		{% set dueAmount = (item.PurchaseAmount - item.PaidAmount) | round %}
+		<tr class="{{ loop.cycle('odd', 'even') }}" data-purchaseno="{{item.PurchaseNo}}" data-id="{{item.Id}}">
 		    <td class="check">
                       <input type="checkbox" name="ids" value="{{item.Id}}">
             </td>
@@ -39,8 +52,6 @@
 			<td>{{item.ItemCount}}</td>
 			<td>{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}</td>
 			<td>{{item.DueDate | datetimeformat('%d-%m-%Y')}}</td>
-			<td>{{item.PurchaseAmount | round}}</td>
-			<td>{{ ((dueAmount) | round) if dueAmount > 0.0 else 0.0 }}</td>
 			<td>
 				{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 					<span class="status overdue"> Overdue </span>
@@ -50,10 +61,10 @@
 					<span class="status closed"> Closed </span>
 				{% endif %}
 			</td>
+			<td class="right">{{item.PurchaseAmount | round | currency}}</td>
+			<td class="right" style="{{ 'color:red;font-weight:bold;' if dueAmount > 0.0 }}" title="Paid Amount: {{item.PaidAmount|round|currency}}">{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency }}</td>
 			<td class="action payments">
-                <button class="btn payment action-clear" 
-                    onclick="document.location.href='{{'purchasespayments' | route_url(pid=item.Id)}}'"
-                    href="#" type="button">
+                <button class="btn payment action-clear" href="#" type="button">
                     <span><span>Payments</span></span>
                 </button>
             </td>

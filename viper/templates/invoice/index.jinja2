@@ -27,10 +27,10 @@
 		<div class="searchSection">
 			<ul class="filters">
 				<li>Status: </li>
-				<li><a class="status #1#" href="#">Opened</a> |</li>
-				<li><a class="status #2#" href="#">Closed</a> |</li>
-				<li><a class="status #3#" href="#">Overdue</a> |</li>
-				<li><a class="status #4#" href="#">Drafts</a></li>
+				<li><input type="radio" name="invoicestatus" value="all" checked="checked"/> All |</li>
+				<li><input type="radio" name="invoicestatus" value="opened"/> Opened |</li>
+				<li><input type="radio" name="invoicestatus" value="closed"/> Closed |</li>
+				<li><input type="radio" name="invoicestatus" value="overdue"/> Overdue </li>
 			</ul>
 			<ul>
 				<li>
@@ -53,105 +53,212 @@
 {% endblock %}
 {% block content %}
 <script>
+	window.swizapp.settings = {
+		currency: '{{ '' | currency }}'
+	};
 	window.swizapp.urls = {
 		edit	: '{{ 'editproduct'| route_url(pid='')}}',
 		add		: '{{ 'addproduct' | route_url }}',
 		delete	: '{{ 'deleteinvoice'| route_url(invoiceid='')}}',
-		list	: '{{ 'invoices' | route_url }}'
+		list	: '{{ 'invoices' | route_url }}',
+		payments: '{{'invoicepayments' | route_url(invoiceid='')}}',
+		savepayments: '{{ 'saveinvoicepayments' | route_url}}'
 	};
 </script>
-<div id="invoice-container" class="content">
+<div class="content">
 	<div id="result">
-	{% if model != None and (model | count) > 0 %} 
-	<table id="prdTable" class="listing noedit">
-		<thead>
-			<tr class="empty noborder listing-options">
-				<td colspan="10">
-					<a class="btn batch delete action-clear"
-						href="#"
-						onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
-						confirm="Are you sure?"> <span><span>Delete</span></span>
-					</a>
-				</td>
-			</tr>
-			<tr class="empty noborder">
-				<td colspan="1000"></td>
-			</tr>
-			<tr>
-				<th class="xs"><input id="select_all" type="checkbox"
-				name="select_all" rel="all" /></th>
-				<th>Invoice No#</th>
-				<th>Customer</th>
-				<th>Invoice Date</th>
-				<th>Due Date</th>
-				<!--<th>Total Items</th>-->
-				<th>Status</th>
-				<th class="gross_amount">Total</th>
-				<th class="due_amount"> Due</th>
-				<th class="noborder"></th>
-			</tr>
-		</thead>
-		<tbody>
-			{% for item in model %}
-				{% set dueAmount = (item.OrderAmount - item.PaidAmount) | round %}
-				<tr class="{{ loop.cycle('odd', 'even') }}" data-id="{{item.Id}}">
-				    <td class="check">
-		                      <input type="checkbox" name="ids" value="{{item.Id}}">
-		            </td>
-					<td>
-						{{item.OrderNo}}
-					</td>
-					<td>
-						{{item.CustomerName | d('--',true)}}
-					</td>
-					<td>
-						{{item.OrderDate | datetimeformat}}
-					</td>
-					<td>
-						{{item.DueDate | datetimeformat | d('--',true)}}
-					</td>
-					<!--<td>
-						{{item.ItemCount}}
-					</td>-->
-					<td>
-						{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
-							<span class="status overdue"> Overdue </span>
-						{% elif (dueAmount > 0) %}
-							<span class="status opened"> Opened </span>
-						{% elif (item.ItemCount == 0) %}
-							<span class="status draft"> Draft </span>
-						{% else %}
-							<span class="status closed"> Closed </span>
-						{% endif %}
-					</td>
-					<td class="right">
-						{{item.OrderAmount | round | currency }}
-					</td>
-					<td class="right" style="{{ 'color:red;font-weight:bold;' if dueAmount > 0.0 }}">
-						{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency}}
-					</td>
-					<td class="action payments">
-		                <button class="btn payment action-clear" 
-		                    onclick="document.location.href='{{'invoicepayments' | route_url(invoiceid=item.Id)}}'"
-		                    href="#" type="button">
-		                    <span><span>Payments</span></span>
-		                </button>
-		            </td>
-				</tr>
-			{% endfor %}
-		</tbody>
-	</table>
-	{% else %}
-		<div class="alert alert-info">
-			No records found!
-		</div>
-	{% endif %}
-</section>      
+		{% include 'templates/invoice/partialInvoiceList.jinja2' with context %}
+	</div>
+</div>    
+<div id="templates" style="display:none;">
+<script type="text/template" id="tplAddPayment">
+<ul class="payments" data-id="<%=item.Id%>">
+  <li>
+	<ul>
+		<a class="remove xit" href="#"></a>
+		<li>
+			<select name="paymentType">
+				<option <%= item.Type=='Cash' ? 'selected' : ''%>>Cash</option>
+				<option <%= item.Type=='Card' ? 'selected' : ''%>>Card</option>
+				<option <%= item.Type=='Cheque' ? 'selected' : ''%>>Cheque</option>
+			</select>
+			<input type="hidden" name="paymentId" value="<%=item.Id%>"/>
+			<input type="hidden" name="remove" class="remove" value="0"/>
+		</li>
+		<li><input type="text" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>"/></li>
+		<li><input type="text" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>"/></li>
+	</ul>
+  </li>
+</ul>
+</script>
+	<script type="text/template" id="tplPayment">
+<form class="payments-form" method="post" action="{{ 'saveinvoicepayments' | route_url}}">
+<% _.each(items,function(item){ %>
+<ul class="payments" data-id="<%=item.Id%>">
+  <li>
+	<ul>
+		<a class="remove xit" href="#"></a>
+		<li>
+			<select name="paymentType">
+				<option <%= item.Type=='Cash' ? 'selected' : ''%>>Cash</option>
+				<option <%= item.Type=='Card' ? 'selected' : ''%>>Card</option>
+				<option <%= item.Type=='Cheque' ? 'selected' : ''%>>Cheque</option>
+			</select>
+			<input type="hidden" name="paymentId" value="<%=item.Id%>"/>
+			<input type="hidden" name="remove" class="remove" value="0"/>
+		</li>
+		<li><input type="text" title="Paid Date" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>"/></li>
+		<li><input type="text" title="Paid Amount" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>"/></li>
+	</ul>
+  </li>
+</ul>
+<% }); %>
+<div style="float:left;margin:10px 45px;font-weight:bold;">
+    Total Paid Amount: <span style="color:red">Rs. <span class="pamt">
+	<%= _.reduce(items, function(m,x) { return (m + x.PaidAmount); }, 0.0).toFixed(2) %>
+	</span></span>
+</div>
+<div class="buttons text-right">
+	<a class="btn action add-payment"><span><span>Add payment</span></span></a>
+	<a class="btn action cancel"><span><span>Cancel</span></span></a>
+	<button type="submit" class="btn action save"><span><span>Save</span></span></button>
+</div>
+</form>
+	</script>
+</div>  
 {% endblock %}
 {% block footerscript %}
 <script>
 	$(function(){
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+		
+		$('form#searchForm').submit(function(){
+			var postdata = $(this).serialize()
+			$('#result').html('<div class="ajaxBar">')
+			$.post($(this).attr('action'),postdata,function(data){
+				if(data){
+					$('#result').html(data)
+				}else{
+					// search returns no value
+					$('#result').html('<div class="error wrong">No items found!</div>')
+				}
+			})
+			return false
+		})
+		
+		$('.payments-row form.payments-form').live('submit', function(){
+			var $prow = $(this).closest('tr')
+			var $tr = $prow.prev()
+			var invoiceid = $tr.data('id')
+			var invoiceno = $tr.data('invoiceno')
+					
+			if(invoiceid && window.swizapp.urls.savepayments) {
+				var postdata = {}  
+				postdata.invoiceId = invoiceid
+				postdata.payments = []
+				
+				var fdata = $(this).serializeObject()
+				
+				if(fdata.paymentId instanceof Array){
+					for(var i=0; i < fdata.paymentId.length; ++i) {
+						var item = {}
+						item.paymentId   = fdata.paymentId[i]
+						item.paymentDate = fdata.paymentDate[i]
+						item.paymentType = fdata.paymentType[i]
+						item.paidAmount  = fdata.paidAmount[i]
+						item.remove 	 = fdata.remove[i]
+						postdata.payments.push(item)
+					}
+				}else{
+					postdata.payments.push(fdata)
+				}
+				
+				$.post(window.swizapp.urls.savepayments, JSON.stringify(postdata), function(data){
+					if (data && data.status==true){
+						showMsg('success', '<strong>#'+invoiceno+'</strong> - '+ data.message)
+						$('form#searchForm').submit()
+					}else{
+						showMsg('error', (data && data.message) ? data.message : 'Error while saving payment details!')
+					}
+					$prow.remove()
+				},'json')
+			}
+			return false
+		})
+		
+		// "Add payment" button
+		$('.payments-row a.add-payment').live('click', function(e) {
+			e.preventDefault()
+			
+			// find the layer with payments
+			var tr         = $(this).closest('.payments-row')
+			var container  = $(this).closest('.payments-row').find('.payments:last')
+			
+			var compl = _.template($('#tplAddPayment').html())
+			var newpayment = compl({'item': 
+				{
+					Id: '',
+					PaymentType: 'Cash',
+					PaymentDate: new Date(),
+					PaidAmount: 0.0
+				}
+				})
+			
+			container.after(newpayment).fadeIn()
+			
+			$('input.datetime', newpayment).datepicker({ dateFormat: 'dd-mm-yy' })
+			//$('input[type=text], textarea', newpayment).SwizappFormTips()		  
+		});
+	    
+	    /* "Cancel" button */
+	    $('.payments-row a.cancel').live('click', function(e) {
+	      e.preventDefault();
+	      $(this).closest('tr.payments-row').remove();
+	    });
+	
+	    /* Remove payment link*/
+	    $('.payments-row a.xit').live('click', function(e) {
+	      e.preventDefault();
+	      var p = $(this).closest('ul');
+	      p.find('input.remove').val(1);
+	      p.parent().hide();
+	    })
+		
+		$('#invoiceTable tbody tr td.payments button').live('click', function(e){
+			e.preventDefault()
+			
+			var $tr = $(this).parent().closest('tr')
+			var invoiceid = $tr.data('id')			
+			
+			if(!invoiceid && !window.swizapp.urls.payments) return false
+			
+			if($tr.next('tr').hasClass('payments-row')) {
+				$tr.next('tr').fadeOut().remove()
+			}else{
+				 var $td = $('<td class="payments-form-container">')
+				 				.attr('colspan', $tr.children('td').length)
+				 				.append('<div class="ajaxBar">');
+        		$tr.after($('<tr class="payments-row" style="display:none;">').append($td).show());
+        				
+				var url = window.swizapp.urls.payments + invoiceid
+				
+				$.post(url,null,function(data){
+					var html = '';
+					var compl = _.template($('#tplPayment').html())
+					
+					if(data && data.payments) {
+						html = compl({'items': data.payments})
+					}else{
+						html = compl({'items': []})
+					}
+					
+					$td.html(html).fadeIn()
+					
+					$('input.datetime', $td).datepicker({ dateFormat: 'dd-mm-yy' })
+					//$('input[type=text], textarea', $td).SwizappFormTips()
+				},'json')
+			} 
+		})
 	});
 </script>
 {% endblock %}

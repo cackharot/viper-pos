@@ -56,15 +56,16 @@ class ReportController(object):
 		param.Credit 	 = True
 
 		stockService = StockService()
-		items, total = stockService.SearchPurchases(param)
-
+		items, stat = stockService.SearchPurchases(param)
+		log.info(items)
+		log.info(stat)
 		if items and len(items) > 0:
-			return dict(status=True, total=total,
+			return dict(status=True, total=stat.ItemsCount,
 								items=[dict(PurchaseNo=x.PurchaseNo,
 								SupplierName=x.SupplierName,
 								PurchaseDate=x.PurchaseDate,
-								PurchaseAmount=(x.PurchaseAmount),
-								PaidAmount=(x.PaidAmount)) for x in items])
+								PurchaseAmount=x.PurchaseAmount,
+								PaidAmount=x.PaidAmount) for x in items])
 		return dict(status=False)
 
 	@action(renderer='json')
@@ -77,10 +78,10 @@ class ReportController(object):
 		param.Credit = True
 
 		service = OrderService()
-		items, total = service.SearchOrders(param)
+		items, stat = service.SearchOrders(param)
 
 		if items and len(items) > 0:
-			return dict(status=True, total=total,
+			return dict(status=True, total=stat.ItemsCount,
 								items=[dict(OrderNo=x.OrderNo,
 								CustomerName=x.CustomerName,
 								OrderDate=x.OrderDate,
