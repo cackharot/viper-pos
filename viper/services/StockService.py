@@ -209,8 +209,8 @@ class StockService(object):
 			return lstItems
 		
 		tquery = DBSession.query(func.count(Purchase.Id).label('ItemsCount'), \
-								func.sum(a.c.PurchaseAmount).label('TotalAmount'),\
-								func.sum(func.IF(b.c.PaidAmount>=a.c.PurchaseAmount,a.c.PurchaseAmount,b.c.PaidAmount)).label('TotalPaidAmount'))
+								func.ifnull(func.sum(a.c.PurchaseAmount).label('TotalAmount'),0),\
+								func.ifnull(func.sum(func.IF(b.c.PaidAmount>=a.c.PurchaseAmount,a.c.PurchaseAmount,b.c.PaidAmount)),0).label('TotalPaidAmount'))
 		tquery = tquery.join(Supplier)\
 					.outerjoin(a,a.c.PurchaseId==Purchase.Id)\
 					.outerjoin(b,b.c.PurchaseId==Purchase.Id)
