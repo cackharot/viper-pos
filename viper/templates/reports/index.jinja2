@@ -1,0 +1,98 @@
+{% extends "templates/layout.jinja2" %} {% block content %}
+<div id="report-container" class="content dashboard">
+	<table class="dashboard-summary dashboard-info">
+		<tbody>
+			<tr>
+				<td>Invoices</td>
+				<td class="right">{{ invoice.Count | d(0,true)}}</td>
+			</tr>
+			<tr>
+				<td>Total</td>
+				<td class="right">{{ invoice.TotalAmount | d(0.00,true) | currency}}</td>
+			</tr>
+			<tr class="amount">
+				<td>Due</td>
+				<td class="right">{{ (invoice.TotalAmount - invoice.PaidAmount) | d(0.00,true) | currency}}</td>
+			</tr>
+			<tr class="overdue">
+				<td>Overdue Invoices</td>
+				<td class="right">{{ invoice.Overdues.Count | d(0,true)}}</td>
+			</tr>
+			<tr class="overdue">
+				<td>Overdue</td>
+				<td class="right">{{ (invoice.Overdues.OverdueAmount) | d(0.00,true) | currency}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="dashboard-summary dashboard-info">
+		<tbody>
+			<tr>
+				<td>Purchases</td>
+				<td class="right">{{ purchase.Count | d(0,true) }}</td>
+			</tr>
+			<tr>
+				<td>Total</td>
+				<td class="right">{{ purchase.TotalAmount | d(0.00,true) | currency}}</td>
+			</tr>
+			<tr class="amount">
+				<td>Due</td>
+				<td class="right">{{ (purchase.TotalAmount - purchase.PaidAmount) | d(0.00,true) | currency}}</td>
+			</tr>
+			<tr class="overdue">
+				<td>Overdue Purchases</td>
+				<td class="right">{{ purchase.Overdues.Count | d(0,true)}}</td>
+			</tr>
+			<tr class="overdue">
+				<td>Overdue</td>
+				<td class="right">{{ purchase.Overdues.OverdueAmount| d(0.00,true) | currency}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="dashboard-summary dashboard-info">
+		<tbody>
+			<tr>
+				<td>Invoices</td>
+				<td class="right">{{ totals.Invoices | d(0.00,true) }}</td>
+			</tr>
+			<tr>
+				<td>Purchases</td>
+				<td class="right">{{ totals.Purchases | d(0.00,true) }}</td>
+			</tr>
+			<tr>
+				<td>Products</td>
+				<td class="right">{{ totals.Products | d(0.00,true)}}</td>
+			</tr>
+			<tr>
+				<td>Suppliers</td>
+				<td class="right">{{ totals.Suppliers | d(0.00,true) }}</td>
+			</tr>
+			<tr>
+				<td>Customers</td>
+				<td class="right">{{ totals.Customers | d(0.00,true)}}</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="clear"></div>
+	<table id="recurring-summary">
+		<tbody>
+			<tr>
+				<th colspan="10">Average turnover</th>
+			</tr>
+			<tr>
+				<td><strong>{{20000 | currency}}</strong> /day</td>
+				<td><strong>{{125000 | currency}}</strong> /week</td>
+				<td><strong>{{3200000 | currency}}</strong> /month</td>
+				<td><strong>{{53000120 | currency}}</strong> /year</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="clear"></div>
+	<div class="charts" id="chartsSection">
+	</div>
+</div>
+<div style="display: none;" id="templates"></div>
+{% endblock content %} {% block footerscript %}
+<script>
+	
+</script>
+{% endblock footerscript %}

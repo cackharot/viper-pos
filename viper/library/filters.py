@@ -1,5 +1,5 @@
 from datetime import datetime
-prefix = 'Rs.'
+prefix = 'R'
 
 def datetimeformat(value, format='%d-%m-%Y %H:%M %p'):
 	if value and type(value) is datetime:
@@ -26,9 +26,17 @@ def comptoday(value):
 	return 0
 	
 
-def currency(value,request=None):
+def currency(value,safe=True,style=True,request=None):
+	from jinja2.filters import do_mark_safe
 	global prefix
+	if isinstance(value,str) and value != '':
+		value = float(value)
+	if style:
+		value = '{:04,.2f}'.format(value)
 	if request:
 		prefix = request.swizapp.settings.currencyFormat
 		return '%s %s' % (prefix,value)
-	return '%s %s' % (prefix,value)
+	if safe:
+		return do_mark_safe('<span class="currency">%s</span> %s' % (prefix,value))
+	else:
+		return '%s %s' % (prefix,value)

@@ -44,7 +44,10 @@ div.ajaxBar { background:transparent url(../../images/ajax-bar.gif) no-repeat to
 
 /* notifications */
 #hd-notifications div.notification { border-color:#489E00; background-color:#8DC361; color:#FFFFFF; cursor:pointer; }
-#hd-notifications div.warning      { border-color:#d8b256; background-color:#FADC76; color:#9B7720; }
+#hd-notifications div.warning, 
+#hd-notifications div.warn,
+.dirty      
+{ border-color:#d8b256; background-color:#FADC76; color:#9B7720; }
 #hd-notifications div.error        { border-color:#B12F17; background-color:#C4452D; color:#FFFFFF; }
 
 /* tables & listings */
@@ -76,12 +79,11 @@ span.status.disabled  { color:#999999; background-color:#EEEEEE; border-color:#C
 .estimates span.status.pending { color:#9B7720; background-color:#FADC76; border-color:#D8B256; }
 .estimates span.status.approved { color:#FFFFC0; background-color:#8DC361; border-color:#489E00; }
 .estimates span.status.rejected { color:#FFFFFF; background-color:#C4452D; border-color:#B12F17; }
+
 /* DASHBOARD */
-.dashboard table#dashboard-summary    {}
-.dashboard table#dashboard-summary td { border-color:#DCDCDC; }
-.dashboard table#dashboard-summary tr.overdue td { color:#c4452d; }
-.dashboard #dashboard-balance         {}
-.dashboard #dashboard-balance-total   {}
+.dashboard table.dashboard-summary    {margin-right: 2em;}
+.dashboard table.dashboard-summary td { border-color:#DCDCDC; }
+.dashboard table.dashboard-summary tr.overdue td { color:#c4452d; }
 
 /* PAYMENTS */
 table.listing tbody tr:hover td.payments-form-container { background-color:white; }

@@ -31,8 +31,9 @@ a.xit:hover { background-position:-10px center; }
 
 #hd-top {
   position:relative;
-  height:10.5em;
+  height:9.0em;
 }
+
 #hd-top-logo {
   position:relative;
   display:block;
@@ -41,12 +42,41 @@ a.xit:hover { background-position:-10px center; }
   text-decoration:none;
   color:inherit;
 }
+
+#hd-top-logo span{
+    color: #222;
+    font: 12px Tahoma,Helvetica,Arial,Sans-Serif;
+    text-align: center;
+    /*text-shadow: 0 2px 3px #555555;*/
+}
+
+#hd-top-logo .slogan{
+	position: absolute;
+    right: 0;
+    top: 10px;
+}
+
+#hd-top-logo h1{
+	background: url("/static/swizapp_logo.png") repeat scroll 0 0 transparent;
+    color: #DA4722;
+    display: block;
+    font: 70px Helvetica,Arial,Sans-Serif;
+    height: 87px;
+    letter-spacing: -4px;
+    text-align: justify;
+    text-decoration: none;
+    width: 238px;
+    text-indent:-9999px;
+    /*text-shadow: 0 3px 8px #2A2A2A;*/
+}
+
 #hd-top-logo .version {
   position:absolute;
   display:inline-block;
   width:100px;
   top:75px;
-  left:200px;
+  left: 190px;
+  font-size: 11px;
 }
 #hd-top-menu { float:right; padding:1em 2em 1em 1em; }
 
@@ -189,9 +219,7 @@ table.listing td.sent {
 /* DASHBOARD */
 .dashboard table.dashboard-info    { width:auto; margin:1em 0; border-collapse:collapse; }
 .dashboard table.dashboard-info td { padding:0.2em 1em; border:1px solid #DCDCDC; }
-.dashboard #dashboard-summary  { float:left; }
-.dashboard #dashboard-balance { float:right; margin-left:1em; }
-.dashboard #dashboard-taxes { float:right; }
+.dashboard .dashboard-summary  { float:left; }
 
 
 /* RECURRING INVOICES */
@@ -214,7 +242,7 @@ form.payments-form .buttons { margin:0; padding:0; }
 
 /* INVOICE EDITING */
 #invoice-container, #customer-container, #product-container        { display:block; }
-#invoice-container .block, #customer-container .block, #product-container .block { display:block; overflow:visible; padding:0 0 1.5em; margin:0 3.846em 0 1em; }
+#invoice-container .block, #customer-container .block, #product-container .block { display:block; overflow:visible; padding:0 0 1.5em; margin:0 0em 0 1em; }
 
 #invoice-container ul.inline, #customer-container ul.inline, #product-container ul.inline            { margin:0; }
 #invoice-container ul.inline li, #customer-container ul.inline li, #product-container ul.inline li         { position:relative; }
@@ -284,7 +312,7 @@ form.payments-form .buttons { margin:0; padding:0; }
 #invoice-container #addItem { margin-bottom:1em; }
 
 #invoice-container div.global-data, #customer-container div.global-data, #product-container div.global-data     { overflow:hidden; }
-#invoice-container div.global-data ul, #customer-container div.global-data ul, #product-container div.global-data ul { margin:0 250px 0 0; list-style-type:none; }
+#invoice-container div.global-data ul, #customer-container div.global-data ul, #product-container div.global-data ul { margin:0 250px 0 0; list-style-type:none;width: 75%; }
 #invoice-container div.global-data textarea,
 #invoice-container div.global-data input,
 #customer-container div.global-data textarea,
@@ -521,3 +549,19 @@ div.grippie {
   height: 20%;
 }
 form div.resizable-textarea { padding-bottom: 0pt;}
+
+table.noborder,td.noborder,tr.noborder {border:0;}
+
+.inline-form input
+{
+	border:1px solid #ccc;
+	padding:1px;
+	margin:0px;
+	display:inline;
+	color:#333;
+}
+
+td.tright .inline-form input
+{
+	text-align:right;
+}

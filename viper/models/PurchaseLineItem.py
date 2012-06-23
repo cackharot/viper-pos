@@ -41,11 +41,11 @@ class PurchaseLineItem(Base):
 
 	@property
 	def BuyAmount(self):
-		return round(self.BuyPrice * self.Quantity)
+		return (self.BuyPrice * self.Quantity)
 
 	@property
 	def Amount(self):
-		return round(self.MRP * self.Quantity)
+		return (self.MRP * self.Quantity)
 
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name))

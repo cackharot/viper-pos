@@ -198,10 +198,11 @@ class OrderService(object):
 		osq = DBSession.query(LineItem.OrderId, func.count(LineItem.OrderId).label('ItemCount'), \
 							func.sum(LineItem.Quantity * LineItem.SellPrice).label('OrderAmount'))
 		osq = osq.join(Order, Order.Id == LineItem.OrderId).group_by(LineItem.OrderId).subquery()
+		
 
 		psq = DBSession.query(OrderPayment.OrderId, func.sum(OrderPayment.PaidAmount).label('PaidAmount'))
 		psq = psq.join(Order, Order.Id == OrderPayment.OrderId).group_by(OrderPayment.OrderId).subquery()
-
+		
 		query = DBSession.query(Order.Id, Order.OrderNo, Order.OrderDate, Order.CustomerId, Order.TenantId, Order.CreatedBy, \
 							 Order.CreatedOn, Order.UpdatedBy, Order.UpdatedOn, Order.Status, Order.IpAddress, Order.DueDate,\
 							 CustomerContactDetails.FirstName.label('CustomerName'), osq.c.ItemCount,\
@@ -227,12 +228,13 @@ class OrderService(object):
 			return orders
 		
 		tquery = DBSession.query(func.count(Order.Id).label('ItemsCount'), \
-								func.sum(osq.c.OrderAmount).label('TotalAmount'),\
-								func.sum(func.IF(psq.c.PaidAmount>=osq.c.OrderAmount,osq.c.OrderAmount,psq.c.PaidAmount)).label('TotalPaidAmount'))
-		tquery = tquery.outerjoin(osq, osq.c.OrderId == Order.Id)\
-					   .outerjoin(psq, psq.c.OrderId == Order.Id)
-		tquery = tquery.outerjoin(Customer, Customer.Id == Order.CustomerId)
-		tquery = tquery.outerjoin(CustomerContactDetails, Customer.Id == CustomerContactDetails.CustomerId)
+								func.ifnull(func.sum(osq.c.OrderAmount),0).label('TotalAmount'),\
+								func.ifnull(func.sum(func.IF(psq.c.PaidAmount>=osq.c.OrderAmount,osq.c.OrderAmount,psq.c.PaidAmount)),0).label('TotalPaidAmount'))
+		tquery = tquery.outerjoin(osq, osq.c.OrderId == Order.Id).outerjoin(psq, psq.c.OrderId == Order.Id)
+		
+		if searchParam.CustomerName:
+			tquery = tquery.outerjoin(Customer, Customer.Id == Order.CustomerId)
+			tquery = tquery.outerjoin(CustomerContactDetails, Customer.Id == CustomerContactDetails.CustomerId)
 		
 		tquery = self.formQueryFromParam(tquery, osq, psq, searchParam)
 
@@ -270,11 +272,11 @@ class OrderService(object):
 			query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
 									Order.OrderAmount <= searchParam.MaxAmount)
 			
-		if searchParam.InvoiceStatus:
-			if searchParam.InvoiceStatus == 'closed':
-				query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount)
-			elif searchParam.InvoiceStatus == 'overdue':
-				query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate < func.now())
+		if searchParam.InvoiceStatus == 'closed':
+			query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount)
+		elif searchParam.InvoiceStatus == 'overdue':
+			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate < func.now())
+			
 		return query
 		
 	def GetOrderPayments(self,orderId,tenantId):

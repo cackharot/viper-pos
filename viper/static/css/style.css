@@ -21,6 +21,7 @@ tbody.scroll {
 
 .tright{
 	text-align:right !important;
+	padding-right: 0.5em !important;
 }
 
 .navbar-fixed-top .brand {

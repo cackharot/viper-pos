@@ -19,8 +19,8 @@
 				</a>
 			</td>
 			<td class="strong noborder" title="Total Invoices">Total ({{totalInvoices | d('0',true)}})</td>
-			<td class="strong noborder right" title="Total invoice amounts">{{ totalAmount | d(0.00,true) | round | currency }}</td>
-			<td class="totalDue strong noborder right" title="Total due amounts">{{ totalDueAmount | d(0.00,true) | round | currency }}</td>
+			<td class="strong noborder right" title="Total invoice amounts">{{ totalAmount | d(0.00,true) | currency }}</td>
+			<td class="totalDue dueamount strong noborder right" title="Total due amounts">{{ totalDueAmount | d(0.00,true) | currency }}</td>
 			<td class="noborder" colspan="1000"></td>
 		</tr>
 		<tr class="empty noborder">
@@ -42,7 +42,7 @@
 	</thead>
 	<tbody>
 		{% for item in model -%}
-			{% set dueAmount = (item.OrderAmount - item.PaidAmount) | round %}
+			{% set dueAmount = (item.OrderAmount - item.PaidAmount) %}
 			<tr class="{{ loop.cycle('odd', 'even') }}" data-invoiceno="{{item.OrderNo}}" data-id="{{item.Id}}">
 			    <td class="check">
 	                      <input type="checkbox" name="ids" value="{{item.Id}}">
@@ -74,9 +74,9 @@
 					{% endif %}
 				</td>
 				<td class="right">
-					{{item.OrderAmount | round | currency }}
+					{{item.OrderAmount | currency }}
 				</td>
-				<td class="right" style="{{ 'color:red;font-weight:bold;' if dueAmount > 0.0 }}"  title="Paid Amount: {{item.PaidAmount|round|currency}}">
+				<td class="right {{ 'dueamount' if dueAmount > 0.0 }}"  title="Paid Amount: {{item.PaidAmount|currency(false)}}">
 					{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency}}
 				</td>
 				<td class="action payments">

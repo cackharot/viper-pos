@@ -10,12 +10,15 @@ from ..models.Purchase import PurchaseSearchParam
 from ..services.SecurityService import SecurityService
 from ..services.StockService import StockService
 from ..services.OrderService import OrderService
+from ..services.ReportService import ReportService
 
 import logging
 log = logging.getLogger(__name__)
 
 def includeme(config):
-	config.add_handler('reports', 'reports/{action}', ReportController)
+	config.add_handler('reportshandler', 'reports/{action}', ReportController)
+	
+	config.add_route('reports','/reports/index')
 	pass
 
 class ReportController(object):
@@ -26,6 +29,14 @@ class ReportController(object):
 		self.request = request
 		self.UserId = request.user.Id
 		self.TenantId = request.user.TenantId
+		
+	@action(renderer='/reports/index.jinja2')
+	def index(self):
+		service = ReportService()
+		invoiceTotals  = service.GetInvoiceTotals(self.TenantId)
+		purchaseTotals = service.GetPurchaseTotals(self.TenantId)
+		totals = service.GetTotals(self.TenantId)
+		return dict(status=True,invoice=invoiceTotals,purchase=purchaseTotals,totals=totals)
 
 	@action(renderer='json')
 	def getreturnproducts(self):

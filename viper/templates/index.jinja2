@@ -118,7 +118,7 @@
 {% block footerscript %}
 <script>
 	$(function() {
-		$.post('reports/getreturnproducts',null,function(data){
+		$.post('/reports/getreturnproducts',null,function(data){
 			if(data && data.status == true) {
 				var compiled = _.template($('#tdReturnProduct').html())
 				var rows = compiled({
@@ -132,7 +132,7 @@
 			}
 		})
 		
-		$.post('reports/lowstocks',{minStock:1000},function(data){
+		$.post('/reports/lowstocks',{minStock:1000},function(data){
 			if(data && data.status == true) {
 				var compiled = _.template($('#tdReturnProduct').html())
 				var rows = compiled({
@@ -146,7 +146,7 @@
 			}
 		})
 		
-		$.post('reports/creditpurchases',{pageNo:0,pageSize:10},function(data){
+		$.post('/reports/creditpurchases',{pageNo:0,pageSize:10},function(data){
 			if(data && data.status == true) {
 				var compiled = _.template($('#tdPurchase').html())
 				var rows = compiled({
@@ -160,7 +160,7 @@
 			}
 		})
 		
-		$.post('reports/creditorders',{pageNo:0,pageSize:10},function(data){
+		$.post('/reports/creditorders',{pageNo:0,pageSize:10},function(data){
 			if(data && data.status == true) {
 				var compiled = _.template($('#tdOrder').html())
 				var rows = compiled({

@@ -1,23 +1,19 @@
 from pyramid.httpexceptions import HTTPFound
 from pyramid_handlers import action
 
-from ..models.Product import Product
-from ..models.Customer import Customer
-from ..models.Order import Order, OrderSearchParam
-from ..models.LineItem import LineItem
-from ..models.OrderPayment import OrderPayment
+#from ..models.Product import Product
+#from ..models.Customer import Customer
+#from ..models.Order import Order
+from ..models.Order import OrderSearchParam
+#from ..models.LineItem import LineItem
+#from ..models.OrderPayment import OrderPayment
 
-from ..services.SecurityService import SecurityService
+#from ..services.SecurityService import SecurityService
 from ..services.OrderService import OrderService
-from ..services.StockService import StockService
-from ..services.SupplierService import SupplierService
+#from ..services.StockService import StockService
+#from ..services.SupplierService import SupplierService
 
-from pyramid_simpleform import Form
-
-from datetime import datetime
-
-from ..forms.vFormRenderer import vFormRenderer
-from ..library.ViperLog import log
+#from ..library.ViperLog import log
 
 import json
 

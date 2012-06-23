@@ -56,6 +56,13 @@ tr.alert-error td{
 </style>
 <script>
 	$(function(){
+		$('.inline-form input, input[name=searchValue]').live('focus',function(){
+			$(this).select()
+		}).live('blur',function(){
+			$(this).val($(this).val())
+		})	
+		$('input[name=searchValue]').focus()
+		
 		$('form#searchForm').submit(function(){
 			var postdata = $(this).serialize()
 			$.post($(this).attr('action'),postdata,function(data){

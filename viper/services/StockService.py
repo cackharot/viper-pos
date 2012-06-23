@@ -153,9 +153,12 @@ class StockService(object):
 				raise Exception('Duplicate Purchase entry!')
 			if entity.PurchaseDate and isinstance(entity.PurchaseDate, unicode):
 				entity.PurchaseDate = datetime.strptime(entity.PurchaseDate, '%d-%m-%Y')
+			if entity.DueDate and isinstance(entity.DueDate, unicode):
+				entity.DueDate = datetime.strptime(entity.DueDate, '%d-%m-%Y')
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
 			DBSession.add(entity)
+			DBSession.flush()
 			return True
 		return False
 

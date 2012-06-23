@@ -365,7 +365,7 @@ class StockController(object):
 					model.CreatedBy = self.UserId
 					model.Status = True
 					if stockService.AddPurchase(model):
-						return HTTPFound(location=self.request.route_url('purchases')+'/'+model.Id)
+						return HTTPFound(location=self.request.route_url('editpurchase',pid=model.Id))
 					else:
 						errors = 'Unable to save purchase details!'
 		except Exception, e:

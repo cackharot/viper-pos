@@ -14,9 +14,9 @@
 		{% set dueAmount =  totalAmount - paidAmount %}
 		
 		{% if model.Id %}
-			{% if (model.DueDate | comptoday) == 1 %}
+			{% if (model.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 				<span style="float: right;" class="status overdue"> Overdue </span>
-			{% elif (dueAmount > 0 or totalAmount == 0) %}
+			{% elif ( totalAmount == 0 or dueAmount > 0) %}
 				<span style="float: right;" class="status opened"> Opened </span>
 			{% else %}
 				<span style="float: right;" class="status closed"> Closed </span>
@@ -25,40 +25,52 @@
 	</h2>
 	<div id="statusMessage">
 	</div>
-	<div class="clear"></div>
+	<div class="clear"></div>	
+	<table class="dashboard-summary" style="position: absolute; right: 25px;width: 23%;">
+		<tbody>
+			<tr>
+				<td>Total Items</td>
+				<td class="right">
+					<span id="totalItems">{{model.TotalItems}}</span>
+				</td>
+			</tr>
+			<tr>
+				<td>Total Quantity</td>
+				<td class="right">
+					<span id="totalQuantity">{{model.TotalQuantity}}</span>
+				</td>
+			</tr>
+			<tr class="bold">
+				<td>Total Amount</td>
+				<td class="right">{{totalAmount | currency}}</td>
+			</tr>
+			<tr>
+				<td>Paid Amount</td>
+				<td class="right">{{paidAmount | currency}}</td>
+			</tr>
+			<tr class="dueamount">
+				<td>Due Amount</td>
+				<td class="right">{{dueAmount | currency}}</td>
+			</tr>
+		</tbody>
+	</table>
 	<form id="frmPurchase" action="{{'savepurchase'|route_url}}" method="post">
-		<div class="span6">
-			<h3>Purchase Info</h3>
-			<div id="customer-data" class="global-data block">
-				<ul>
-					<li>
+		<h3>Purchase Info</h3>
+		<div id="customer-data" class="global-data block">
+			<ul>
+				<li>
+				<span class="_50">
+						{{purchaseRenderer.text('PurchaseNo',title='Purchase Invoice Number',size=50,class='error wrong' if	purchaseRenderer.is_error('PurchaseNo'))}} 
+				</span> 
+				<span class="_50">
+						{{purchaseRenderer.select('SupplierId',suppliers,prompt='Choose a supplier',title='Supplier',class='error wrong' if	purchaseRenderer.is_error('SupplierId'),style="width: 387px;")}} </span></li>
+				<li>
 					<span class="_50">
-							{{purchaseRenderer.text('PurchaseNo',title='Purchase Invoice Number',size=50,class='error wrong' if	purchaseRenderer.is_error('PurchaseNo'))}} 
-					</span> 
+						{{purchaseRenderer.date('PurchaseDate',title='Purchase Date',class='datetime error' if purchaseRenderer.is_error('PurchaseDate') else 'datetime')}} </span> 
 					<span class="_50">
-							{{purchaseRenderer.select('SupplierId',suppliers,prompt='Choose a supplier',title='Supplier',class='error wrong' if	purchaseRenderer.is_error('SupplierId'))}} </span></li>
-					<li>
-						<span class="_50">
-							{{purchaseRenderer.date('PurchaseDate',title='Purchase Date',class='datetime error' if purchaseRenderer.is_error('PurchaseDate') else 'datetime')}} </span> 
-						<span class="_50">
-							{{purchaseRenderer.date('DueDate',title='Due Date',class='datetime error' if	purchaseRenderer.is_error('DueDate') else 'datetime')}} </span>
-					</li>
-					<li>
-						<span class="_50" style="line-height:23px;font-weight:bold;">
-							Total Items/Quantity: <span id="totalItems">{{model.TotalItems}}</span>/<span id="totalQuantity">{{model.TotalQuantity}}</span>
-						</span>
-						<span class="_50" style="line-height:23px;font-weight:bold;color:Green;"> 
-							Total Amount: {{'' | currency}}<span id="totalAmount">{{totalAmount}}</span>
-						</span>
-						<span class="_50" style="line-height:23px;font-weight:bold;color:Brown">
-							Paid Amount: {{'' | currency}}<span id="paidAmount">{{paidAmount}}</span>
-						</span>
-						<span class="_50" style="line-height:23px;font-weight:bold;color:Red">
-							Due Amount: {{'' | currency}}<span id="dueAmount">{{dueAmount}}</span>
-						</span>
-					</li>
-				</ul>
-			</div>
+						{{purchaseRenderer.date('DueDate',title='Due Date',class='datetime error' if	purchaseRenderer.is_error('DueDate') else 'datetime')}} </span>
+				</li>
+			</ul>
 		</div>
 		<div id="saving-options" class="block">
 			<input type="hidden" id="pid" name="pid" value="{{model.Id|d('',True)}}" /> 
@@ -82,14 +94,14 @@
 			{% import 'shared/productform.jinja2' as productForm with context %}
 			{{ productForm.render(renderer,True) }} 
 			<input type="hidden"name="ProductId" value="" />
-			<div class="form-actions">
-				<button class="btn action create" type="submit">
-					<span><span>Add</span></span>
-				</button>
-				<button class="btn action cancel" type="reset">
-					<span><span>Reset</span></span>
-				</button>
-			</div>
+		</div>
+		<div id="saving-options" class="block">
+			<button class="btn action create" type="submit">
+				<span><span>Add</span></span>
+			</button>
+			<button class="btn action cancel" type="reset">
+				<span><span>Reset</span></span>
+			</button>
 		</div>
 	</form>
 	<div class="clear"></div>
@@ -98,12 +110,12 @@
 			<th class="noborder"></th>
 			<th>Barcode</th>
 			<th>Name</th>
-			<th>MRP</th>
-			<th>Tax</th>
-			<th>Price</th>
-			<th>Discount</th>
-			<th>Quantity</th>
-			<th>Total</th>
+			<th class="right">MRP</th>
+			<th class="right">Tax</th>
+			<th class="right">Price</th>
+			<th class="right">Discount</th>
+			<th class="right">Quantity</th>
+			<th class="right">Total</th>
 		</thead>
 		<tbody>
 			{% for item in model.LineItems %}
@@ -114,12 +126,12 @@
 					title="Delete this item!">Delete</a></td>
 				<td>{{item.Barcode}}</td>
 				<td>{{item.Name}}</td>
-				<td>{{item.MRP}}</td>
-				<td>{{item.Tax}}</td>
-				<td>{{item.BuyPrice}}</td>
-				<td>{{item.Discount}}</td>
-				<td>{{item.Quantity}}</td>
-				<td>{{item.BuyAmount}}</td>
+				<td class="right">{{item.MRP}}</td>
+				<td class="right">{{item.Tax}}</td>
+				<td class="right">{{item.BuyPrice}}</td>
+				<td class="right">{{item.Discount}}</td>
+				<td class="right">{{item.Quantity}}</td>
+				<td class="right">{{item.BuyAmount}}</td>
 			</tr>
 			{% endfor %}
 		</tbody>

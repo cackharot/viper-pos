@@ -34,9 +34,11 @@
 	<div id="hd">
 		<div id="hd-top">
 			<a id="hd-top-logo" href="/">
-			  <img alt="{{request.registry.settings.name}}" width="210" height="100" border="0" 
-				  src="{{request.static_url('viper:static/images/logo.gif')}}" />
-			  <span class="version">{{request.registry.settings.version}}</span>
+			  <!-- <img alt="{{request.registry.settings.name}}" width="210" height="100" border="0" 
+				  src="{{request.static_url('viper:static/images/logo.gif')}}" />-->
+				<h1>Swizapp</h1>
+				<!-- <span class="slogan">invoice system</span>-->
+			  	<span class="version">v {{request.registry.settings.version}}</span>
 			</a>    
 			<ul id="hd-top-menu" class="inline content">
 			  <li>Welcome, {{user.UserName}}! |</li>
@@ -59,7 +61,7 @@
 				<li class="{{'active' if request.path.startswith('/stock/purchases')}}"><a href="{{'purchases' | route_url}}">Purchases</a></li>
 				<li class="{{'active' if request.path.startswith('/customers')}}"><a href="{{'customers' | route_url}}">Customers</a></li>
 				<li class="{{'active' if request.path.startswith('/suppliers')}}"><a href="{{'suppliers' | route_url}}">Suppliers</a></li>
-				<li class="{{'active' if request.path.startswith('/reports')}}"><a href="/reports">Reports</a></li>
+				<li class="{{'active' if request.path.startswith('/reports')}}"><a href="{{'reports' | route_url}}">Reports</a></li>
 				<li class="{{'active' if request.path.startswith('/admin')}}"><a href="/admin">Admin</a></li>
 			</ul>
 		</div>

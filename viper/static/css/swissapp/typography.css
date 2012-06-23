@@ -3,6 +3,14 @@ html, textarea, input[type="text"], input[type="password"], select {
   font-family:'lucida grande','lucida sans unicode','lucida sans',lucida,arial,helvetica,sans-serif;
 }
 
+.currency{
+	font-family: "rupi foradian";
+}
+
+.bold{
+	font-weight:bold;
+}
+
 .content { font-size:1.3em; }
 
 a, a:link, a:visited { text-decoration:none;      }
@@ -26,6 +34,10 @@ h1 { /* Reserved */ }
 h2 { font-size:1.833em; } /* 22px */
 h3 { font-size:1.500em; } /* 18px */
 h4 { font-size:1.250em; } /* 15px */
+
+.dueamount{
+	color: #C4452D;
+}
 
 /* header section */
 #hd-navbar-menu { font-size:1.2em; }

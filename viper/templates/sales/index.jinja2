@@ -29,7 +29,7 @@ table#tblTodayOrders tbody tr.active td{
 {% block content %}
 <div id="invoice-container" class="content" style="position:relative">
    	<div id="orderListDiv" style="float:left;width:20%;position:relative">
-		<h2 style="margin-bottom:0px">Today Orders</h2>
+		<h2 style="margin-bottom:0px">Recent Invoices</h2>
 		<div style="position:absolute;top:15px;right:0px;">
 			<button id="refresh-orders" class="btn">
 				 <span><span>Refresh</span></span>
@@ -51,28 +51,66 @@ table#tblTodayOrders tbody tr.active td{
 	</div>
 	<div id="rightPane" style="float:left;width:75%;border-left:1px solid #ccc;padding-left:10px;margin-left: 10px;">
 		<div id="customer-data" class="global-data block" id="orderDetailsDiv">
-			<h2>Invoice Details</h2>
-			<div style="position: absolute;right: 90px;top: 15px;"> 
+			<h2 style="position: relative;">
+				Invoice Details
+				<span id="paymentType" style="position: absolute; top: 0px; left: 140px;"></span>
+			</h2>
+			<div style="position: absolute;right: 38px;top: 15px;"> 
 		   		<button id="new-order" title="New Invoice" class="btn action primary create"><span><span>New (F3)</span></span></button>
 		   		<button id="cancel-order" title="Cancel this Invoice" class="btn action cancel"><span><span>Cancel (F4)</span></span></button>
 		   		<button id="checkout-order" title="Pay Invoice" class="btn action save"><span><span>Checkout (F5)</span></span></button>
 		   		<button id="print-order" title="Print Invoice" class="btn action print"><span><span>Print (F11)</span></span></button>
 		   		<button id="preview-order" title="Preview Invoice" class="btn action pdf"><span><span>Preview (F12)</span></span></button>
 		    </div> 
-			<ul>
-				<li>
-					<span class="_25">Invoice No#</span>
-					<span class="_25"id="orderNumber">0000</span>
-					<span class="_25">Date:</span>
-					<span class="_25" id="orderDate">--</span>
-				</li>
-				<li>
-					<span class="_25">Customer:</span>
-					<span class="_25" id="customerName">--</span>
-					<span class="_25">Type:</span>
-					<span class="_25" id="paymentType">Cash</span>
-				</li>
-			</ul>
+		    <table class="noborder" style="float:left;margin-bottom:0em;margin-right:2em;">
+				<tbody>
+					<tr class="strong">
+						<td class="noborder" style="width:120px;">Invoice No#</td>
+						<td class="noborder" style="width:140px;"><span id="orderNumber">0000</span></td>
+					</tr>
+					<tr>
+						<td class="noborder">Date</td>
+						<td class="noborder"><span id="orderDate"></span></td>
+					</tr>
+					<tr>
+						<td class="noborder">Duedate</td>
+						<td class="noborder"><input title="Enter due amount!" type="text" class="datetime" name="dueDate" id="dueDate"/></td>
+					</tr>
+				</tbody>
+			</table>
+			<table class="noborder" style="float:left;margin-bottom:0em;margin-right:2em;">
+				<tbody>
+					<tr>
+						<td class="noborder" style="width:110px;">Search</td>
+						<td class="noborder" style="width:330px;">
+							<input type="text" class="typeahead" data-provide="typeahead" 
+									name="customerName" id="customerName"
+									placeholder="Enter customer name or mobile number..."  
+									value="" required></input>
+							<input type="hidden" id="customerid" name="customerid" value=""></input>
+					</tr>
+					<tr>
+						<td class="noborder"></td>
+						<td class="noborder">
+							<label class="radio inline">
+								<input type="radio" name="searchfield" value="name"></input> Name
+							</label>
+							<label class="radio inline">
+								<input type="radio" name="searchfield" value="mobile" checked="checked"></input> Mobile
+							</label>
+							<label class="radio inline">
+								<input type="radio" name="searchfield" value="customerno"></input> Customer No
+							</label>
+						</td>
+					</tr>
+					<tr class="strong">
+						<td class="noborder">Customer</td>
+						<td class="noborder">
+							<span id="invoiceCustomerName"></span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
 			<div class="clear"></div>
 			<h2>Line Items</h2>
 			<ul style="width:90%;position:relative;">
@@ -90,7 +128,7 @@ table#tblTodayOrders tbody tr.active td{
 		<table class="listing noedit" id="tblOrderLineItems">
 				<thead>
 					<tr>
-						<th style="width:50px" class="noborder"></th>
+						<th style="width:32px" class="noborder"></th>
 						<th style="width:130px;">Barcode</th>
 						<th>Item Name</th>
 						<th class="right" style="width:90px;">MRP</th>
@@ -108,45 +146,45 @@ table#tblTodayOrders tbody tr.active td{
 						<td colspan="2" class="noborder top"></td>
 						<td colspan="2"><span>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></span></td>
 						<td class="right strong big"><span>Total: </span></td>
-						<td colspan="2" class="right strong big green">{{ '' | currency }} <span id="totalAmount">0.0</span></td>
+						<td colspan="2" class="right strong big green"><span id="totalAmount">{{ 0 | currency }}</span></td>
 					</tr>
 					<tr>
 						<td colspan="2" class="noborder top"></td>
-						<td colspan="2" class="strong"><span>Savings: {{ '' | currency }} <span id="savingsAmount">0.0</span></span></td>
+						<td colspan="2" class="strong"><span>Savings: <span id="savingsAmount">{{ 0 | currency }}</span></span></td>
 						<td class="right strong big"><span>Paid: </span></td>
-						<td colspan="2" class="right strong big">{{ '' | currency }}<span id="paidAmount">0.0</span></td>
+						<td colspan="2" class="right strong big"><span id="paidAmount">0.0</span></td>
 					</tr>
 					<tr>
 						<td class="noborder top" colspan="4"></td>
 						<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
-						<td colspan="2" class="right strong big red">{{ '' | currency }} <span id="balanceAmount">0.0</span></td>
+						<td colspan="2" class="right strong big dueamount"><span id="balanceAmount">{{ 0 | currency }}</span></td>
 					</tr>
 				</tfoot>
 			</table>
 	</div>
 </div> 
 <div style="display:block;" id="product-container">
-	<div class="modal fade" id="selectItemModal">
+	<div class="content modal fade" id="selectItemModal">
 	  <div class="modal-header">
 		<button class="close" data-dismiss="modal">×</button>
-		<h2>Multiple Items found</h2>
+		<h3>Multiple Items found</h3>
 	  </div>
-	  <div class="modal-body">
+	  <div class="modal-body global-data">
 		<table class="listing noedit" id="tblSelectItem">
 			<thead>
 				<th>Barcode</th>
 				<th>Item Name</th>
-				<th>MRP</th>
-				<th>Price</th>
-				<th>Added On</th>
-				<th>Action</th>
+				<th class="tright">MRP</th>
+				<th class="tright">Price</th>
+				<th>Created Date</th>
+				<th class="noborder"></th>
 			</thead>
 			<tbody>
 			</tbody>
 		</table>
 	  </div>
 	  <div class="modal-footer">
-		<a href="#" data-dismiss="modal" class="btn">Close</a>
+		<a href="#" data-dismiss="modal" class="btn action cancel"><span><span>Close</span></span></a>
 	  </div>
 	</div>
 	<div class="content modal fade" id="checkoutOrderModel">
@@ -175,31 +213,17 @@ table#tblTodayOrders tbody tr.active td{
 		<li>
 			<span class="_50">Total Amount: </span>
 			<span class="_50 strong big green">
-				Rs. <%= item.get('orderamount').toFixed(2)%>
+				{{ '' | currency(true,false) }} <%= Math.round(item.get('orderamount')).toFixed(2)%>
 			</span>
 		</li>
-		<li>
+		<li class="strong">
 			<span class="_50">Customer:</span>
-			<span class="_50">
-				<input style="margin-bottom:10px;" type="text" class="typeahead" data-provide="typeahead" name="customername" placeholder="Enter customer name or mobile number..."  value="<%=item.get('customername')||''%>" required></input>
-				<input type="hidden" name="customerid" value="<%=item.get('customerid')||''%>"></input>
-				<label class="radio inline">
-					<input type="radio" name="searchfield" value="name" checked="checked"></input> Name
-				</label>
-				<label class="radio inline">
-					<input type="radio" name="searchfield" value="mobile"></input> Mobile
-				</label>
-				<label class="radio inline">
-					<input type="radio" name="searchfield" value="customerno"></input> Customer No
-				</label>
-			</span>
+			<span class="_50"><%=item.get('customername')%></span>
 		</li>
-	</ul>
-	<ul style="width:90%;margin-top: 20px;">
 		<li>
 			<span class="_50">Payment Type: </span>
 			<span class="_50">
-				<select class="dropdown" name="paymenttype">
+				<select class="dropdown" name="paymenttype" style="width: 99%;">
 					<option>Cash</option>
 					<option>Credit</option>
 					<option>Card</option>
@@ -210,7 +234,7 @@ table#tblTodayOrders tbody tr.active td{
 		<li>
 			<span class="_50">Paid Amount: <span class="add-on">Rs.</span></span>
 			<span class="_50 strong big red">
-				<input type="number" name="paidamount" placeholder="<%=item.get('orderamount').toFixed(2)%>" value="<%=item.get('balanceamount').toFixed(2)%>" required autofocus="autofocus"></input>
+				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span> <input style="width:95%" type="number" name="paidamount" placeholder="<%=Math.round(item.get('orderamount'))%>" value="<%=Math.round(item.get('orderamount'))%>" required autofocus="autofocus"></input>
 			</span>
 		</li>
 		<li>
@@ -229,8 +253,8 @@ table#tblTodayOrders tbody tr.active td{
 			<td><%= item.Name %></td>
 			<td class="tright"><%= item.MRP.toFixed(2) %></td>
 			<td class="tright"><%= item.SellPrice.toFixed(2) %></td>
-			<td><%= item.CreatedOn %></td>
-			<td class="tcenter"><button class="btn btn-mini btn-info" data-id="<%= cnt++ %>">Select</button></td>
+			<td><%= $.format.date(ToLocalDate(item.CreatedOn),'dd-MM-yyyy h:mm a') %></td>
+			<td class="tcenter"><button class="btn btn-mini btn-info" data-id="<%= cnt++ %>"><span><span>Select</span></span></button></td>
 		</tr>
 		<% }); %>
 	</script>
@@ -251,7 +275,7 @@ table#tblTodayOrders tbody tr.active td{
 		<tr data-orderid="<%= item.get('orderid') %>" title="Click to edit!">
 			<td class="o tbold"><%= item.get('orderno') %></td>
 			<td class="c"><%= $.format.date(ToLocalDate(item.get('orderdate')),'h:mm a') %></td>
-			<td class="a tright tbold"><%= item.get('orderamount').toFixed(2) %></td>
+			<td class="a tright tbold"><%= Math.round(item.get('orderamount')) %></td>
 		</tr>
 	</script>	
 </div>
@@ -260,22 +284,20 @@ table#tblTodayOrders tbody tr.active td{
 <script src="{{request.static_url('viper:static/js/swizapp/salesapp.js')}}"></script>
 <script>
 	$(function(){
+		$('input.datetime').datepicker({dateFormat:'dd-mm-yy'})
 		$('#customer-data input[type=text], #customer-data textarea').SwizappFormTips()
-		
-		var $txtBarcode = $('input[name=barcode]')
-		$txtBarcode[0].select(0, $txtBarcode.val().length)
+	
+		$('.inline-form input, #barcode, #itemName').live('focus',function(){
+			$(this).select()
+		}).live('blur',function(){
+			$(this).val($(this).val())
+		})	
+		$('#barcode').focus()
 	});
 </script>
 <style>
-	.inline-form input
-	{
-		border:1px solid #ccc;
-		padding:1px;
-		margin:0px;
-		display:inline;
-		color:#333;
-	}
-</style>
+	
+</style>	 
 {% endblock %}
 
 

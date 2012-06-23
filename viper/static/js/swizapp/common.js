@@ -24,6 +24,7 @@ function ToLocalDate(inDate) {
 		
 function hideMsg() {
 	$('#statusMessage').fadeOut();
+	$(document).trigger('NotificationRemoveEvent');
 }
 
 function showMsg(type, message, timeout) {

@@ -18,9 +18,9 @@
 					<span><span>Email</span></span>
 				</a>
 			</td>
-			<td class="strong noborder" title="Total Invoices">Total ({{totalPurchases | d('0',true)}})</td>
-			<td class="strong noborder right" title="Total invoice amounts">{{ totalAmount | d(0.00,true) | round | currency }}</td>
-			<td class="totalDue strong noborder right" title="Total due amounts">{{ totalDueAmount | d(0.00,true) | round | currency }}</td>
+			<td class="strong noborder" title="Total Purchases">Total ({{totalPurchases | d('0',true)}})</td>
+			<td class="strong noborder right" title="Total invoice amounts">{{ totalAmount | d(0.00,true) | currency }}</td>
+			<td class="totalDue dueamount strong noborder right" title="Total due amounts">{{ totalDueAmount | d(0.00,true) | currency }}</td>
 			<td class="noborder" colspan="1000"></td>
 		</tr>
 		<tr class="empty noborder">
@@ -42,27 +42,29 @@
 	</thead>
 	<tbody>
 		{% for item in model %}
-		{% set dueAmount = (item.PurchaseAmount - item.PaidAmount) | round %}
+		{% set dueAmount = (item.PurchaseAmount - item.PaidAmount) %}
 		<tr class="{{ loop.cycle('odd', 'even') }}" data-purchaseno="{{item.PurchaseNo}}" data-id="{{item.Id}}">
 		    <td class="check">
                       <input type="checkbox" name="ids" value="{{item.Id}}">
             </td>
 			<td>{{item.PurchaseNo}}</td>
 			<td>{{item.SupplierName}}</td>
-			<td>{{item.ItemCount}}</td>
+			<td>{{item.ItemCount | d(0,true)}}</td>
 			<td>{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}</td>
 			<td>{{item.DueDate | datetimeformat('%d-%m-%Y')}}</td>
 			<td>
 				{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 					<span class="status overdue"> Overdue </span>
-				{% elif (dueAmount > 0) %}
+				{% elif (item.PurchaseAmount == 0 or dueAmount > 0) %}
 					<span class="status opened"> Opened </span>
 				{% else %}
 					<span class="status closed"> Closed </span>
 				{% endif %}
 			</td>
-			<td class="right">{{item.PurchaseAmount | round | currency}}</td>
-			<td class="right" style="{{ 'color:red;font-weight:bold;' if dueAmount > 0.0 }}" title="Paid Amount: {{item.PaidAmount|round|currency}}">{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency }}</td>
+			<td class="right">{{item.PurchaseAmount | currency}}</td>
+			<td class="right currency {{ 'dueamount' if dueAmount > 0.0 }}" title="Paid Amount: {{item.PaidAmount | currency(false)}}">
+				{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency }}
+			</td>
 			<td class="action payments">
                 <button class="btn payment action-clear" href="#" type="button">
                     <span><span>Payments</span></span>

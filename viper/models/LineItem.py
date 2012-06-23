@@ -35,7 +35,7 @@ class LineItem(Base):
 
 	@property
 	def Amount(self):
-		return round(self.SellPrice * self.Quantity)
+		return (self.SellPrice * self.Quantity)
 
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name))

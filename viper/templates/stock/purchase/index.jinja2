@@ -158,6 +158,11 @@
 					}
 				}else{
 					postdata.payments.push(fdata)
+					
+					if(!fdata.paidAmount) {
+						showMsg('warning','No Payments entered. Not saving!')
+						return false
+					}
 				}
 				
 				$.post(window.swizapp.urls.savepayments, JSON.stringify(postdata), function(data){
@@ -198,7 +203,7 @@
 			
 			container.after(newpayment).fadeIn()
 			
-			$('input.datetime', newpayment).datepicker({ dateFormat: 'dd-mm-yy' })
+			$('.payments input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
 			//$('input[type=text], textarea', newpayment).SwizappFormTips()		  
 		});
 	    
