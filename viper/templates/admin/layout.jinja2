@@ -1,0 +1,33 @@
+{% extends "templates/layout.jinja2" %}
+{% block topcontent %}
+<ul id="settings-menu" class="content tabs" style="margin-bottom: 1em;">
+	<li class="{{ 'active' if request.path_info == '/admin/index' }}"><a href="/admin/index">Global Settings</a></li>
+	<li class="{{ 'active' if request.path_info == '/admin/settings' }}"><a href="/admin/settings">My Settings</a></li>
+	<li class="{{ 'active' if request.path_info == '/admin/templates' }}"><a href="/admin/templates">Templates</a></li>
+	<li class="{{ 'active' if request.path_info == '/admin/modules' }}"><a href="/admin/modules">Modules</a></li>
+</ul>
+{% block atopcontent %}{% endblock atopcontent%} 
+{% endblock topcontent%} 
+{% block content %}
+<div id="settings-wrapper" class="content">
+	{% block acontent %}
+		
+	{% endblock %}
+</div>
+{% endblock content %} 
+{% block footerscript %}
+<script>
+	$(function(){
+		$('input.datetime').datepicker({ 
+			dateFormat:'dd-mm-yy',
+			showAnim: 'slide',
+			changeMonth: true,
+			changeYear: true,
+			showOn: "both",
+			buttonImage: "/static/images/icons/calendar.png",
+			buttonImageOnly: true 
+		})
+	})
+</script>
+{% block afooterscript %}{% endblock afooterscript %}
+{% endblock footerscript %}

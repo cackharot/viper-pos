@@ -1,0 +1,50 @@
+{% extends "templates/layout.jinja2" %}
+{% block topcontent %}
+<ul id="settings-menu" class="content tabs" style="margin-bottom: 1em;">
+	<li class="{{ 'active' if request.path_info == '/reports/index' }}"><a href="/reports/index">Totals</a></li>
+	<li class="{{ 'active' if request.path_info == '/reports/invoices' }}"><a href="/reports/invoices">Invoice</a></li>
+	<li class="{{ 'active' if request.path_info == '/reports/purchases' }}"><a href="/reports/purchases">Purchase</a></li>
+	<li class="{{ 'active' if request.path_info == '/reports/products' }}"><a href="/reports/products">Products</a></li>
+	<li class="{{ 'active' if request.path_info == '/reports/customers' }}"><a href="/reports/customers">Customers</a></li>
+	<li class="{{ 'active' if request.path_info == '/reports/suppliers' }}"><a href="/reports/suppliers">Suppliers</a></li>
+</ul>
+{% block rtopcontent %}{% endblock rtopcontent%} 
+{% endblock topcontent%} 
+{% block content %}
+<div id="report-container" class="content dashboard">
+	{% block rcontent %}
+		
+	{% endblock %}
+</div>
+{% endblock content %} 
+{% block footerscript %}
+<script>
+	$(function(){
+		$('input.datetime').datepicker({ 
+			dateFormat:'dd-mm-yy',
+			showAnim: 'slide',
+			changeMonth: true,
+			changeYear: true,
+			showOn: "both",
+			buttonImage: "/static/images/icons/calendar.png",
+			buttonImageOnly: true 
+		})
+		
+		$('form#searchForm').submit(function(){
+			var postdata = $(this).serialize()
+			$('#result').html('<div class="ajaxBar">')
+			$.post($(this).attr('action'),postdata,function(data){
+				if(data){
+					$('#result').slideUp('fast').html(data).slideDown('slow') 
+				}else{
+					// search returns no value
+					$('#result').html('<div class="error alert">No items found!</div>').slideDown()
+				}
+				$(document).trigger('AjaxRefreshEvent')
+			})
+			return false
+		})
+	})
+</script>
+{% block rfooterscript %}{% endblock rfooterscript %}
+{% endblock footerscript %}

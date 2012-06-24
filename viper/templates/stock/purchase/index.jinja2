@@ -23,6 +23,8 @@
 					<label for="search_quick_dates"> </label>
 					<select id="search_quick_dates" name="search_quick_dates">
 						<option selected="selected" value=""></option>
+						<option value="today">today</option>
+						<option value="yesterday">yesterday</option>
 						<option value="last_week">last week</option>
 						<option value="last_month">last month</option>
 						<option value="last_year">last year</option>
@@ -46,7 +48,7 @@
 			<ul>
 				<li>
 					<label for="supplierId">Supplier: </label> 
-					<select	name="supplierId">
+					<select	name="supplierId" style="min-width:150px">
 						<option value="">--Select--</option> 
 						{% for item in suppliers if suppliers %}
 						<option value="{{item[0]}}">{{item[1]}}</option> 

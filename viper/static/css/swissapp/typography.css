@@ -73,8 +73,10 @@ span.status { font-size:0.833em; line-height:1em; text-align:center; }
 
 /* SETTINGS */
 #settings-wrapper li small { line-height:1.2em; }
-#settings-menu li.selected a { font-weight:bold; }
-#settings-menu li.selected a:hover { text-decoration:none; }
+#settings-menu li.selected a,
+#settings-menu li.active a { font-weight:bold; }
+#settings-menu li.selected a:hover,
+#settings-menu li.active a:hover { text-decoration:none; }
 
 /* ERRORS */
 .error_list { font-size:0.85em; line-height:1.5em; }

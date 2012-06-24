@@ -1,66 +1,79 @@
 {% extends "templates/layout.jinja2" %} {% block content %}
-<div id="content-wrapper" class="content">
-	<h2>
-		Return Products <span class="pull-right"
-			style="margin-right: 20px; font-size: 14px;">Total: <span
-			id="totalReturns">0</span></span>
-	</h2>
+<ul id="settings-menu" class="content tabs">
+	<li><a href="#tblReturns">Return Products</a></li>
+	<li><a href="#tblLowStock">Low Stock Products</a></li>
+	<li><a href="#tblCreditOrders">Credit Orders</a></li>
+	<li><a href="#tblCreditPurchases">Credit Purchases</a></li>
+</ul>
+<div id="settings-wrapper" class="content">
 	<table class="listing" id="tblReturns">
 		<thead>
-			<th>Supplier</th>
-			<th>Barcode</th>
-			<th>Name</th>
-			<th class="tright">MRP</th>
-			<th class="tright">Stock</th>
+			<tr class="noborder">
+				<td colspan="5">
+				<span>Total: <span id="totalReturns">0</span></span>
+			</td>
+			</tr>
+			<tr>
+				<th>Supplier</th>
+				<th>Barcode</th>
+				<th>Name</th>
+				<th class="tright">MRP</th>
+				<th class="tright">Stock</th>
+			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 	</table>
-	<div class="clear"></div>
-	<h2>
-		Low Stock Products <span class="pull-right"
-			style="margin-right: 20px; font-size: 14px;">Total: <span
-			id="totalLowStock">0</span></span>
-	</h2>
 	<table class="listing" id="tblLowStock">
 		<thead>
-			<th>Supplier</th>
-			<th>Barcode</th>
-			<th>Name</th>
-			<th class="tright">MRP</th>
-			<th class="tright">Stock</th>
+			<tr class="noborder">
+				<td colspan="5">
+				<span>Total: <span id="totalLowStock">0</span></span>
+			</td>
+			</tr>
+			<tr>
+				<th>Supplier</th>
+				<th>Barcode</th>
+				<th>Name</th>
+				<th class="tright">MRP</th>
+				<th class="tright">Stock</th>
+			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 	</table>
-	<h2>
-		Credit Orders <span class="pull-right"
-			style="margin-right: 20px; font-size: 14px;">Total: <span
-			id="totalCreditOrders">0</span></span>
-	</h2>
 	<table class="listing" id="tblCreditOrders">
 		<thead>
-			<th>No</th>
-			<th>Customer</th>
-			<th>Date</th>
-			<th class="tright">Total</th>
-			<th class="tright">Paid</th>
+			<tr class="noborder">
+				<td colspan="5">
+				<span>Total: <span id="totalCreditOrders">0</span></span>
+			</td>
+			</tr>
+			<tr>
+				<th>No</th>
+				<th>Customer</th>
+				<th>Date</th>
+				<th class="tright">Total</th>
+				<th class="tright">Paid</th>
+			</tr>
 		</thead>
 		<tbody>
 		</tbody>
 	</table>
-	<h2>
-		Credit Purchases <span class="pull-right"
-			style="margin-right: 20px; font-size: 14px;">Total: <span
-			id="totalCreditPurchases">0</span></span>
-	</h2>
 	<table class="listing" id="tblCreditPurchases">
 		<thead>
-			<th>No</th>
-			<th>Supplier</th>
-			<th>Date</th>
-			<th class="tright">Total</th>
-			<th class="tright">Paid</th>
+			<tr class="noborder">
+				<td colspan="5">
+				<span>Total: <span id="totalCreditPurchases">0</span></span>
+			</td>
+			</tr>
+			<tr>
+				<th>No</th>
+				<th>Supplier</th>
+				<th>Date</th>
+				<th class="tright">Total</th>
+				<th class="tright">Paid</th>
+			</tr>
 		</thead>
 		<tbody>
 		</tbody>
@@ -102,8 +115,12 @@
 	</script>
 </div>
 {% endblock content %} {% block footerscript %}
+<script src="{{request.static_url('viper:static/js/easytabs.js')}}"></script>
 <script>
 	$(function() {
+	
+		$('#bd-content').easyTabs({defaultContent:1});
+	
 		$.post('/reports/getreturnproducts',null,function(data){
 			if(data && data.status == true) {
 				var compiled = _.template($('#tdReturnProduct').html())

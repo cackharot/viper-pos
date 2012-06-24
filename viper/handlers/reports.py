@@ -9,8 +9,11 @@ from ..models.Purchase import PurchaseSearchParam
 
 from ..services.SecurityService import SecurityService
 from ..services.StockService import StockService
+from ..services.SupplierService import SupplierService
 from ..services.OrderService import OrderService
 from ..services.ReportService import ReportService
+
+from collections import namedtuple
 
 import logging
 log = logging.getLogger(__name__)
@@ -21,6 +24,29 @@ def includeme(config):
 	config.add_route('reports','/reports/index')
 	pass
 
+class SearchParam(object):
+	TenantId 		= None
+	FromDate		= None
+	ToDate			= None
+	Status			= None
+	CustomerId		= None
+	CustomerName	= None
+	SupplierId		= None
+	SupplierName	= None
+	MinAmount		= None
+	MaxAmount		= None
+	QuickDates		= None
+	IpAddress		= None
+	PurchaseNo		= None
+	InvoiceNo		= None
+	PurchaseAmount	= None
+	PurchaseDate	= None
+	InvoiceDate		= None
+	Credit			= False
+	
+	def __init__(self):
+		pass
+
 class ReportController(object):
 	"""
 		Basic Report Handler
@@ -29,6 +55,10 @@ class ReportController(object):
 		self.request = request
 		self.UserId = request.user.Id
 		self.TenantId = request.user.TenantId
+	
+	def getDateFmt(self,value):
+		from ..library.filters import todatetime
+		return todatetime(value)
 		
 	@action(renderer='/reports/index.jinja2')
 	def index(self):
@@ -37,6 +67,57 @@ class ReportController(object):
 		purchaseTotals = service.GetPurchaseTotals(self.TenantId)
 		totals = service.GetTotals(self.TenantId)
 		return dict(status=True,invoice=invoiceTotals,purchase=purchaseTotals,totals=totals)
+	
+	@action(renderer='/reports/invoices.jinja2')
+	def invoices(self):
+		param = SearchParam()
+		param.FromDate = self.getDateFmt(self.request.params.get('fromDate',None))
+		param.ToDate = self.getDateFmt(self.request.params.get('toDate',None))
+		param.Status = self.request.params.get('status',None)
+		param.CustomerName = self.request.params.get('customerName',None)
+		param.QuickDates = self.request.params.get('search_quick_dates',None)
+		
+		service = ReportService()
+		invoiceTotals  = service.GetInvoiceTotals(self.TenantId, param)
+		
+		if self.request.is_xhr:
+			self.request.override_renderer = '/reports/partialInvoices.jinja2'
+		
+		return dict(invoice=invoiceTotals)
+	
+	@action(renderer='/reports/purchases.jinja2')
+	def purchases(self):
+		param = SearchParam()
+		param.FromDate = self.getDateFmt(self.request.params.get('fromDate',None))
+		param.ToDate = self.getDateFmt(self.request.params.get('toDate',None))
+		param.Status = self.request.params.get('status',None)
+		param.SupplierId = self.request.params.get('supplierId',None)
+		param.QuickDates = self.request.params.get('search_quick_dates',None)
+		
+		service = ReportService()
+		purchaseTotals  = service.GetPurchaseTotals(self.TenantId, param)
+		
+		lstSuppliers = None
+		if self.request.is_xhr:
+			self.request.override_renderer = '/reports/partialPurchases.jinja2'
+		else:
+			lstSuppliers = self.GetSuppliers()
+		return dict(purchase=purchaseTotals,suppliers=lstSuppliers)
+	
+	def products(self):
+		return HTTPFound(location='/reports/index')
+
+	def customers(self):
+		return HTTPFound(location='/reports/index')
+	
+	def suppliers(self):
+		return HTTPFound(location='/reports/index')
+	
+	def GetSuppliers(self):
+		lstSuppliers = SupplierService().GetSuppliers(self.TenantId)
+		if lstSuppliers:
+			lstSuppliers = [[str(x.Id), x.Name] for x in lstSuppliers]
+		return lstSuppliers
 
 	@action(renderer='json')
 	def getreturnproducts(self):

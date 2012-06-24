@@ -2,7 +2,7 @@ import json
 from datetime import datetime, date
 
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc, func, cast, Date
+from sqlalchemy import desc, func, cast, Date, or_
 
 from ..models import DBSession
 from ..models.Product import Product
@@ -26,15 +26,15 @@ class ReportService(object):
 		Reporting service class
 	"""
 
-	def GetInvoiceTotals(self, tenantId):
+	def GetInvoiceTotals(self, tenantId, param=None):
 		"""
 			Calculates invoice totals, amounts, due, etc.,
 		"""
 		if tenantId:
-			osq = DBSession.query(LineItem.OrderId, func.sum(LineItem.Quantity * LineItem.SellPrice).label('OrderAmount'))
+			osq = DBSession.query(LineItem.OrderId, func.ROUND(func.sum(LineItem.Quantity * LineItem.SellPrice),2).label('OrderAmount'))
 			osq = osq.join(Order, Order.Id == LineItem.OrderId).group_by(LineItem.OrderId).subquery()
 	
-			psq = DBSession.query(OrderPayment.OrderId, func.sum(OrderPayment.PaidAmount).label('PaidAmount'))
+			psq = DBSession.query(OrderPayment.OrderId, func.ROUND(func.sum(OrderPayment.PaidAmount),2).label('PaidAmount'))
 			psq = psq.join(Order, Order.Id == OrderPayment.OrderId).group_by(OrderPayment.OrderId).subquery()
 	
 			query = DBSession.query(func.count(Order.Id).label('Count'), \
@@ -43,6 +43,9 @@ class ReportService(object):
 			query = query.outerjoin(osq, osq.c.OrderId == Order.Id).outerjoin(psq, psq.c.OrderId == Order.Id)
 			
 			query = query.filter(Order.TenantId == tenantId, Order.Status == True)
+			
+			if param:
+				query = self.applySearchParam(query,osq,psq,param)
 			
 			totals = query.first()
 			
@@ -54,7 +57,39 @@ class ReportService(object):
 			return totals
 		return None
 	
-	def GetPurchaseTotals(self, tenantId):
+	def applySearchParam(self, query, osq, psq, searchParam):
+		if searchParam.CustomerId:
+			query = query.filter(Order.CustomerId == searchParam.CustomerId)
+		if searchParam.CustomerName:
+			query = query.filter(CustomerContactDetails.FirstName.like('%%%s' % searchParam.CustomerName))
+		if searchParam.IpAddress:
+			query = query.filter(Order.IpAddress == searchParam.IpAddress)
+
+		if searchParam.FromDate and not searchParam.ToDate:
+			query = query.filter(cast(Order.OrderDate, Date) >= searchParam.FromDate)
+		if not searchParam.FromDate and searchParam.ToDate:
+			query = query.filter(cast(Order.OrderDate, Date) <= searchParam.ToDate)
+		if searchParam.FromDate and searchParam.ToDate:
+			query = query.filter(cast(Order.OrderDate, Date) >= searchParam.FromDate, \
+									cast(Order.OrderDate, Date) <= searchParam.ToDate)
+
+		if searchParam.MinAmount and not searchParam.MaxAmount:
+			query = query.filter(Order.OrderAmount >= searchParam.MinAmount)
+		if not searchParam.MinAmount and searchParam.MaxAmount:
+			query = query.filter(Order.OrderAmount <= searchParam.MaxAmount)
+		if searchParam.MinAmount and searchParam.MaxAmount:
+			query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
+									Order.OrderAmount <= searchParam.MaxAmount)			
+			
+		if searchParam.Status == 'opened':
+			query = query.filter(or_(osq.c.OrderAmount > psq.c.PaidAmount, osq.c.OrderAmount==0, osq.c.OrderAmount == None))
+		elif searchParam.Status == 'closed':
+			query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount, osq.c.OrderAmount!=0)
+		elif searchParam.Status == 'overdue':
+			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate < func.now())
+		return query
+	
+	def GetPurchaseTotals(self, tenantId, param=None):
 		"""
 			Calculates invoice totals, amounts, due, etc.,
 		"""
@@ -73,6 +108,9 @@ class ReportService(object):
 			
 			query = query.filter(Purchase.TenantId == tenantId, Purchase.Status == True)
 			
+			if param:
+				query = self.applyPurchaseSearchParam(query,a,b,param)
+			
 			totals = query.first()
 			
 			if totals:
@@ -82,6 +120,41 @@ class ReportService(object):
 			
 			return totals
 		return None
+	
+	def applyPurchaseSearchParam(self,query,a,b,param):
+		if param.PurchaseNo:
+			query = query.filter(Purchase.PurchaseNo == param.PurchaseNo)
+			
+		if param.SupplierId and len(param.SupplierId) > 0:
+			query = query.filter(Purchase.SupplierId == param.SupplierId)
+		elif param.SupplierName:
+			query = query.join(Supplier).filter(Supplier.Name.like('%%%s%%' % param.SupplierName))
+			
+		if param.PurchaseAmount:
+			query = query.filter(Purchase.PurchaseAmount == param.PurchaseAmount)
+		if param.PurchaseDate:
+			query = query.filter(Purchase.PurchaseDate == param.PurchaseDate)
+		
+		if param.Credit:
+			query = query.filter(a.c.PurchaseAmount > b.c.PaidAmount)
+			
+		if param.FromDate and not param.ToDate:
+			query = query.filter(cast(Purchase.PurchaseDate, Date) >= param.FromDate)
+		if not param.FromDate and param.ToDate:
+			query = query.filter(cast(Purchase.PurchaseDate, Date) <= param.ToDate)
+		if param.FromDate and param.ToDate:
+			query = query.filter(cast(Purchase.PurchaseDate, Date) >= param.FromDate, \
+									cast(Purchase.PurchaseDate, Date) <= param.ToDate)
+			
+		if param.Status == 'opened':
+			query = query.filter(or_(a.c.PurchaseAmount > b.c.PaidAmount, a.c.PurchaseAmount==0, \
+									b.c.PaidAmount == None, a.c.PurchaseAmount == None))
+		elif param.Status == 'closed':
+			query = query.filter(a.c.PurchaseAmount <= b.c.PaidAmount, a.c.PurchaseAmount!=0)
+		elif param.Status == 'overdue':
+			query = query.filter(a.c.PurchaseAmount > b.c.PaidAmount, Purchase.DueDate < func.now())
+
+		return query
 	
 	def GetTotals(self,tenantId):
 		if not tenantId:

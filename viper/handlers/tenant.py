@@ -13,7 +13,6 @@ from ..services.TenantService import TenantService
 
 from formencode import Schema, validators
 from pyramid_simpleform import Form
-from pyramid_simpleform.renderers import FormRenderer
 
 from ..forms import TenantSchema, UserSchema, ContactSchema, TenantContactSchema, UserContactSchema
 from ..library.helpers import EncryptPassword
@@ -127,7 +126,7 @@ class TenantController(object):
 	def delete(self):
 		tenantId = self.request.params.get('tenantId', None)
 		if tenantId:
-			tenant = tenantService.DeleteTenant(tenantId)
+			tenantService.DeleteTenant(tenantId)
 		return HTTPFound(location='tenant/index')
 	pass
 

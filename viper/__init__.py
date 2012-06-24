@@ -63,6 +63,7 @@ def main(global_config, **settings):
     config.add_handler('logout', '/logout', 'viper.handlers.auth:Auth', action='logout')
 
     #tenant controller
+    config.include('viper.handlers.admin')
     config.include('viper.handlers.tenant')
     config.include('viper.handlers.user')
     config.include('viper.handlers.stock')

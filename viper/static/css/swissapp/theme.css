@@ -114,8 +114,10 @@ input:focus { border-color:#DA4722; background-color:#FFF0E1; }
 /* SETTINGS */
 #settings-menu                     { border-color:#DCDCDC; }
 #settings-menu li                  { border-color:#FFFFFF; background-color:white; }
-#settings-menu li.selected         { border-color:#DCDCDC; }
-#settings-menu li.selected a       { color:black; }
+#settings-menu li.selected,
+#settings-menu li.active         { border-color:#DCDCDC; }
+#settings-menu li.selected a,
+#settings-menu li.active a       { color:black; }
 
 #settings-wrapper .break   { border-top-color:#DCDCDC; }
 #settings-wrapper input,

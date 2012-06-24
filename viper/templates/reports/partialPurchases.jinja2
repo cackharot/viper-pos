@@ -1,0 +1,24 @@
+<table class="dashboard-summary dashboard-info">
+	<tbody>
+		<tr>
+			<td>Purchases</td>
+			<td class="right">{{ purchase.Count | d(0,true) }}</td>
+		</tr>
+		<tr>
+			<td>Total</td>
+			<td class="right">{{ purchase.TotalAmount | d(0.00,true) | currency}}</td>
+		</tr>
+		<tr class="amount">
+			<td>Due</td>
+			<td class="right">{{ (purchase.TotalAmount - purchase.PaidAmount) | d(0.00,true) | currency}}</td>
+		</tr>
+		<tr class="overdue">
+			<td>Overdue Purchases</td>
+			<td class="right">{{ purchase.Overdues.Count | d(0,true)}}</td>
+		</tr>
+		<tr class="overdue">
+			<td>Overdue</td>
+			<td class="right">{{ purchase.Overdues.OverdueAmount| d(0.00,true) | currency}}</td>
+		</tr>
+	</tbody>
+</table>

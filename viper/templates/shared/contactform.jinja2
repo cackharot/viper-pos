@@ -13,7 +13,7 @@
 	<li>
 		<span class="_75  ">
 			{{renderer.label('Email','Email',class='tip')}}
-			{{renderer.text('Email',size=255,class='error wrong' if renderer.is_error('Email'),title='Email')}}
+			{{renderer.text('Email',size=255,class='full error wrong' if renderer.is_error('Email') else 'full',title='Email')}}
 		</span>
 	</li>
 	<li>
@@ -45,7 +45,7 @@
 	<li>
 		<span class="_75">
 			{{renderer.label('Address','Address',class='tip')}}
-			{{renderer.textarea('Address',class='error wrong' if renderer.is_error('Address'),title='Address')}}
+			{{renderer.textarea('Address',class='full error wrong' if renderer.is_error('Address') else 'full',title='Address')}}
 		</span>
 	</li>
 </ul>

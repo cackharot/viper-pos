@@ -42,7 +42,7 @@
 			</a>    
 			<ul id="hd-top-menu" class="inline content">
 			  <li>Welcome, {{user.UserName}}! |</li>
-			  <li><a accesskey="s" href="/settings/global">Settings</a> |</li>
+			  <li><a accesskey="s" href="{{ 'settings' | route_url}}">Settings</a> |</li>
 			  <li><a href="/logout">Logout</a></li>
 			</ul>
 			<div id="hd-notifications" class="content"></div>
@@ -62,7 +62,7 @@
 				<li class="{{'active' if request.path.startswith('/customers')}}"><a href="{{'customers' | route_url}}">Customers</a></li>
 				<li class="{{'active' if request.path.startswith('/suppliers')}}"><a href="{{'suppliers' | route_url}}">Suppliers</a></li>
 				<li class="{{'active' if request.path.startswith('/reports')}}"><a href="{{'reports' | route_url}}">Reports</a></li>
-				<li class="{{'active' if request.path.startswith('/admin')}}"><a href="/admin">Admin</a></li>
+				<li class="{{'active' if request.path.startswith('/admin')}}"><a href="{{ 'admin' | route_url}}">Admin</a></li>
 			</ul>
 		</div>
 	</div>

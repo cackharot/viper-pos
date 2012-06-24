@@ -1,0 +1,63 @@
+{% extends "templates/reports/layout.jinja2" %}
+{% block rtopcontent %}
+<form class="searchform" id="searchForm" method="post">
+	<div id="searchFilters">
+		<div class="searchSection">
+			<ul>
+				<li>
+					<label for="fromDate">From: </label> 
+					<input type="text" class="datetime" name="fromDate">
+				</li>
+				<li>
+					<label for="toDate">To: </label> 
+					<input type="text" class="datetime" name="toDate">
+				</li>
+				<li>
+					<label for="search_quick_dates"> </label>
+					<select name="search_quick_dates" id="search_quick_dates">
+						<option value="" selected="selected"></option>
+						<option value="today">today</option>
+						<option value="yesterday">yesterday</option>
+						<option value="last_week">last week</option>
+						<option value="last_month">last month</option>
+						<option value="last_year">last year</option>
+						<option value="last_5_years">last 5 years</option>
+						<option value="this_week">this week</option>
+						<option value="this_month">this month</option>
+						<option value="this_year">this year</option>
+					</select>
+				</li>
+			</ul>
+		</div>
+		<hr class="searchSeparator"/>
+		<div class="searchSection">
+			<ul class="filters">
+				<li>Status: </li>
+				<li><input type="radio" name="status" value="all" checked="checked"/> <span>All</span> |</li>
+				<li><input type="radio" name="status" value="opened"/> <span>Opened</span> |</li>
+				<li><input type="radio" name="status" value="closed"/> <span>Closed</span> |</li>
+				<li><input type="radio" name="status" value="overdue"/> <span>Overdue</span> </li>
+			</ul>
+			<ul>
+				<li>
+					<label for="customerName">Customer</label> 
+					<input type="text" id="customerName" name="customerName" value=""/>
+				</li>
+			</ul>			
+		</div>
+	</div>
+	<span class="buttons">
+		<button type="submit" class="btn" id="search-form-submit">
+			<span><span>Search</span></span>
+		</button>
+		<button type="reset" class="btn" id="search-form-reset">
+			<span><span>Reset</span></span>
+		</button>
+	</span>
+</form>
+{% endblock %}
+{% block rcontent %}
+<div id="result">
+	{% include '/reports/partialInvoices.jinja2' with context %}
+</div>
+{% endblock %}

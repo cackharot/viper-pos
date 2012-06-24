@@ -428,7 +428,8 @@ div#invoice-container div#recurring-data input { width: auto;}
   padding:0.5em 1em;
 }
 
-#settings-menu li.selected { top:0; }
+#settings-menu li.selected,
+#settings-menu li.active { top:0; }
 
 #settings-wrapper { padding:1em 1em 0; overflow:hidden; }
 #settings-wrapper .break {
