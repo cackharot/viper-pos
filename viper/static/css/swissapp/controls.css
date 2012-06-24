@@ -15,7 +15,7 @@ input[type=checkbox].checkbox { position:relative; top:2px; }
 }
 
 #searchForm input,
-#searchForm select { border-width:1px; border-style:solid; line-height:1.2em; height:1.6em; }
+#searchForm select { vertical-align: middle;border-width:1px; border-style:solid; line-height:1.2em; height:1.6em; }
 
 #searchForm ul { float:left; }
 #searchForm li { float:left; margin-right:0.5em; }
@@ -92,8 +92,19 @@ input[type=checkbox].checkbox { position:relative; top:2px; }
 }
 .filters { 
   margin-right:1em;
-  margin-top:0.6em; 
+  margin-top:0.2em; 
 }
+
+.filters li span {
+	vertical-align: bottom;
+	color: #DA4722;
+	cursor:pointer;
+}
+
+.filters li span:hover {
+	text-decoration:underline;
+}
+
 .series {
   margin-top:0.3em;
 }

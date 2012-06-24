@@ -3,7 +3,7 @@
 	<a id="new-invoice-button" href="{{'addinvoice'|route_url}}"><span>New Invoice</span></a>
 {% endblock %} 
 {% block topcontent %}
-<form id="searchForm" action="{{'searchinvoices_xhr'|route_url}}">
+<form id="searchForm" class="searchform" action="{{'searchinvoices_xhr'|route_url}}">
 	<div id="searchFilters">
 		<div class="searchSection">
 			<ul>
@@ -14,23 +14,34 @@
 				<li>
 					<label for="fromDate">From: </label> 
 					<input type="text" name="fromDate" class="datetime" />
-					<img class="ui-datepicker-trigger" src="/static/images/icons/calendar.png" alt="..." title="...">
 				</li>
 				<li>
 					<label for="toDate">To: </label> 
 					<input type="text" name="toDate" class="datetime" />
-					<img class="ui-datepicker-trigger" src="/static/images/icons/calendar.png" alt="..." title="...">
+				</li>
+				<li>
+					<label for="search_quick_dates"> </label>
+					<select id="search_quick_dates" name="search_quick_dates">
+						<option selected="selected" value=""></option>
+						<option value="last_week">last week</option>
+						<option value="last_month">last month</option>
+						<option value="last_year">last year</option>
+						<option value="last_5_years">last 5 years</option>
+						<option value="this_week">this week</option>
+						<option value="this_month">this month</option>
+						<option value="this_year">this year</option>
+					</select>
 				</li>
 			</ul>
 		</div>
-		<hr class="searchSeparator">
+		<hr class="searchSeparator"/>
 		<div class="searchSection">
 			<ul class="filters">
 				<li>Status: </li>
-				<li><input type="radio" name="invoicestatus" value="all" checked="checked"/> All |</li>
-				<li><input type="radio" name="invoicestatus" value="opened"/> Opened |</li>
-				<li><input type="radio" name="invoicestatus" value="closed"/> Closed |</li>
-				<li><input type="radio" name="invoicestatus" value="overdue"/> Overdue </li>
+				<li><input type="radio" name="invoicestatus" value="all" checked="checked"/> <span>All</span> |</li>
+				<li><input type="radio" name="invoicestatus" value="opened"/> <span>Opened</span> |</li>
+				<li><input type="radio" name="invoicestatus" value="closed"/> <span>Closed</span> |</li>
+				<li><input type="radio" name="invoicestatus" value="overdue"/> <span>Overdue</span> </li>
 			</ul>
 			<ul>
 				<li>
@@ -41,7 +52,6 @@
 		</div>
 	</div>
 	<span class="buttons">
-		<input	type="hidden" name="pageSize" value="20" />
 		<button id="search-form-submit" class="btn" type="submit">
 			<span><span>Search</span></span>
 		</button>
@@ -130,7 +140,15 @@
 {% block footerscript %}
 <script>
 	$(function(){
-		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+		$('input.datetime').datepicker({ 
+			dateFormat:'dd-mm-yy',
+			showAnim: 'slide',
+			changeMonth: true,
+			changeYear: true,
+			showOn: "both",
+			buttonImage: "/static/images/icons/calendar.png",
+			buttonImageOnly: true 
+		})
 		
 		$('form#searchForm').submit(function(){
 			var postdata = $(this).serialize()

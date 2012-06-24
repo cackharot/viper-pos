@@ -43,6 +43,7 @@ class Product(AuditMixin, Base):
 		d = datetime.utcnow().date()
 		self.MfgDate = d.strftime('%d-%m-%Y')
 		self.ExpiryDate = d.replace(year=d.year + 1).strftime('%d-%m-%Y')
+		self.Status = True
 		pass
 
 	def toDict(self):

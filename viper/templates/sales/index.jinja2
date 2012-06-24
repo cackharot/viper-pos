@@ -57,6 +57,7 @@ table#tblTodayOrders tbody tr.active td{
 			</h2>
 			<div style="position: absolute;right: 38px;top: 15px;"> 
 		   		<button id="new-order" title="New Invoice" class="btn action primary create"><span><span>New (F3)</span></span></button>
+		   		<button id="save-order" title="Save this Invoice" class="btn action save"><span><span>Save</span></span></button>
 		   		<button id="cancel-order" title="Cancel this Invoice" class="btn action cancel"><span><span>Cancel (F4)</span></span></button>
 		   		<button id="checkout-order" title="Pay Invoice" class="btn action save"><span><span>Checkout (F5)</span></span></button>
 		   		<button id="print-order" title="Print Invoice" class="btn action print"><span><span>Print (F11)</span></span></button>
@@ -65,8 +66,8 @@ table#tblTodayOrders tbody tr.active td{
 		    <table class="noborder" style="float:left;margin-bottom:0em;margin-right:2em;">
 				<tbody>
 					<tr class="strong">
-						<td class="noborder" style="width:120px;">Invoice No#</td>
-						<td class="noborder" style="width:140px;"><span id="orderNumber">0000</span></td>
+						<td class="noborder" style="width:75px;">Invoice No#</td>
+						<td class="noborder" style="width:150px;"><span id="orderNumber">0000</span></td>
 					</tr>
 					<tr>
 						<td class="noborder">Date</td>
@@ -75,8 +76,14 @@ table#tblTodayOrders tbody tr.active td{
 					<tr>
 						<td class="noborder">Duedate</td>
 						<td class="noborder">
-							<input title="Enter due amount!" type="text" class="datetime" name="dueDate" id="dueDate" style="float: left; width: 90%;"/>
-							<img class="ui-datepicker-trigger" src="/static/images/icons/calendar.png" alt="..." title="Click to select due date!" style="margin: 0pt; position: relative; top: -2px; right: -5px;">
+							<ul style="margin: 0pt;">
+								<li>
+									<input title="Enter due amount!" type="text" class="datetime" name="dueDate" id="dueDate" style="width: 90%;"/>
+									<input type="hidden" id="hiddenDuedateSelect"/>
+									<img class="ui-datepicker-trigger" style="margin: 0pt; position: absolute; top: 6px; right: -10px;" 
+										title="Click to select due date!" alt="..." src="/static/images/icons/calendar.png"/>
+								</li>
+							</ul>
 						</td>
 					</tr>
 				</tbody>
@@ -84,13 +91,16 @@ table#tblTodayOrders tbody tr.active td{
 			<table class="noborder" style="float:left;margin-bottom:0em;margin-right:2em;">
 				<tbody>
 					<tr>
-						<td class="noborder" style="width:110px;">Search</td>
+						<td class="noborder" style="width:70px;">Search</td>
 						<td class="noborder" style="width:330px;">
-							<input type="text" class="typeahead" data-provide="typeahead" 
-									name="customerName" id="customerName"
-									placeholder="Enter customer name or mobile number..."  
-									value="" required></input>
-							<input type="hidden" id="customerid" name="customerid" value=""></input>
+							<ul style="margin:0em">
+								<li>
+									<input type="text" class="typeahead" data-provide="typeahead" 
+										name="customerName" id="customerName" title="Search customer..."
+										placeholder="Enter customer name or mobile number..." value="" />
+									<input type="hidden" id="customerid" name="customerid" value=""/>
+								</li>
+							</ul>
 					</tr>
 					<tr>
 						<td class="noborder"></td>
@@ -118,8 +128,8 @@ table#tblTodayOrders tbody tr.active td{
 			<h2>Line Items</h2>
 			<ul style="width:90%;position:relative;">
 				<li>
-					<span class="_50"><input type="text" title="Barcode" placeholder="Enter barcode" id="barcode" name="barcode"/></span>
-					<span class="_50"><input type="text" title="Item Name" placeholder="Enter item name" id="itemName" name="itemName"/></span>
+					<span class="_50"><input type="text" title="Barcode" maxlength="20" placeholder="Enter barcode" id="barcode" name="barcode"/></span>
+					<span class="_50"><input type="text" title="Item Name" maxlength="30" placeholder="Enter item name" id="itemName" name="itemName"/></span>
 					<span style="position:absolute;right:-75px;top:-5px">
 						<input type="hidden" name="quantity" value="1"/>
 						<button id="add-item" class="btn action primary create"><span><span>Add</span></span></button>
@@ -147,20 +157,20 @@ table#tblTodayOrders tbody tr.active td{
 				<tfoot>
 					<tr>
 						<td colspan="2" class="noborder top"></td>
-						<td colspan="2"><span>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></span></td>
+						<td><span>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></span></td>
 						<td class="right strong big"><span>Total: </span></td>
-						<td colspan="2" class="right strong totalAmount green">{{ '' | currency(true,false) }}<span id="totalAmount">0.00</span></td>
+						<td colspan="3" class="right strong totalAmount green">{{ '' | currency(true,false) }}<span id="totalAmount">0.00</span></td>
 					</tr>
 					<tr>
 						<td colspan="2" class="noborder top"></td>
-						<td colspan="2" class="strong"><span>Savings: {{ '' | currency(true,false) }}<span id="savingsAmount">0.00</span></span></td>
+						<td class="strong"><span>Savings: {{ '' | currency(true,false) }}<span id="savingsAmount">0.00</span></span></td>
 						<td class="right strong big"><span>Paid: </span></td>
-						<td colspan="2" class="right strong paidAmount">{{ '' | currency(true,false) }}<span id="paidAmount">0.00</span></td>
+						<td colspan="3" class="right strong paidAmount">{{ '' | currency(true,false) }}<span id="paidAmount">0.00</span></td>
 					</tr>
 					<tr>
-						<td class="noborder top" colspan="4"></td>
+						<td class="noborder top" colspan="3"></td>
 						<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
-						<td colspan="2" class="right strong big dueamount">{{ '' | currency(true,false) }}<span id="balanceAmount">0.00</span></td>
+						<td colspan="3" class="right strong big dueamount">{{ '' | currency(true,false) }}<span id="balanceAmount">0.00</span></td>
 					</tr>
 				</tfoot>
 			</table>
@@ -221,7 +231,7 @@ table#tblTodayOrders tbody tr.active td{
 		</li>
 		<li class="strong">
 			<span class="_50">Customer:</span>
-			<span class="_50"><%=item.get('customername')%></span>
+			<span class="_50"><%=item.get('customername').toUpperCase()%></span>
 		</li>
 		<li>
 			<span class="_50">Payment Type: </span>
@@ -287,7 +297,10 @@ table#tblTodayOrders tbody tr.active td{
 <script src="{{request.static_url('viper:static/js/swizapp/salesapp.js')}}"></script>
 <script>
 	$(function(){
-		$('input.datetime').datepicker({dateFormat:'dd-mm-yy'})
+		$('img.ui-datepicker-trigger').click(function(){
+			$('#hiddenDuedateSelect').datepicker('show')
+		})
+	
 		$('#customer-data input[type=text], #customer-data textarea').SwizappFormTips()
 	
 		$('.inline-form input, #barcode, #itemName').live('focus',function(){

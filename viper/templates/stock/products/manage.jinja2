@@ -8,6 +8,12 @@
 	        {{ 'Edit Product' if model.Id }}
 	</h2>
 	<form action="{{'saveproduct'|route_url}}" method="post">
+		{% if errors %}
+			<div class="alert error">
+				{{ errors }}
+			</div>
+			<div class="clear"></div>
+		{% endif %}
 		<div id="customer-data" class="global-data block">
 			{% import 'shared/productform.jinja2' as productForm with context %}
 			{{ productForm.render(renderer) }}

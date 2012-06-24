@@ -126,8 +126,10 @@ class SupplierController(object):
 
 	@action()
 	def delete(self):
-		sid = self.request.matchdict.get('sid', None)
-		val = supplierService.DeleteSupplier(sid, self.TenantId)
+		ids = self.request.matchdict.get('sid', None)
+		if ids:
+			supplierids = ids.split(',')
+			supplierService.DeleteSupplier(supplierids, self.TenantId)
 		return HTTPFound(location='/suppliers/index')
 	pass
 

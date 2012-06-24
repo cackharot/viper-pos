@@ -1,12 +1,12 @@
 from datetime import datetime
-
+import uuid
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc, func, cast, Date, distinct
+from sqlalchemy import desc, cast, Date, func, or_
 #from sqlalchemy.sql.operators.Operators import in_
 
 from ..models import DBSession
 from ..models.Product import Product
-from ..models.Order import Order
+#from ..models.Order import Order
 from ..models.LineItem import LineItem
 from ..models.Supplier import Supplier
 
@@ -102,6 +102,17 @@ class StockService(object):
 				entity.MfgDate = datetime.strptime(entity.MfgDate, '%d-%m-%Y')
 			if entity.ExpiryDate and isinstance(entity.ExpiryDate, unicode):
 				entity.ExpiryDate = datetime.strptime(entity.ExpiryDate, '%d-%m-%Y')
+			if entity.CategoryId !='' and isinstance(entity.CategoryId,unicode):
+				entity.CategoryId = uuid.UUID(entity.CategoryId)
+			if entity.TaxCategoryId != '' and isinstance(entity.TaxCategoryId,unicode):
+				entity.TaxCategoryId = uuid.UUID(entity.TaxCategoryId)
+			else:
+				entity.TaxCategoryId = None	
+			if entity.SupplierId != '' and isinstance(entity.SupplierId,unicode):
+				entity.SupplierId = uuid.UUID(entity.SupplierId)
+			else:
+				entity.SupplierId = None								
+				
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
 			DBSession.add(entity)
@@ -116,6 +127,17 @@ class StockService(object):
 				entity.MfgDate = datetime.strptime(entity.MfgDate, '%d-%m-%Y')
 			if entity.ExpiryDate and isinstance(entity.ExpiryDate, unicode):
 				entity.ExpiryDate = datetime.strptime(entity.ExpiryDate, '%d-%m-%Y')
+			if entity.CategoryId !='' and isinstance(entity.CategoryId,unicode):
+				entity.CategoryId = uuid.UUID(entity.CategoryId)
+			if entity.TaxCategoryId != '' and isinstance(entity.TaxCategoryId,unicode):
+				entity.TaxCategoryId = uuid.UUID(entity.TaxCategoryId)
+			else:
+				entity.TaxCategoryId = None
+			if entity.SupplierId != '' and isinstance(entity.SupplierId,unicode):
+				entity.SupplierId = uuid.UUID(entity.SupplierId)
+			else:
+				entity.SupplierId = None
+					
 			entity.UpdatedOn = datetime.utcnow()
 			if not entity in DBSession:
 				DBSession.add(entity)
@@ -124,11 +146,14 @@ class StockService(object):
 			return True
 		return False
 
-	def DeleteProduct(self, productId, tenantId):
-		if productId and tenantId:
-			OrderCacheService.RemoveProduct(productId)
-			return DBSession.query(Product).filter(Product.Id == productId, \
-					Product.TenantId == tenantId).delete()
+	def DeleteProduct(self, productIds, tenantId):
+		if productIds and tenantId:
+			entities = DBSession.query(Product).filter(Product.Id.in_(productIds), \
+												Product.TenantId == tenantId).all()					
+			if entities:
+				for entity in entities:
+					OrderCacheService.RemoveProduct(entity.Id)
+					DBSession.delete(entity)
 		return False
 
 	def GetPurchase(self, purchaseId, tenantId):
@@ -178,10 +203,13 @@ class StockService(object):
 			return True
 		return False
 
-	def DeletePurchase(self, purchaseId, tenantId):
-		if purchaseId and tenantId:
-			return DBSession.query(Purchase).filter(Purchase.Id == purchaseId, \
-					Purchase.TenantId == tenantId).delete()
+	def DeletePurchase(self, purchaseids, tenantId):
+		if purchaseids and tenantId:
+			entities = DBSession.query(Purchase).filter(Purchase.Id.in_(purchaseids), \
+														Purchase.TenantId == tenantId).all()
+			if entities:
+				for entity in entities:
+					DBSession.delete(entity)
 		return False
 
 	def SearchPurchases(self, param):
@@ -189,10 +217,10 @@ class StockService(object):
 			return None
 
 		a = DBSession.query(PurchaseLineItem.PurchaseId, func.count(PurchaseLineItem.PurchaseId).label('ItemCount'),\
-						func.sum(PurchaseLineItem.BuyPrice * PurchaseLineItem.Quantity).label('PurchaseAmount'))
+						func.ROUND(func.sum(PurchaseLineItem.BuyPrice * PurchaseLineItem.Quantity),2).label('PurchaseAmount'))
 		a = a.join(Purchase,Purchase.Id==PurchaseLineItem.PurchaseId).group_by(PurchaseLineItem.PurchaseId).subquery()
 		
-		b = DBSession.query(PurchasePayment.PurchaseId, func.sum(PurchasePayment.PaidAmount).label('PaidAmount'))
+		b = DBSession.query(PurchasePayment.PurchaseId, func.ROUND(func.sum(PurchasePayment.PaidAmount),2).label('PaidAmount'))
 		b = b.join(Purchase,Purchase.Id==PurchasePayment.PurchaseId).group_by(PurchasePayment.PurchaseId).subquery()
 
 		query = DBSession.query(Purchase.Id, Purchase.PurchaseNo, Purchase.PurchaseDate, \
@@ -204,7 +232,7 @@ class StockService(object):
 		query = query.join(Supplier).outerjoin(a,a.c.PurchaseId==Purchase.Id).outerjoin(b,b.c.PurchaseId==Purchase.Id).group_by(Purchase.Id)
 
 		query = self.formQueryFromParam(query, a, b, param)
-		query = query.order_by(desc(Purchase.PurchaseDate))
+		query = query.order_by(desc(Purchase.PurchaseDate),a.c.PurchaseAmount)
 
 		lstItems = query.offset(param.PageNo).limit(param.PageSize).all()
 		
@@ -225,18 +253,35 @@ class StockService(object):
 	def formQueryFromParam(self,query,a,b,param):
 		if param.PurchaseNo:
 			query = query.filter(Purchase.PurchaseNo == param.PurchaseNo)
-		elif param.SupplierId and len(param.SupplierId) > 0:
+			
+		if param.SupplierId and len(param.SupplierId) > 0:
 			query = query.filter(Purchase.SupplierId == param.SupplierId)
 		elif param.SupplierName:
 			query = query.join(Supplier).filter(Supplier.Name.like('%%%s%%' % param.SupplierName))
-		elif param.PurchaseAmount:
+			
+		if param.PurchaseAmount:
 			query = query.filter(Purchase.PurchaseAmount == param.PurchaseAmount)
-		elif param.PurchaseDate:
+		if param.PurchaseDate:
 			query = query.filter(Purchase.PurchaseDate == param.PurchaseDate)
-		elif param.Credit:
-			#smt = query.subquery()
-			#query = DBSession.query(smt).filter(a.c.PurchaseAmount > b.c.PaidAmount)
+		
+		if param.Credit:
 			query = query.filter(a.c.PurchaseAmount > b.c.PaidAmount)
+			
+		if param.FromPurchaseDate and not param.ToPurchaseDate:
+			query = query.filter(cast(Purchase.PurchaseDate, Date) >= param.FromPurchaseDate)
+		if not param.FromPurchaseDate and param.ToPurchaseDate:
+			query = query.filter(cast(Purchase.PurchaseDate, Date) <= param.ToPurchaseDate)
+		if param.FromPurchaseDate and param.ToPurchaseDate:
+			query = query.filter(cast(Purchase.PurchaseDate, Date) >= param.FromPurchaseDate, \
+									cast(Purchase.PurchaseDate, Date) <= param.ToPurchaseDate)
+			
+		if param.PurchaseStatus == 'opened':
+			query = query.filter(or_(a.c.PurchaseAmount > b.c.PaidAmount, a.c.PurchaseAmount==0, \
+									b.c.PaidAmount == None, a.c.PurchaseAmount == None))
+		elif param.PurchaseStatus == 'closed':
+			query = query.filter(a.c.PurchaseAmount <= b.c.PaidAmount, a.c.PurchaseAmount!=0)
+		elif param.PurchaseStatus == 'overdue':
+			query = query.filter(a.c.PurchaseAmount > b.c.PaidAmount, Purchase.DueDate < func.now())
 
 		query = query.filter(Purchase.TenantId == param.TenantId, Purchase.Status == True)
 		return query

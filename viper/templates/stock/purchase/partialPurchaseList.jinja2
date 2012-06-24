@@ -45,17 +45,17 @@
 		{% set dueAmount = (item.PurchaseAmount - item.PaidAmount) %}
 		<tr class="{{ loop.cycle('odd', 'even') }}" data-purchaseno="{{item.PurchaseNo}}" data-id="{{item.Id}}">
 		    <td class="check">
-                      <input type="checkbox" name="ids" value="{{item.Id}}">
+                      <input type="checkbox" rel="item" name="ids" value="{{item.Id}}">
             </td>
 			<td>{{item.PurchaseNo}}</td>
 			<td>{{item.SupplierName}}</td>
 			<td>{{item.ItemCount | d(0,true)}}</td>
-			<td>{{item.PurchaseDate | datetimeformat('%d-%m-%Y')}}</td>
-			<td>{{item.DueDate | datetimeformat('%d-%m-%Y')}}</td>
+			<td>{{item.PurchaseDate | datetimeformat('%d %b, %Y') }}</td>
+			<td>{{item.DueDate | datetimeformat('%d %b, %Y') }}</td>
 			<td>
 				{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 					<span class="status overdue"> Overdue </span>
-				{% elif (item.PurchaseAmount == 0 or dueAmount > 0) %}
+				{% elif (item.PurchaseAmount == 0 or dueAmount > 0.0) %}
 					<span class="status opened"> Opened </span>
 				{% else %}
 					<span class="status closed"> Closed </span>

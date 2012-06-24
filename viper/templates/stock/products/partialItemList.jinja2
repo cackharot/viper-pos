@@ -35,7 +35,7 @@
 			<tr data-id="{{item.Id}}" title="Created On {{item.CreatedOn | datetimeformat('%d-%m-%Y')}}" 
 				data-id="{{item.Id}}" class="{{ loop.cycle('odd', 'even') }}">
 			    <td class="check">
-                      <input type="checkbox" name="ids" value="{{item.Id}}">
+                      <input type="checkbox" rel="item" name="ids" value="{{item.Id}}">
             	</td>
 				<td data-col="Barcode" class="edit">{{item.Barcode}}</td>
 				<td data-col="Name" class="edit">{{item.Name}}</td>

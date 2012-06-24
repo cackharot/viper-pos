@@ -1,7 +1,8 @@
 from datetime import datetime
-prefix = 'R'
+#prefix = 'R'
+prefix = '&#96;'
 
-def datetimeformat(value, format='%d-%m-%Y %H:%M %p'):
+def datetimeformat(value, format='%d %b, %Y %H:%M %p'):
 	if value and type(value) is datetime:
 		return value.strftime(format)
 	return ''

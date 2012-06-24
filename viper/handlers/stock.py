@@ -162,14 +162,17 @@ class StockController(object):
 						errors = 'Unable to save product details!'
 		except Exception, e:
 			errors = str(e)
+			DBSession.rollback()
 			log.debug(e)
 
 		return dict(model=model, renderer=vFormRenderer(pForm), errors=errors)
 
 	@action()
 	def deleteProduct(self):
-		pid = self.request.matchdict.get('pid', None)
-		stockService.DeleteProduct(pid, self.TenantId)
+		ids = self.request.matchdict.get('pid', None)
+		if ids:
+			productids = ids.split(',')
+			stockService.DeleteProduct(productids, self.TenantId)
 		return HTTPFound(location=self.request.route_url('products'))
 
 	@action(renderer='json')
@@ -188,8 +191,10 @@ class StockController(object):
 
 	@action()
 	def deletePurchase(self):
-		pid = self.request.matchdict.get('pid', None)
-		stockService.DeletePurchase(pid, self.TenantId)
+		ids = self.request.matchdict.get('pid', None)
+		if ids:
+			purchaseids = ids.split(',')
+			stockService.DeletePurchase(purchaseids, self.TenantId)
 		return HTTPFound(location=self.request.route_url('purchases'))
 
 	@action(renderer='templates/stock/purchase/index.jinja2')
@@ -202,6 +207,10 @@ class StockController(object):
 	@action(renderer='templates/stock/purchase/partialPurchaseList.jinja2', xhr=True)
 	def purchases_xhr(self):
 		return self.getPurchaseList()
+	
+	def getDateFmt(self,value):
+		from ..library.filters import todatetime
+		return todatetime(value)
 
 	def getPurchaseList(self):
 		param = PurchaseSearchParam()
@@ -210,10 +219,13 @@ class StockController(object):
 		param.SupplierId = self.request.params.get('supplierId', None)
 		param.PageSize = self.request.params.get('pageSize', 20)
 		param.PageNo = self.request.params.get('pageNo', 0)
+		param.FromPurchaseDate = self.getDateFmt(self.request.params.get('fromDate',None))
+		param.ToPurchaseDate = self.getDateFmt(self.request.params.get('toDate',None))
+		param.PurchaseStatus = self.request.params.get('purchasestatus',None)
 
 		bdate = self.request.params.get('billDate', None)
 		if bdate and len(bdate) > 0:
-			param.PurchaseDate = datetime.strptime(bdate.strip(), '%d-%m-%Y')
+			param.PurchaseDate = self.getDateFmt(bdate.strip())
 		
 		lstPurchases, stat = stockService.SearchPurchases(param)
 		totalPurchases = stat.ItemsCount
@@ -317,6 +329,7 @@ class StockController(object):
 					return dict(status=False, message=pForm.all_errors())
 			except Exception, e:
 				log.debug(e)
+				DBSession.rollback()
 				return dict(status=False, message=e.message)
 		return dict(status=False, message="Invalid PurchaseId or SupplierId!")
 
@@ -371,6 +384,7 @@ class StockController(object):
 		except Exception, e:
 			errors = str(e)
 			log.debug(e)
+			DBSession.rollback()
 
 		return dict(model=model, suppliers=lstSuppliers, renderer=vFormRenderer(pForm), purchaseRenderer=vFormRenderer(form), errors=errors)
 

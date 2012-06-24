@@ -91,6 +91,7 @@ class PurchaseSearchParam(object):
 		self.PurchaseId = None
 		self.PurchaseNo = None
 		self.LoadStats = True
+		self.PurchaseStatus = None
 		self.SupplierId = None
 		self.SupplierName = None
 		self.PurchaseDate = None

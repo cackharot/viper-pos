@@ -97,10 +97,13 @@ class CustomerService(object):
 			return True
 		return False
 
-	def DeleteCustomer(self, id, tenantId):
-		if id and tenantId:
-			CustomerCacheService.Remove(id)
-			return DBSession.query(Customer).filter(Customer.Id == id, \
-					Customer.TenantId == tenantId).delete()
+	def DeleteCustomer(self, ids, tenantId):
+		if ids and tenantId:
+			entities = DBSession.query(Customer).filter(Customer.Id.in_(ids), \
+													Customer.TenantId == tenantId).all()
+			if entities:
+				for entity in entities:
+					CustomerCacheService.Remove(entity.Id)
+					DBSession.delete(entity)
 		return False
 	pass

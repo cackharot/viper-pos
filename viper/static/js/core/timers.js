@@ -108,7 +108,6 @@ jQuery.extend({
 			var timers = jQuery.data(element, this.dataKey), ret;
 			
 			if ( timers ) {
-				
 				if (!label) {
 					for ( label in timers )
 						this.remove(element, label, fn);

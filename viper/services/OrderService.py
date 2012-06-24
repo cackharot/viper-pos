@@ -4,7 +4,7 @@ import random
 from datetime import datetime, date
 
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc, func, cast, Date
+from sqlalchemy import desc, func, cast, Date, or_
 
 from ..models import DBSession
 from ..models.Product import Product
@@ -82,7 +82,8 @@ class OrderService(object):
 					o.OrderAmount = order["orderamount"]
 					o.PaidAmount = order["paidamount"]
 					o.IpAddress = order['ipaddress']
-					o.ShipDate = o.OrderDate
+					if order['duedate'] and len(order['duedate']) > 0:
+						o.DueDate = datetime.strptime(order['duedate'],'%Y-%m-%d')
 					o.UpdatedBy = userId
 					o.UpdatedOn = datetime.utcnow()
 
@@ -136,12 +137,14 @@ class OrderService(object):
 				DBSession.add(item)
 		pass
 
-	def DeleteOrder(self, tenantId, orderid):
+	def DeleteOrder(self, tenantId, orderids):
 		"""
 			Deletes the order details from db
 		"""
-		if tenantId and orderid:
-			DBSession.query(Order).filter(Order.Id == orderid, Order.TenantId == tenantId).delete()
+		if tenantId and orderids:
+			orders = DBSession.query(Order).filter(Order.Id.in_(orderids), Order.TenantId == tenantId).all()
+			for o in orders:
+				DBSession.delete(o)
 		pass
 
 	def UpdateOrderPayment(self, orderid, paymentid, details, userId):
@@ -196,11 +199,11 @@ class OrderService(object):
 			return None
 
 		osq = DBSession.query(LineItem.OrderId, func.count(LineItem.OrderId).label('ItemCount'), \
-							func.sum(LineItem.Quantity * LineItem.SellPrice).label('OrderAmount'))
+							func.ROUND(func.sum(LineItem.Quantity * LineItem.SellPrice),2).label('OrderAmount'))
 		osq = osq.join(Order, Order.Id == LineItem.OrderId).group_by(LineItem.OrderId).subquery()
 		
 
-		psq = DBSession.query(OrderPayment.OrderId, func.sum(OrderPayment.PaidAmount).label('PaidAmount'))
+		psq = DBSession.query(OrderPayment.OrderId, func.ROUND(func.sum(OrderPayment.PaidAmount),2).label('PaidAmount'))
 		psq = psq.join(Order, Order.Id == OrderPayment.OrderId).group_by(OrderPayment.OrderId).subquery()
 		
 		query = DBSession.query(Order.Id, Order.OrderNo, Order.OrderDate, Order.CustomerId, Order.TenantId, Order.CreatedBy, \
@@ -241,9 +244,9 @@ class OrderService(object):
 		return orders, tquery.first()
 	
 	def formQueryFromParam(self,query,osq,psq, searchParam):
-		if searchParam.Credit or searchParam.InvoiceStatus == 'opened':
+		if searchParam.Credit:
 			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount)
-
+			
 		if searchParam.UserId:
 			query = query.filter(Order.CreatedBy == searchParam.UserId, \
 									   Order.UpdatedBy == searchParam.UserId)
@@ -272,8 +275,11 @@ class OrderService(object):
 			query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
 									Order.OrderAmount <= searchParam.MaxAmount)
 			
-		if searchParam.InvoiceStatus == 'closed':
-			query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount)
+			
+		if searchParam.InvoiceStatus == 'opened':
+			query = query.filter(or_(osq.c.OrderAmount > psq.c.PaidAmount, osq.c.OrderAmount==0, osq.c.OrderAmount == None))
+		elif searchParam.InvoiceStatus == 'closed':
+			query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount, osq.c.OrderAmount!=0)
 		elif searchParam.InvoiceStatus == 'overdue':
 			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate < func.now())
 			

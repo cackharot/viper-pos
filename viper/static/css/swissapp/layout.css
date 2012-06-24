@@ -333,7 +333,7 @@ form.payments-form .buttons { margin:0; padding:0; }
 #product-data textarea
 { padding:0; }
 
-#customer-data ul li, #product-data ul li { margin-bottom:1em; height:1em;}
+#customer-data ul li, #product-data ul li { clear:left;margin-bottom:1em; height:1em;}
 
 #customer-data ul.error_list li, #product-data ul.error_list li  { clear:both; text-align:left;width:150%; }
 #customer-data ul.error_list, #product-data ul.error_list{ margin:0; }
@@ -363,7 +363,7 @@ form.payments-form .buttons { margin:0; padding:0; }
 #invoice-container table.listing tbody tr:hover td,
 #invoice-container table.listing tbody tr.hover td { background-color:inherit; }
 
-#invoice-container table.listing tfoot td { border-top-width:1px; padding: 0.7em; }
+#invoice-container table.listing tfoot td { border-top-width:1px; padding: 0.1em; }
 
 #invoice-container #template-data,
 #invoice-container #template-data .block { padding-bottom:0; }

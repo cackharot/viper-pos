@@ -74,7 +74,7 @@
 				{% set cnt = item.Contacts[0] %}
 				<tr data-id="{{item.Id}}" class="{{ loop.cycle('odd', 'even') }}">
 					<td class="check">
-						<input type="checkbox" name="ids" value="{{item.Id}}">
+						<input type="checkbox" rel="item" name="ids" value="{{item.Id}}">
 					</td>
 					<td>
 						{{item.CustomerNo}}

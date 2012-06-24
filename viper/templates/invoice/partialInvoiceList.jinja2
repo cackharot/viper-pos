@@ -45,7 +45,7 @@
 			{% set dueAmount = (item.OrderAmount - item.PaidAmount) %}
 			<tr class="{{ loop.cycle('odd', 'even') }}" data-invoiceno="{{item.OrderNo}}" data-id="{{item.Id}}">
 			    <td class="check">
-	                      <input type="checkbox" name="ids" value="{{item.Id}}">
+	                      <input type="checkbox" rel="item" name="ids" value="{{item.Id}}">
 	            </td>
 				<td>
 					{{item.OrderNo}}
@@ -57,7 +57,7 @@
 					{{item.OrderDate | datetimeformat}}
 				</td>
 				<td>
-					{{item.DueDate | datetimeformat | d('--',true)}}
+					{{item.DueDate | datetimeformat('%d %b, %Y') | d('--',true)}}
 				</td>
 				<!--<td>
 					{{item.ItemCount}}
@@ -65,7 +65,7 @@
 				<td>
 					{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 						<span class="status overdue"> Overdue </span>
-					{% elif (dueAmount > 0) %}
+					{% elif (dueAmount > 0.0) or item.OrderAmount == 0 %}
 						<span class="status opened"> Opened </span>
 					{% elif (item.ItemCount == 0) %}
 						<span class="status draft"> Draft </span>
@@ -76,7 +76,7 @@
 				<td class="right">
 					{{item.OrderAmount | currency }}
 				</td>
-				<td class="right {{ 'dueamount' if dueAmount > 0.0 }}"  title="Paid Amount: {{item.PaidAmount|currency(false)}}">
+				<td class="right {{ 'dueamount' if dueAmount > 0.00 }}"  title="Paid Amount: {{item.PaidAmount|currency(false)}}">
 					{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency}}
 				</td>
 				<td class="action payments">

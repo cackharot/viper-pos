@@ -56,6 +56,12 @@
 	</table>
 	<form id="frmPurchase" action="{{'savepurchase'|route_url}}" method="post">
 		<h3>Purchase Info</h3>
+		{% if errors %}
+			<div class="alert error">
+				{{ errors }}
+			</div>
+			<div class="clear"></div>
+		{% endif %}
 		<div id="customer-data" class="global-data block">
 			<ul>
 				<li>

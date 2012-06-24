@@ -15,6 +15,12 @@
 			Edit Customer
 		{% endif %}
 	</h2>
+	{% if errors %}
+		<div class="alert error">
+			{{ errors }}
+		</div>
+		<div class="clear"></div>
+	{% endif %}
 	<!--
 	{% if errors or renderer.errorlist() or cfr.errorlist() %} 
 		<div>

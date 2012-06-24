@@ -321,7 +321,7 @@
 						}
 					}
 				} else {
-					showMsg('info', '<strong>Hmmm!</strong> No orders made today.', false)
+					showMsg('warn', '<strong>Hmmm!</strong> No orders made today.', false)
 				}
 				$('#tblTodayOrders tbody').show()
 			}).fail(function () {
@@ -342,10 +342,12 @@
 			_.bindAll(this, "payOrder")
 			_.bindAll(this, "updateLineItem")
 			_.bindAll(this, "updateInvoiceCustomer")
+			_.bindAll(this, "updateDuedate")
 
 			this.vent.bind('editOrder', this.editOrder)
 			this.vent.bind('updateLineItem', this.updateLineItem)
 			this.vent.bind('updateDuedate', this.updateDuedate)
+			
 			this.itemNameTypeahead()
 			this.customerNameTypeahead()
 		},
@@ -355,7 +357,8 @@
 			var odate = $.format.date(ToLocalDate(item.get('orderdate')), 'dd-MM-yyyy hh:mm a')
 			
 			if(item.get('duedate')) {
-				var duedate = $.format.date(ToLocalDate(item.get('duedate')), 'dd-MM-yyyy')
+				var duedate = item.get('duedate')
+			 	duedate = $.format.date(ToLocalDate(duedate), 'dd-MM-yyyy')
 				$('#dueDate').val(duedate)
 			}else{
 				$('#dueDate').val('')
@@ -409,8 +412,17 @@
 			"click #checkout-order": "checkOutOrder",
 			"click a.del-lineitem": "deleteLineItem",
 			"click #refresh-orders": "refreshOrders",
+			"click #save-order": "saveOrder",
 			"keyup input[name=barcode]": "key_addlineitem",
 			"keyup input[name=itemName]": "key_addlineitem",
+		},
+		saveOrder: function() {
+			if(this.model && this.model.get('lineItems').length > 0) {
+				this.model.save()
+				showMsg('success', '#'+ this.model.get('orderno') + ' - Invoice saved successfully!')
+			}else{
+				showMsg('warn','No Items added to the invoice. Cannot save invoice!')
+			}
 		},
 		refreshOrders: function(){
 			this.resetOrder()
@@ -421,9 +433,8 @@
 				this.addLineItem()
 		},
 		updateDuedate: function(duedate){
-			console.log(duedate)
-			if(this.model && duedate){
-				this.model.set({'duedate': duedate})
+			if(this.model && duedate) {
+				this.model.set('duedate', duedate)
 			}
 		},
 		updateLineItem: function(data){
@@ -450,7 +461,7 @@
 					items.remove(item)
 					items.refreshUI()
 					this.vent.trigger('updateOrder', this.model.get('orderid'))
-					showMsg('info', '<span class="label label-info">' + item.get('name') + '</span> removed from the order!')
+					showMsg('warn', '<span class="label label-info">' + item.get('name') + '</span> removed from the order!')
 				}
 			}
 		},
@@ -567,14 +578,16 @@
 			return false
 		},
 		addLineItem: function () {
-			if (!this.model) {
+			var $txtBarcode = $('input[name=barcode]')
+			var barcode = $txtBarcode.val()
+			
+			if (!this.model && barcode && barcode.length > 0) {
 				this.newOrder(function () {
 					$('#add-item').trigger('click')
 				})
 				return
 			}
-			var $txtBarcode = $('input[name=barcode]')
-			var barcode = $txtBarcode.val()
+			
 			var tmp = $('input[name=quantity]').val()
 			var quantity = 1.0
 			if (tmp && tmp.length > 0) quantity = parseFloat(tmp)
@@ -856,10 +869,17 @@
 			var paidamount = Math.round(parseFloat($('input[name=paidamount]', $('#checkoutOrderModel')).val()))
 			var paymenttype = $('select[name=paymenttype] option:selected', $('#checkoutOrderModel')).val()
 			var canprint = $('input[name=printTicket]', $('#checkoutOrderModel')).is(':checked')
-			var orderamount = Math.round(this.model.getOrderAmount())
-			var prevpaidamt = Math.round(this.model.getPaidAmount())
+			var oa = this.model.getOrderAmount()
+			var pa = this.model.getPaidAmount()
+			var orderamount = Math.round(oa)
+			var prevpaidamt = Math.round(pa)
 
 			if ((paymenttype == 'Cash' && (prevpaidamt + paidamount >= orderamount)) || (paymenttype == 'Credit' && paidamount < orderamount) || (paymenttype == 'Card' && paidamount > 0.0) || (paymenttype == 'Cheque' && paidamount > 0.0)) {
+				
+				if(oa > orderamount) {
+					paidamount += (oa-orderamount);//round off the less than 0.5 paise
+				}
+				
 				this.model.set({
 					'paidamount': prevpaidamt + paidamount,
 					'isloaded': true,
@@ -901,7 +921,7 @@
 		},
 		showPrintableOrder: function (callback) {
 			if (!this.model || this.model.get('lineItems').length <= 0) {
-				showMsg('info', 'No active order! Cannot print!')
+				showMsg('warn', 'No active order! Cannot print!')
 				return;
 			}
 			var that = this
@@ -930,9 +950,23 @@
 	$('#dueDate').blur(function(){
 		var tmp = $(this).val()
 		if(tmp && tmp.length>1){
-			var duedate = new Date(tmp,'dd-mm-yyyy')
-			vent.trigger('updateDuedate',duedate)
+			try{
+				var duedate = $.datepicker.parseDate('dd-mm-yy', tmp);
+				vent.trigger('updateDuedate', duedate)
+			}catch(e){
+				showMsg('error',e)
+			}
 		}		
+	})
+	
+	$('#hiddenDuedateSelect').datepicker({
+			dateFormat:'yy-mm-dd',
+			showAnim: 'slide',
+			changeMonth: true,
+			changeYear: true,
+			onSelect: function( selectedDate ) {
+				vent.trigger('updateDuedate', selectedDate)
+			}
 	})
 	
 	$('table#tblOrderLineItems tbody td.edit').live('click', function(){
@@ -1017,6 +1051,6 @@
 		if (isHandled) e.preventDefault()
 	}
 
-	//$(document).bind('keypress', listen)
+	$(document).bind('keypress', listen)
 	//$(document).bind('keyup', listen);
 })(jQuery);

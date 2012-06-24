@@ -117,6 +117,8 @@ class CustomerController(object):
 
     @action()
     def delete(self):
-        cid = self.request.matchdict.get('cid', None)
-        customerService.DeleteCustomer(cid, self.TenantId)
+        ids = self.request.matchdict.get('cid', None)
+        if ids:
+            customerids = ids.split(',')
+            customerService.DeleteCustomer(customerids, self.TenantId)
         return HTTPFound(location='/customers/index')

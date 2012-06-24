@@ -35,6 +35,73 @@ function showMsg(type, message, timeout) {
 	});
 }
 
+function do_batch(action)
+{
+  var n = $('.listing input:checkbox[rel=item]:checked')
+    .map(function(){ return $(this).val(); })
+    .get();
+  
+  if (n && n.length) {
+    switch(action) {
+    	case 'delete':
+    		if(window.swizapp.urls.delete){
+    			window.location.href = window.swizapp.urls.delete + n;
+    		}
+    		break;
+    	case 'print':
+    		break;
+    	case 'preview':
+    		break;
+    	case 'email':
+    		break;
+    }
+  } else {
+    showMsg('warn','No selection. Nothing to do.');
+  }
+}
+
+(function($){
+  
+  // "select all" checkboxes should have rel="all"
+  // "select this row" checkboxes should have rel="item"
+  // Apply to table elements or it will throw an exception
+  $.fn.selecTable = function(){
+    var options = $.extend({
+      classname: 'selected'
+    }, arguments[0]||{});
+    
+    // Check/Unckeck all clicked: add/remove "selected" class to items
+    $(this).find('input:checkbox[rel=all]').click(function(e){
+      var t = $(this).closest('table');
+      var tr = t.find('input:checkbox[rel=item]').closest('tr');
+      t.find('input:checkbox[rel=item], input:checkbox[rel=all]').attr('checked', this.checked);
+      if (this.checked)
+        tr.addClass(options.classname);
+      else
+        tr.removeClass(options.classname);
+    });
+    
+    // Check/Uncheck item clicked: add/remove "selected" class to it.
+    $(this).find('input:checkbox[rel=item]').click(function(e){
+      var t = $(this).closest('table');
+      var tr = $(this).closest('tr');
+      var n = t.find('input:checkbox[rel=item]:not(:checked)').length;
+      t.find('input:checkbox[rel=all]').attr('checked', n == 0);
+      if (this.checked)
+        tr.addClass(options.classname);
+      else
+        tr.removeClass(options.classname);
+    });
+    
+    return $(this);
+  };
+  
+})(jQuery);
+
+var tb = $('table.listing');
+tb.selecTable();
+
+
 // Apply to TR elements only
 $.fn.rowClick = function(f){
     var options = $.extend({
@@ -131,3 +198,89 @@ $.fn.SwizappFormTips = function (options) {
 		}
 	});
 };
+
+Tools = {};
+
+$(function(){
+/*
+  Resets all the <selector> descendants. Optionally you can pass as second argument
+  a "not" selector to exclude items from the reset action.
+  */
+  Tools.resetFields = function(selector) {
+    var not = arguments[1] || false;
+    var items = $(selector).find(':text, :password, :checkbox, :image, :file');
+    if (not)
+      items = items.not(not);
+    items.val(null);
+  };
+  
+    /*
+  Opens a popup window with the specified URL in it.
+  As second argument you can set an object with the popup properties.
+  */
+  Tools.popup = function(url) {
+    var settings = $.extend({
+      name        : 'popup',
+      width       : 960,
+      height      : 700,
+      menubar     : 'no',
+      status      : 'no',
+      location    : 'no',
+      directories : 'no',
+      copyhistory : 'no',
+      scrollbars  : 'yes'
+    }, arguments[1] || {});
+    
+    var options = [];
+    for (key in settings)
+      if (key != 'name')
+        options.push(key + '=' + settings[key]);
+    var w = window.open(url, settings.name, options.join(','));
+    if (w && !w.closed)
+      w.focus();
+    return w;
+  };
+});
+
+  /**
+   * SelectableTag
+   * Carlos Escribano Rey <carlos@markhaus.com>
+   *
+   * $('my_selector_to_get_all_tag_nodes').SelectableTag({
+   *   output    : 'input_tag_id',
+   *   classname : 'selected_status_CSS_class'
+   * });
+   *
+   * <input type="hidden" id="tags" name="tags" value="" />
+   * ...
+   * <span class="tag">value1</span>
+   * <span class="tag">value2</span>
+   * ...
+   * $('span.tag').SelectableTag();
+   * ...
+   *
+   * If you click on tags with "value1" and "value2" values:
+   * <input type="hidden" id="tags" name="tags" value="value1,value2" />
+   * <span class="tag selected">value1</span>
+   * <span class="tag selected">value2</span>
+   */
+  $.fn.SelectableTag = function() {
+    var opt = $.extend({
+      output    : '#tags',
+      classname : 'selected'
+    }, (arguments[0]||{}));
+
+    $(this).click(function() {
+      var r = $(opt.output);
+      var t = $(this);
+      var v = r.attr('value');
+
+      if (t.toggleClass(opt.classname).hasClass(opt.classname)) {
+        v = v + ',' + t.html();
+      } else {
+        v = v.replace(t.html(), '');
+      }
+      v = v.replace(/^,,*|,,*$/, '').replace(',,', ',');
+      r.attr('value', v);
+    });
+  };

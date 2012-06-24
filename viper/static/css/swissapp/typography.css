@@ -3,8 +3,19 @@ html, textarea, input[type="text"], input[type="password"], select {
   font-family:'lucida grande','lucida sans unicode','lucida sans',lucida,arial,helvetica,sans-serif;
 }
 
+@font-face {
+    font-family: 'RupeeForadianRegular';
+    src: url('/static/font/rupee_foradian-webfont.eot');
+    src: url('/static/font/rupee_foradian-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/static/font/rupee_foradian-webfont.woff') format('woff'),
+         url('/static/font/rupee_foradian-webfont.ttf') format('truetype'),
+         url('/static/font/rupee_foradian-webfont.svg#RupeeForadianRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .currency{
-	font-family: "rupi foradian";
+	font-family: "RupeeForadianRegular", 'rupi foradian';
 }
 
 .bold{

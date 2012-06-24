@@ -22,6 +22,10 @@ h4 { color:#DA4722; font-weight:normal; margin-bottom:0.667em; }
 
 textarea, input[type="text"], input[type="password"], select { color:inherit; }
 
+.ui-datepicker select.ui-datepicker-month, .ui-datepicker select.ui-datepicker-year {
+    color:#333;
+}
+
 div.ajaxBar { background:transparent url(../../images/ajax-bar.gif) no-repeat top left; width:220px; height:19px; }
 
 /* header section */
@@ -43,12 +47,15 @@ div.ajaxBar { background:transparent url(../../images/ajax-bar.gif) no-repeat to
 #new-invoice-button:hover { background:transparent url(../../images/bg/navbar_dark2.gif) repeat-x bottom left; }
 
 /* notifications */
-#hd-notifications div.notification { border-color:#489E00; background-color:#8DC361; color:#FFFFFF; cursor:pointer; }
+div.alert{
+	border-radius: 6px 6px 6px 6px;
+    margin-bottom: 1em;
+    padding: 1em;
+}
+#hd-notifications div.notification, .alert { border-color:#489E00; background-color:#8DC361; color:#FFFFFF; cursor:pointer; }
 #hd-notifications div.warning, 
-#hd-notifications div.warn,
-.dirty      
-{ border-color:#d8b256; background-color:#FADC76; color:#9B7720; }
-#hd-notifications div.error        { border-color:#B12F17; background-color:#C4452D; color:#FFFFFF; }
+#hd-notifications div.warn, .warn, .alert-info, .dirty   { border-color:#d8b256; background-color:#FADC76; color:#9B7720; }
+#hd-notifications div.error, div.error, .alert-error        { border-color:#B12F17; background-color:#C4452D; color:#FFFFFF; }
 
 /* tables & listings */
 table.listing        { background-color:#FFFFFF; }
@@ -63,6 +70,8 @@ table.listing tbody tr:hover td,
 table.listing tbody tr.hover td { background-color:#FFF0E1; }
 
 table.listing tfoot th { background:transparent url('../../images/bg/thead.gif') repeat-x bottom left; }
+
+table.listing tbody tr.selected { background:lightyellow; }
 
 #searchForm .filters a.selected,
 #searchForm .filters a.selected:hover { color:#464648; }
@@ -124,7 +133,8 @@ input:focus { border-color:#DA4722; background-color:#FFF0E1; }
 /* ERRORS */
 .error_list { color:#c4452d; }
 .errorBox   { border-left:2px solid #b12f17; background:white; }
-#bd #bd-content form input.error { border-bottom-color:#c4452d; color:#c4452d; border-bottom-width:2px; }
+#bd #bd-content form input.error,
+#bd #bd-content form textarea.error { border-bottom-color:#c4452d; color:#c4452d; border-bottom-width:2px; }
 
 #global-errors ul.error_list { border:1px solid #c4452d; }
 

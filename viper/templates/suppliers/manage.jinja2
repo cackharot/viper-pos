@@ -11,6 +11,12 @@
 <div id="customer-container" class="content">
 	<h2>{% if model.Id == None %} Add Supplier {% else %} Edit
 		Supplier {% endif %}</h2>
+	{% if errors %}
+		<div class="alert error">
+			{{ errors }}
+		</div>
+		<div class="clear"></div>
+	{% endif %}	
 	<!--
      {% if errors or renderer.errorlist() or cfr.errorlist() %} 
          <div class="alert alert-error">

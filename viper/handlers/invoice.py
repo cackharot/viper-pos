@@ -63,8 +63,8 @@ class InvoiceController(object):
         searchParam.ToOrderDate = self.getDateFmt(self.request.params.get('toDate',None))
         searchParam.InvoiceStatus = self.request.params.get('invoicestatus',None)
         
-        searchParam.PageSize = self.request.params.get('pageSize',None)
-        searchParam.PageNo = self.request.params.get('pageNo',None)
+        searchParam.PageSize = self.request.params.get('pageSize',20)
+        searchParam.PageNo = self.request.params.get('pageNo',0)
 
         orderService = OrderService()
         invoices, stat  = orderService.SearchOrders(searchParam)
@@ -105,4 +105,9 @@ class InvoiceController(object):
 
     @action()
     def delete(self):
+        ids = self.request.matchdict['invoiceid']
+        if ids:
+            orderids = ids.split(',')
+            orderService = OrderService()
+            orderService.DeleteOrder(self.TenantId, orderids)
         return HTTPFound(location=self.request.route_url('invoices'))

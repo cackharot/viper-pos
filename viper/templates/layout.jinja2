@@ -90,6 +90,7 @@
     <script src="{{request.static_url('viper:static/js/typeahead.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/templateLoader.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/swizapp/common.js')}}"></script>
+    <script src="{{request.static_url('viper:static/js/swizapp/searchform.js')}}"></script>
     <script src="{{request.static_url('viper:static/js/core/timers.js')}}"></script>
     <script>
 		//<![CDATA[
@@ -100,8 +101,12 @@
 			var html = $('<div class="notification ' + data.type + '" style="display:none;">' + next + data.message + '</div>');
 			$('#hd-notifications').append(html);
 			$('html, body').animate({ scrollTop: 0 }, 'fast', function() {
-				html.oneTime(500, function(){
+				html.oneTime(500,'swizapp', function(){
 				  $(this).slideDown(500);
+				});
+				
+				html.oneTime(5000, function(){
+				  $(this).slideUp(500);
 				});
 			});
 		}).bind('NotificationRemoveEvent', function() {
