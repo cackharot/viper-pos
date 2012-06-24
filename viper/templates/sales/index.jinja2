@@ -74,7 +74,10 @@ table#tblTodayOrders tbody tr.active td{
 					</tr>
 					<tr>
 						<td class="noborder">Duedate</td>
-						<td class="noborder"><input title="Enter due amount!" type="text" class="datetime" name="dueDate" id="dueDate"/></td>
+						<td class="noborder">
+							<input title="Enter due amount!" type="text" class="datetime" name="dueDate" id="dueDate" style="float: left; width: 90%;"/>
+							<img class="ui-datepicker-trigger" src="/static/images/icons/calendar.png" alt="..." title="Click to select due date!" style="margin: 0pt; position: relative; top: -2px; right: -5px;">
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -146,18 +149,18 @@ table#tblTodayOrders tbody tr.active td{
 						<td colspan="2" class="noborder top"></td>
 						<td colspan="2"><span>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></span></td>
 						<td class="right strong big"><span>Total: </span></td>
-						<td colspan="2" class="right strong big green"><span id="totalAmount">{{ 0 | currency }}</span></td>
+						<td colspan="2" class="right strong totalAmount green">{{ '' | currency(true,false) }}<span id="totalAmount">0.00</span></td>
 					</tr>
 					<tr>
 						<td colspan="2" class="noborder top"></td>
-						<td colspan="2" class="strong"><span>Savings: <span id="savingsAmount">{{ 0 | currency }}</span></span></td>
+						<td colspan="2" class="strong"><span>Savings: {{ '' | currency(true,false) }}<span id="savingsAmount">0.00</span></span></td>
 						<td class="right strong big"><span>Paid: </span></td>
-						<td colspan="2" class="right strong big"><span id="paidAmount">0.0</span></td>
+						<td colspan="2" class="right strong paidAmount">{{ '' | currency(true,false) }}<span id="paidAmount">0.00</span></td>
 					</tr>
 					<tr>
 						<td class="noborder top" colspan="4"></td>
 						<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
-						<td colspan="2" class="right strong big dueamount"><span id="balanceAmount">{{ 0 | currency }}</span></td>
+						<td colspan="2" class="right strong big dueamount">{{ '' | currency(true,false) }}<span id="balanceAmount">0.00</span></td>
 					</tr>
 				</tfoot>
 			</table>
@@ -296,7 +299,14 @@ table#tblTodayOrders tbody tr.active td{
 	});
 </script>
 <style>
-	
+	.totalAmount{
+		font-size: 3em;
+    	line-height: 50px;
+	}
+	.paidAmount{
+		font-size: 2em;
+    	line-height: 50px;
+	}
 </style>	 
 {% endblock %}
 

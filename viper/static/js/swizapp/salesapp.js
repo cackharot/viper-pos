@@ -1,7 +1,7 @@
 /*
- *	Viper POS
+ *	Swizapp
  *	salesapp.js
- *	contains backbone based mvc app.
+ *	contains backbone based mvc app. for sales POS functionality
  */
 (function ($) {
 
@@ -18,34 +18,32 @@
 			subtotal: 0.0
 		},
 		initialize: function (model, options) {
-			this.bind("change:name", this.updateUI);
-			this.bind("change:quantity", this.updateUI);
-			this.bind("change:mrp", this.updateUI);		
-			this.bind("change:price", this.updateUI);
-			this.bind("change:barcode", this.updateUI);
+			this.bind("change:name", this.updateUI)
+			this.bind("change:quantity", this.updateUI)
+			this.bind("change:mrp", this.updateUI)
+			this.bind("change:price", this.updateUI)
+			this.bind("change:barcode", this.updateUI)
 		},
 		updateUI: function () {
-			var id = this.get('id');
-			var barcode = this.get('barcode');
-			var name = this.get('name');
-			var quantity = this.get('quantity');
-			var mrp = this.get('mrp');
-			var price = this.get('price');
-			var discount = this.get('discount');
-			var subtotal = (price * quantity);
+			var id = this.get('id')
+			var barcode = this.get('barcode')
+			var name = this.get('name')
+			var quantity = this.get('quantity')
+			var mrp = this.get('mrp')
+			var price = this.get('price')
+			var discount = this.get('discount')
+			var subtotal = (price * quantity)
 
-			this.set({
-				'subtotal': subtotal
-			})
+			this.set({'subtotal': subtotal})
 
-			var $tr = $('tr[data-id=' + id + ']', $('#tblOrderLineItems tbody'));
+			var $tr = $('tr[data-id=' + id + ']', $('#tblOrderLineItems tbody'))
 
 			if ($tr.length > 0) {
-				$('.n', $tr).text(name);
-				$('.p', $tr).text(price);
-				$('.d', $tr).text(discount);
-				$('.q', $tr).text(quantity);
-				$('.st', $tr).text(subtotal.toFixed(2));
+				$('.n', $tr).text(name)
+				$('.p', $tr).text(price)
+				$('.d', $tr).text(discount)
+				$('.q', $tr).text(quantity)
+				$('.st', $tr).text(subtotal.toFixed(2))
 			}
 		}
 	});
@@ -60,7 +58,7 @@
 		},
 		refreshUI: function (callback) {
 			var that = this
-			$('#tblOrderLineItems tbody').slideUp('normal')
+			//$('#tblOrderLineItems tbody').hide()
 			this.resetRecords()
 			var cnt = 1
 			this.each(function (item) {
@@ -70,7 +68,7 @@
 				that.addItemTpl(item)
 			});
 			this.updateTotal()
-			$('#tblOrderLineItems tbody').fadeIn('slow')
+			//$('#tblOrderLineItems tbody').show()
 		},
 		addItemTpl: function (item) {
 			var n = item.get('slno')
@@ -130,14 +128,12 @@
 			$('#totalItemsQuantity').text('0/0')
 		},
 		hideUI: function (callback) {
-			$('#tblOrderLineItems tbody').fadeOut('normal',function (e) {
-				if (callback) callback()
-			})
+			$('#tblOrderLineItems tbody').hide()
+			if (callback) callback()
 		},
 		showUI: function (callback) {
-			$('#tblOrderLineItems tbody').fadeIn('slow',function (e) {
-				if (callback) callback()
-			})
+			$('#tblOrderLineItems tbody').show()
+			if (callback) callback()
 		}
 	});
 
@@ -162,12 +158,14 @@
 			id: null,
 			orderno: 0,
 			orderdate: new Date(),
+			duedate: null,
 			customerid: null,
 			customername: '',
 			lineItems: new LineItemCollection,
 			payments: new OrderPaymentsCollection,
 			isprinted: false,
 			ispaid: false,
+			isdirty: false,
 		},
 		getOrderAmount: function () {
 			return this.get('lineItems').reduce(function (m, x) {
@@ -188,19 +186,12 @@
 		var searchitemurl = '/sales/searchitem';
 		return {
 			newOrder: function (callback) {
-				var order = {};
 				$.post(neworderurl, null, function (data) {
-					if (typeof (data) == "string") data = eval('(' + data + ')');
-					order = data;
 					if (callback) callback(data);
 				}, 'json');
-				return order;
 			},
 			searchItem: function (barcode, callback) {
-				$.post(searchitemurl, {
-					'barcode': barcode
-				}, function (data) {
-					if (typeof (data) == "string") data = eval('(' + data + ')');
+				$.post(searchitemurl, {'barcode': barcode }, function (data) {
 					if (callback) callback(data);
 				}, 'json');
 			}
@@ -217,6 +208,7 @@
 			this.model = window.TodayOrderList
 
 			_.bindAll(this, "updateorderitem")
+			_.bindAll(this, "loadTodayOrders")
 
 			this.model.bind('add', this.addorderitem)
 			this.model.bind('remove', this.removeorderitem)
@@ -227,7 +219,6 @@
 			this.loadTodayOrders()
 		},
 		events: {
-			"click #refresh-orders": "loadTodayOrders",
 			"click #tblTodayOrders tbody tr": "editOrder"
 		},
 		editOrder: function (e) {
@@ -295,7 +286,7 @@
 		},
 		loadTodayOrders: function () {
 			this.resetUI()
-			$('#tblTodayOrders tbody').slideUp()
+			$('#tblTodayOrders tbody').hide()
 			var model = this.model
 			model.reset()
 			$.ajax({
@@ -332,10 +323,10 @@
 				} else {
 					showMsg('info', '<strong>Hmmm!</strong> No orders made today.', false)
 				}
-				$('#tblTodayOrders tbody').fadeIn('slow')
+				$('#tblTodayOrders tbody').show()
 			}).fail(function () {
 				showMsg('warn', '<strong>Oops!</strong> Error in loading todays order details.', false)
-				$('#tblTodayOrders tbody').fadeIn('slow')
+				$('#tblTodayOrders tbody').show()
 			})
 		}
 	});
@@ -354,6 +345,7 @@
 
 			this.vent.bind('editOrder', this.editOrder)
 			this.vent.bind('updateLineItem', this.updateLineItem)
+			this.vent.bind('updateDuedate', this.updateDuedate)
 			this.itemNameTypeahead()
 			this.customerNameTypeahead()
 		},
@@ -371,7 +363,7 @@
 			
 			$('#orderDate').html(odate)
 			$('#orderNumber').html(item.get('orderno'))
-			$('#invoiceCustomerName').text(item.get('customername') || '')
+			$('#invoiceCustomerName').text(item.get('customername').toUpperCase() || '')
 			this.updateAmounts()
 		},
 		updateAmounts: function () {
@@ -390,6 +382,23 @@
 				$('#balanceAmount').text(0.0)
 			}
 		},
+		resetOrder: function(){
+			if(this.model) {
+				this.model.get('lineItems').reset()
+				this.model.unbind('change',this.render)
+				this.model = null
+			}
+			
+			$('#orderDate').html('')
+			$('#dueDate').val('')
+			$('#orderNumber').html('')
+			
+			$('#paidAmount').text(0.0)
+			$('#balanceAmount').text(0.0)
+			
+			$('#paymentType').text('')
+			$('#paymentType').attr('class','')
+		},
 		events: {
 			"click #add-item": "addLineItem",
 			"click #delete-item": "deleteLineItem",
@@ -399,19 +408,22 @@
 			"click #cancel-order": "cancelOrder",
 			"click #checkout-order": "checkOutOrder",
 			"click a.del-lineitem": "deleteLineItem",
-			"blur #dueDate": "updateDuedate",
+			"click #refresh-orders": "refreshOrders",
 			"keyup input[name=barcode]": "key_addlineitem",
 			"keyup input[name=itemName]": "key_addlineitem",
+		},
+		refreshOrders: function(){
+			this.resetOrder()
+			this.vent.trigger("loadTodayOrders")
 		},
 		key_addlineitem: function (e) {
 			if (e.keyCode == 13) 
 				this.addLineItem()
 		},
-		updateDuedate: function(){
-			var duedate = $('#dueDate').val()
+		updateDuedate: function(duedate){
 			console.log(duedate)
 			if(this.model && duedate){
-				//this.model.set({'duedate': new Date(duedate)})
+				this.model.set({'duedate': duedate})
 			}
 		},
 		updateLineItem: function(data){
@@ -664,12 +676,13 @@
 		},
 		newOrder: function (callback) {
 			if (this.model) {
+				this.model.unbind("change", this.render)
 				var items = this.model.get('lineItems')
 				items.resetRecords()
 			}
 
 			this.model = new Order
-			this.model.bind("change", this.render, this)
+			this.bindOrder()
 			this.model.get('lineItems').reset()
 			this.model.get('payments').reset()
 
@@ -685,9 +698,11 @@
 						'customername': data.CustomerName,
 						'orderno': data.OrderNo,
 						'orderdate': data.OrderDate,
+						'duedate': null,
 						'paidamount': data.PaidAmount,
 						'orderamount': data.OrderAmount,
 						'isNew': true,
+						'isdirty':false,
 					})
 					lstorders.add(currentOrder)
 					hideMsg()
@@ -697,6 +712,15 @@
 				}
 			});
 		},
+		bindOrder: function(){
+			/*this.model.bind("change:customerid", this.render, this)
+			this.model.bind("change:customername", this.render, this)
+			this.model.bind("change:orderamount", this.render, this)
+			this.model.bind("change:paidamount", this.render, this)
+			this.model.bind("change:balanceamount", this.render, this)
+			this.model.bind("change:isdirty", this.render, this)*/
+			this.model.bind("change", this.render, this)
+		},
 		editOrder: function (orderid) {
 			if (!orderid || (this.model && orderid == this.model.get('orderid'))) return
 
@@ -705,8 +729,10 @@
 			})
 
 			if (found) {
+				if(this.model) this.model.unbind("change", this.render)
 				this.model = found
-				this.model.bind("change", this.render, this)
+				this.bindOrder()
+				
 				if (!found.get('isloaded') === true) {
 					this.fetchAndEditOrder(orderid)
 				} else {
@@ -721,7 +747,7 @@
 		fetchAndEditOrder: function (orderid) {
 			var currentOrder = this.model
 			var items = this.model.get('lineItems')
-			items.hideUI()
+			//items.hideUI()
 			
 			$.post('/sales/getorder/' + orderid, null, function (data) {
 				if (data) {
@@ -807,14 +833,11 @@
 				return
 			}
 
-			//var orderamt = this.model.getOrderAmount()
 			var orderamt = this.model.get('orderamount')
 			var paidamt = this.model.getPaidAmount()
 			var balanceamt = paidamt > orderamt ? 0.0 : (orderamt - paidamt)
-			this.model.set({
-				//'orderamount': orderamt,
-				'balanceamount': balanceamt,
-			})
+			
+			this.model.set({'balanceamount': balanceamt})
 
 			var cmpl = _.template($('#tpl-chkoutorder').html())
 			var html = cmpl({
@@ -903,6 +926,14 @@
 	})
 
 	templateLoader.clearLocalStorage();
+	
+	$('#dueDate').blur(function(){
+		var tmp = $(this).val()
+		if(tmp && tmp.length>1){
+			var duedate = new Date(tmp,'dd-mm-yyyy')
+			vent.trigger('updateDuedate',duedate)
+		}		
+	})
 	
 	$('table#tblOrderLineItems tbody td.edit').live('click', function(){
 		var w = $(this).width()-10
