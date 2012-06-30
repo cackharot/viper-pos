@@ -37,25 +37,33 @@ class TenantService(object):
 		DBSession.query(Tenant).get(tenantId).delete()
 		return True
 
-	def CheckTenantNameExists(self, name):
+	def CheckTenantNameExists(self,tenantId, name):
 		if name:
-			t = DBSession.query(Tenant.Id).filter(Tenant.Name == name).count()
-			if t:
+			query = DBSession.query(Tenant.Id).filter(Tenant.Name == name)
+			if tenantId:
+				query = query.filter(Tenant.Id!=tenantId)
+			if query.count() > 0:
 				return True
 		return False
 
 	def ProvisionTenant(self, tenant):
 		DBSession.autoflush = False
-		if self.CheckTenantNameExists(tenant.Name):
+		if self.CheckTenantNameExists(None,tenant.Name):
 			raise Exception('Tenant Name already exists! Please use different name.')
 		DBSession.add(tenant)
 		DBSession.commit()
 		if tenant.AdminUser and not tenant.AdminUser.TenantId:
 			tenant.AdminUser.TenantId = tenant.Id
+		DBSession.flush()
 		return True
 
 	def SaveTenant(self, tenant):
-		DBSession.add(tenant)
-		pass
-	pass
-
+		if tenant and tenant.Id and len(tenant.Name) > 0:
+			DBSession.autoflush = False
+			if self.CheckTenantNameExists(tenant.Id,tenant.Name):
+				raise Exception('Tenant Name already exists! Please use different name.')
+			DBSession.add(tenant)
+			DBSession.flush()
+			return True
+		return False
+		

@@ -1,33 +1,31 @@
 {% extends "templates/admin/layout.jinja2" %}
 {% block atopcontent %}
+	
 {% endblock %} 
 {% block acontent %}
-
 {% if errors %} 
 	<div class="alert error">
 		{{ errors | safe }}
 	</div>
 	<div class="clear"></div>
 {% endif %}
+{% if success %} 
+	<div class="alert success">
+		{{ success | safe }}
+	</div>
+	<div class="clear"></div>
+{% endif %}
 {% import 'shared/tenantform.jinja2' as tenantForm with context %} 
 {% import 'shared/userform.jinja2' as userForm with context %} 
 {% import 'shared/contactform.jinja2' as contactForm with context %}
-<form action="manage" method="post">
+<form action="{{'admin'|route_url}}" enctype="multipart/form-data" method="post">
 	<fieldset class="left">
 		<h3>Company</h3>
 		{{ tenantForm.render(tfr) }}
 	</fieldset>
 	<fieldset>
-		<h3>Company Contact Details</h3>
+		<h3>Contact Details</h3>
 		{{ contactForm.render(cfr) }}
-	</fieldset>
-	<fieldset class="left">
-		<h3>Admin User Details</h3>
-		{{ userForm.render(ufr) }}
-	</fieldset>
-	<fieldset>
-		<h3>Admin User Contact Details</h3>
-		{{ contactForm.render(ucfr) }}
 	</fieldset>
 	<div class="clear text-right">
 		<button class="btn btn action primary save" type="submit">

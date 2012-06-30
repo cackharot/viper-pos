@@ -41,45 +41,34 @@ class AdminController(object):
     def index(self):
         tenant = None
         errors = None
+        success = None
         tenantForm = None
         contactForm = None
-        adminUserForm = None
-        userContactForm = None
         try:
             tenantService = TenantService()
             tenant = tenantService.GetTenantDetails(self.TenantId)
     
-            if len(tenant.AdminUser.Contacts) <= 0:
-                tenant.AdminUser.Contacts.append(UserContactDetails())
-    
             tenantForm = Form(self.request, schema=TenantSchema, obj=tenant)
-            adminUserForm = Form(self.request, schema=UserSchema, obj=tenant.AdminUser)
             contactForm = vForm(request=self.request, prefix='tenantcontact-', schema=ContactSchema, obj=tenant.Contacts[0])
-            userContactForm = vForm(request=self.request, prefix='usercontact-', schema=ContactSchema, obj=tenant.AdminUser.Contacts[0])
     
             valid = tenantForm.validate()
-            valid = adminUserForm.validate() and valid
             valid = contactForm.validate() and valid
-            valid = userContactForm.validate() and valid
             if valid:
                 tenantForm.bind(tenant)
-                adminUserForm.bind(tenant.AdminUser)
                 contactForm.bind(tenant.Contacts[0])
-                userContactForm.bind(tenant.AdminUser.Contacts[0])
     
-                tenant.AdminUser.TenantId = tenant.Id
-                tenant.UpdatedBy = tenant.AdminUser.UpdatedBy = self.request.user.Id
-                tenant.UpdatedOn = tenant.AdminUser.UpdatedOn = datetime.utcnow()
+                tenant.UpdatedBy = self.UserId
+                tenant.UpdatedOn = datetime.utcnow()
     
-                tenantService.SaveTenant(tenant)
+                if tenantService.SaveTenant(tenant):
+                    success = "Company details saved successfully!"
+                else:
+                    errors = "Error while saving Company details. Please try later." 
         except Exception,e:
             log.info(e)
             errors = e.message
             
-        return dict(model=tenant, tfr=vFormRenderer(tenantForm),
-                    ufr=vFormRenderer(adminUserForm),
-                    cfr=vFormRenderer(contactForm),
-                    ucfr=vFormRenderer(userContactForm), errors=errors)
+        return dict(model=tenant, tfr=vFormRenderer(tenantForm), cfr=vFormRenderer(contactForm), errors=errors, success=success)
     
     @action(renderer='templates/admin/settings.jinja2')
     def settings(self):

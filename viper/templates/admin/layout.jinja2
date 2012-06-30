@@ -1,9 +1,10 @@
 {% extends "templates/layout.jinja2" %}
 {% block topcontent %}
 <ul id="settings-menu" class="content tabs" style="margin-bottom: 1em;">
-	<li class="{{ 'active' if request.path_info == '/admin/index' }}"><a href="/admin/index">Global Settings</a></li>
+	<li class="{{ 'active' if request.path_info == '/admin/index' }}"><a href="/admin/index">Company Settings</a></li>
 	<li class="{{ 'active' if request.path_info == '/admin/settings' }}"><a href="/admin/settings">My Settings</a></li>
-	<li class="{{ 'active' if request.path_info == '/admin/templates' }}"><a href="/admin/templates">Templates</a></li>
+	<li class="{{ 'active' if request.path_info == '/admin/settings' }}"><a href="/admin/settings">Tags &amp; Taxes</a></li>
+	<li class="{{ 'active' if request.path_info == '/admin/templates' }}"><a href="/admin/templates">Printing</a></li>
 	<li class="{{ 'active' if request.path_info == '/admin/modules' }}"><a href="/admin/modules">Modules</a></li>
 </ul>
 {% block atopcontent %}{% endblock atopcontent%} 

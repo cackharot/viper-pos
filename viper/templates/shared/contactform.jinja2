@@ -1,52 +1,46 @@
 {% macro render(renderer) -%}
 <ul>
 	<li>
-		<span class="_50">
+		<span style="float: left; display: inline-block; margin-right: 25px;">
 			{{renderer.label('FirstName','First Name',class='tip')}}
-			{{renderer.text('FirstName',size=20,class='error wrong' if renderer.is_error('FirstName'),title='First name')}}
+			{{renderer.text('FirstName',size=30,class='error wrong' if renderer.is_error('FirstName'),title='First name')}}
 		</span>
-		<span class="_50">
+		<span>
 			{{renderer.label('LastName','Last Name',class='tip')}}
-			{{renderer.text('LastName',size=20,class='error wrong' if renderer.is_error('LastName'),title='Last name')}}
+			{{renderer.text('LastName',size=30,class='error wrong' if renderer.is_error('LastName'),title='Last name')}}
 		</span>
 	</li>
 	<li>
-		<span class="_75  ">
 			{{renderer.label('Email','Email',class='tip')}}
-			{{renderer.text('Email',size=255,class='full error wrong' if renderer.is_error('Email') else 'full',title='Email')}}
-		</span>
+			{{renderer.text('Email',size=250,class='full error wrong' if renderer.is_error('Email') else 'full',title='Email')}}
 	</li>
 	<li>
-		<span class="_50  ">
+		<span style="float: left; display: inline-block; margin-right: 25px;">
 			{{renderer.label('Phone','Phone',class='tip')}}
-			{{renderer.text('Phone',size=15,class='error wrong' if renderer.is_error('Phone'),title='Landline')}}
+			{{renderer.text('Phone',size=30,class='error wrong' if renderer.is_error('Phone'),title='Landline')}}
 		</span>
-		<span class="_50  ">
+		<span>
 			{{renderer.label('Mobile','Mobile',class='tip')}}
-			{{renderer.text('Mobile',size=15,class='error wrong' if renderer.is_error('Mobile'),title='Mobile')}}
+			{{renderer.text('Mobile',size=30,class='error wrong' if renderer.is_error('Mobile'),title='Mobile')}}
 		</span>
 	</li>
 	<li>
-		<span class="_50  ">
+			{{renderer.label('Country','Country',class='tip')}}
+			{{renderer.text('Country',size=30,class='full error wrong' if renderer.is_error('Country') else 'full',title='Country')}}			
+	</li>
+	<li>
+		<span style="float: left; display: inline-block; margin-right: 25px;">
 			{{renderer.label('City','City',class='tip')}}
 			{{renderer.text('City',size=30,class='error wrong' if renderer.is_error('City'),title='City')}}
 		</span>
-		<span class="_50 ">
-			{{renderer.label('Country','Country',class='tip')}}
-			{{renderer.text('Country',size=30,class='error wrong' if renderer.is_error('Country'),title='Country')}}
-		</span>
-	</li>
-	<li>
-		<span class="_50">
+		<span>
 			{{renderer.label('Zipcode','Zipcode',class='tip')}}
 			{{renderer.text('Zipcode',size=10,class='error wrong' if renderer.is_error('Zipcode'),title='Zipcode')}}
 		</span>
 	</li>
 	<li>
-		<span class="_75">
 			{{renderer.label('Address','Address',class='tip')}}
-			{{renderer.textarea('Address',class='full error wrong' if renderer.is_error('Address') else 'full',title='Address')}}
-		</span>
+			{{renderer.textarea('Address',cols="4",class='error wrong' if renderer.is_error('Address'),title='Address')}}
 	</li>
 </ul>
 {% if caller %}
