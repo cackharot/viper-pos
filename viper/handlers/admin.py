@@ -26,6 +26,7 @@ def includeme(config):
     config.add_handler('adminhandler', 'admin/{action}', AdminController)
     config.add_route('admin','/admin/index')
     config.add_route('settings','/admin/settings')
+    config.add_route('tags','/admin/tags')
     config.add_route('templatesettings','/admin/templates')
     
 class AdminController(object):
@@ -72,6 +73,10 @@ class AdminController(object):
     
     @action(renderer='templates/admin/settings.jinja2')
     def settings(self):
+        return dict()
+    
+    @action(renderer='templates/admin/tags.jinja2')
+    def tags(self):
         return dict()
     
     @action(renderer='templates/admin/templates.jinja2')

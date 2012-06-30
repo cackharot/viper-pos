@@ -26,39 +26,41 @@ def add_global(event):
 
 
 def auth_tween_factory(handler, registry):
-    if registry.settings.get('useauth', '1') == '1':
-        def auth_tween(request):
+	if registry.settings.get('useauth', '1') == '1':
+		def auth_tween(request):
 			userid = None
 			#log.debug('request url: %s' % request.url)#route_url('login',request))
-			tokens = request.url.split('/')
+			tokens = request.path_info.split('/')
+			#log.debug(request.path_info)
 			skip = False
-			for x in ['admin', 'login', 'static', '_debug_toolbar']:
+			for x in ['login', 'static', '_debug_toolbar']:
 				if x in tokens:
 					skip = True
 					break
 			if not skip:
 				#log.info('checking auth')
 				userid = authenticated_userid(request)
+				#log.debug('Logged In UserId=%s' % userid)
 				if userid is None:
 					#raise HTTPForbidden()
 					return HTTPFound(location=route_url('login', request))
 			response = handler(request)
 			return response
-        return auth_tween
-    return handler
+		return auth_tween
+	return handler
 
 
 def get_user(request):
-    # the below line is just an example, use your own method of
-    # accessing a database connection here (this could even be another
-    # request property such as request.db, implemented using this same
-    # pattern).
-    #log.info('called get user.')
-    userid = unauthenticated_userid(request)
-    if userid:
-    	service = UserService()
-        return service.GetUserDetails(userid)
-    return None
+	# the below line is just an example, use your own method of
+	# accessing a database connection here (this could even be another
+	# request property such as request.db, implemented using this same
+	# pattern).
+	#log.info('called get user.')
+	userid = unauthenticated_userid(request)
+	if userid:
+		service = UserService()
+		return service.GetUserDetails(userid)
+	return None
 
 class SaaSAuthTktAuthenticationPolicy(object):
 	implements(IAuthenticationPolicy)
@@ -73,7 +75,6 @@ class SaaSAuthTktAuthenticationPolicy(object):
             timeout=int(settings.get('auth.timeout', 3600)),
             reissue_time=int(settings.get('auth.reissue_time', 360)),
             max_age=int(settings.get('auth.max_age', 3600)))
-        pass
 
 	def remember(self, request, principal, **kw):
 		return self.cookie.remember(request, str(principal), **kw)
