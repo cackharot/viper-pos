@@ -1,16 +1,9 @@
-import json
-import uuid
-import random
-from datetime import datetime, date
-
 from sqlalchemy.exc import DBAPIError
-from sqlalchemy import desc, func, cast, Date
 
 from ..models import DBSession
-from ..models.User import User
 from ..models.Tenant import Tenant
-from ..models.UserRoles import Role, UserRoles, RolePrivileges
-from ..library.ViperLog import log
+
+from .ServiceExceptions import TenantException 
 
 class TenantService(object):
 	"""
@@ -32,6 +25,9 @@ class TenantService(object):
 
 	def GetInActiveTenants(self):
 		return DBSession.query(Tenant).filter(Tenant.Status == False).all()
+	
+	def GetAllTenants(self):
+		return DBSession.query(Tenant).all()
 
 	def DeleteTenant(self, tenantId):
 		DBSession.query(Tenant).get(tenantId).delete()
@@ -47,23 +43,29 @@ class TenantService(object):
 		return False
 
 	def ProvisionTenant(self, tenant):
-		DBSession.autoflush = False
-		if self.CheckTenantNameExists(None,tenant.Name):
-			raise Exception('Tenant Name already exists! Please use different name.')
-		DBSession.add(tenant)
-		DBSession.commit()
-		if tenant.AdminUser and not tenant.AdminUser.TenantId:
-			tenant.AdminUser.TenantId = tenant.Id
-		DBSession.flush()
-		return True
+		try:
+			DBSession.autoflush = False
+			if self.CheckTenantNameExists(None,tenant.Name):
+				raise Exception('Tenant Name already exists! Please use different name.')
+			DBSession.add(tenant)
+			DBSession.commit()
+			if tenant.AdminUser and not tenant.AdminUser.TenantId:
+				tenant.AdminUser.TenantId = tenant.Id
+			DBSession.flush()
+			return True
+		except DBAPIError, ex:
+			raise TenantException(ex,'Error while creating new tenant')
 
 	def SaveTenant(self, tenant):
 		if tenant and tenant.Id and len(tenant.Name) > 0:
-			DBSession.autoflush = False
-			if self.CheckTenantNameExists(tenant.Id,tenant.Name):
-				raise Exception('Tenant Name already exists! Please use different name.')
-			DBSession.add(tenant)
-			DBSession.flush()
-			return True
+			try:
+				DBSession.autoflush = False
+				if self.CheckTenantNameExists(tenant.Id,tenant.Name):
+					raise Exception('Tenant Name already exists! Please use different name.')
+				DBSession.add(tenant)
+				DBSession.flush()
+				return True
+			except DBAPIError, ex:
+				raise TenantException(ex,'Error while saving tenant details')
 		return False
 		

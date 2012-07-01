@@ -2,10 +2,10 @@
 <ul>
 	<li>
 		<span class="_50">
-			{{renderer.text('Barcode',title='Barcode',size=50,class='error wrong' if renderer.is_error('Barcode'),autofocus=True)}}
+			{{renderer.text('Barcode',title='Barcode',placeholder='Enter Barcode',size=50,class='error wrong' if renderer.is_error('Barcode'),autofocus=True)}}
 		</span>
 		<span class="_50">
-			{{renderer.text('Name',title='Product Name',size=50,class='error wrong' if renderer.is_error('Name'))}}
+			{{renderer.text('Name',title='Product Name',placeholder='Enter Product Name',size=50,class='error wrong' if renderer.is_error('Name'))}}
 		</span>
 	</li>
 	<li>

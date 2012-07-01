@@ -59,9 +59,9 @@
 	<div>	
 		<% 
 			var qas = order.get('lineItems').getQAS(); 
-			var paidAmt = order.getPaidAmount().toFixed(2);
+			var paidAmt = Math.round(order.getPaidAmount()).toFixed(2);
 			var totalAmt = qas.totalAmount.toFixed(2);
-			var balanceAmt = (totalAmt - paidAmt).toFixed(2);
+			var balanceAmt = Math.round((totalAmt - paidAmt)).toFixed(2);
 		%>
 		<div class="heading">
 			<h3>Sri Durga Home Needs Super Market</h3>

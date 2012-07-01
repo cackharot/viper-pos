@@ -367,6 +367,7 @@
 			$('#orderDate').html(odate)
 			$('#orderNumber').html(item.get('orderno'))
 			$('#invoiceCustomerName').text(item.get('customername').toUpperCase() || '')
+			$('#invoiceCustomerNo').text(item.get('customerno') || '')
 			this.updateAmounts()
 		},
 		updateAmounts: function () {
@@ -514,12 +515,15 @@
 				showMsg('warn','Please create new invoice!')
 				return
 			}
-			var cusname = $('#customerName').val().trim()
-			var cusid = $('#customerid').val().trim()
+			//console.log(item)
+			var cusname = item.name
+			var cusid = item.id
+			var cusno = item.customerno
 			if(cusname && cusid) {
 				this.model.set({
 						'customername':cusname,
-						'customerid':cusid
+						'customerid':cusid,
+						'customerno':cusno
 				})
 			}
 		},
@@ -529,11 +533,7 @@
 				idControl: $('#customerid'),
 				onSelected: this.updateInvoiceCustomer,
 				formatter: function (displayValue, item) {
-					var fieldName = $('input[type=radio][name=searchfield]:checked').val()
-					if (fieldName != 'name')
-						return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.name + '</span></div>';
-					else
-						return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.mobile + '</span></div>';
+					return '<div style="width:100%;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.mobile + '</span></div>';
 				},
 				ajax: {
 					url: "/customers/search",
@@ -546,10 +546,10 @@
 					preDispatch: function (query) {
 						//showLoadingMask(true);
 						var fieldName = $('input[type=radio][name=searchfield]:checked').val()
-						this.displayField = fieldName
+						this.displayField = fieldName || 'name'
 						return {
 							search: query,
-							field: fieldName || 'name'
+							field: fieldName || 'all'
 						}
 					},
 					preProcess: function (data) {
@@ -709,6 +709,7 @@
 						'orderid': data.Id,
 						'customerid': data.CustomerId,
 						'customername': data.CustomerName,
+						'customerno': data.CustomerNo,
 						'orderno': data.OrderNo,
 						'orderdate': data.OrderDate,
 						'duedate': null,
@@ -774,6 +775,7 @@
 						'orderid': o.Id,
 						'customerid': o.CustomerId,
 						'customername': o.CustomerName,
+						'customerno': o.CustomerNo,
 						'orderno': o.OrderNo,
 						'orderdate': o.OrderDate,
 						'duedate': o.DueDate,
@@ -876,7 +878,7 @@
 
 			if ((paymenttype == 'Cash' && (prevpaidamt + paidamount >= orderamount)) || (paymenttype == 'Credit' && paidamount < orderamount) || (paymenttype == 'Card' && paidamount > 0.0) || (paymenttype == 'Cheque' && paidamount > 0.0)) {
 				
-				if(oa > orderamount) {
+				if(paidamount > 0 && oa > orderamount) {
 					paidamount += (oa-orderamount);//round off the less than 0.5 paise
 				}
 				

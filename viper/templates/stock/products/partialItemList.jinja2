@@ -21,13 +21,13 @@
 			<th>Supplier</th>
 			<th class="tright">MRP</th>
 			<!--<th class="tright">BuyPrice</th>-->
-			<th  class="tright">SellPrice</th>
 			<th  class="tright">Discount</th>
+			<th  class="tright">SellPrice</th>
 			<!--
 			<th style="text-align:center;">Status</th>
 			<th style="text-align:center;">Updated On</th> 
 			-->
-			<th class="noborder"></th>
+			<th  class="tright">Stock</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -42,20 +42,10 @@
 				<td><div style="float:left;position:relative;left:-45px;"><a href="{{'editproduct' | route_url(pid=item.Id)}}" title="Edit!">Edit</a></div>{{item.Supplier.Name}}</td>
 				<td data-col="MRP" class="edit tright">{{item.MRP}}</td>
 				<!--<td style="text-align:right;">{{item.BuyPrice}}</td>-->
-				<td data-col="SellPrice" class="edit tright">{{item.SellPrice}}</td>
 				<td data-col="Discount" class="edit tright">{{item.Discount}}</td>
+				<td data-col="SellPrice" class="edit tright">{{item.SellPrice}}</td>
 				<!-- <td style="text-align:center;">{{item.UpdatedOn | datetimeformat('%d-%m-%Y') | d('--',true)}}</td>-->
-				<td class="action payments">
-					{% if item.Status %}
-						<a title="Click to return the item!" data-status="{{item.Status}}" class="pstatus" href="{{'markreturnproduct' | route_url(pid=item.Id)}}?status={{(not item.Status) | lower}}"> 
-							<span class="status closed"> Return </span>
-						</a>
-					{% else %}
-						<a title="Click to activate the item!" data-status="{{item.Status}}" class="pstatus" href="{{'markreturnproduct' | route_url(pid=item.Id)}}?status={{(not item.Status) | lower}}">
-							<span class="status overdue"> Active </span>
-						</a>
-					{% endif %}
-            	</td>
+				<td class="tright">--</td>
 			</tr>
 		{%- endfor %}
 	</tbody>

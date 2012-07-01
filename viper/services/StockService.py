@@ -104,14 +104,14 @@ class StockService(object):
 				entity.ExpiryDate = datetime.strptime(entity.ExpiryDate, '%d-%m-%Y')
 			if entity.CategoryId !='' and isinstance(entity.CategoryId,unicode):
 				entity.CategoryId = uuid.UUID(entity.CategoryId)
+			elif entity.CategoryId == '':
+				entity.CategoryId = None
 			if entity.TaxCategoryId != '' and isinstance(entity.TaxCategoryId,unicode):
 				entity.TaxCategoryId = uuid.UUID(entity.TaxCategoryId)
-			else:
-				entity.TaxCategoryId = None	
 			if entity.SupplierId != '' and isinstance(entity.SupplierId,unicode):
 				entity.SupplierId = uuid.UUID(entity.SupplierId)
-			else:
-				entity.SupplierId = None								
+			elif entity.SupplierId == '':
+				entity.SupplierId = None
 				
 			entity.CreatedOn = datetime.utcnow()
 			entity.Status = True
@@ -129,13 +129,13 @@ class StockService(object):
 				entity.ExpiryDate = datetime.strptime(entity.ExpiryDate, '%d-%m-%Y')
 			if entity.CategoryId !='' and isinstance(entity.CategoryId,unicode):
 				entity.CategoryId = uuid.UUID(entity.CategoryId)
+			elif entity.CategoryId == '':
+				entity.CategoryId = None
 			if entity.TaxCategoryId != '' and isinstance(entity.TaxCategoryId,unicode):
 				entity.TaxCategoryId = uuid.UUID(entity.TaxCategoryId)
-			else:
-				entity.TaxCategoryId = None
 			if entity.SupplierId != '' and isinstance(entity.SupplierId,unicode):
 				entity.SupplierId = uuid.UUID(entity.SupplierId)
-			else:
+			elif entity.SupplierId == '':
 				entity.SupplierId = None
 					
 			entity.UpdatedOn = datetime.utcnow()

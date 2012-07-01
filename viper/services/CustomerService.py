@@ -50,6 +50,10 @@ class CustomerService(object):
 				query = query.filter(CustomerContactDetails.Mobile.like(searchValue))
 			elif searchField == 'customerno':
 				query = query.filter(Customer.CustomerNo.like(searchValue))
+			elif searchField == 'all':
+				query = query.filter(or_(Customer.CustomerNo.like(searchValue), \
+										CustomerContactDetails.Mobile.like(searchValue), \
+										CustomerContactDetails.FirstName.like(searchValue)))
 
 		lstCustomers = query.offset(pageNo).limit(pageSize).all()
 		return lstCustomers

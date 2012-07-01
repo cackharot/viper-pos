@@ -39,7 +39,7 @@ def salesPage(request):
 def getTodayOrders(request):
     searchParam = OrderSearchParam()
     d = datetime.utcnow().date()
-    searchParam.FromOrderDate = d.replace(day=d.day - 1)
+    searchParam.FromOrderDate = d
     searchParam.ToOrderDate = d
     searchParam.TenantId = request.user.TenantId
     searchParam.LoadStats = False
@@ -49,6 +49,7 @@ def getTodayOrders(request):
         items = [dict(OrderNo=x.OrderNo, Id=x.Id,
                                 CustomerId=x.CustomerId,
                                 CustomerName=x.CustomerName,
+                                CustomerNo = x.CustomerNo,
                                 OrderDate=x.OrderDate,
                                 OrderAmount=(x.OrderAmount),
                                 PaidAmount=(x.PaidAmount)) for x in entities]

@@ -8,6 +8,8 @@ from ..models.Tenant import Tenant, TenantContactDetails
 from ..services.SecurityService import SecurityService
 from ..services.UserService import UserService
 from ..services.TenantService import TenantService
+from ..services.SettingService import SettingService
+from ..services.ServiceExceptions import SettingException, TenantException
 
 from ..forms import TenantSchema, UserSchema, ContactSchema, TenantContactSchema, UserContactSchema
 from ..library.helpers import EncryptPassword
@@ -18,6 +20,7 @@ from pyramid_simpleform import Form
 from ..forms.vForm import vForm
 from ..forms.vFormRenderer import vFormRenderer
 from ..library.ViperLog import log
+from viper.models.PrintTemplate import PrintTemplate
 
 securityService = SecurityService()
 userService = UserService()
@@ -26,8 +29,12 @@ def includeme(config):
     config.add_handler('adminhandler', 'admin/{action}', AdminController)
     config.add_route('admin','/admin/index')
     config.add_route('settings','/admin/settings')
+    config.add_route('addnewtemplate','/admin/managetemplates')
     config.add_route('tags','/admin/tags')
+    
     config.add_route('templatesettings','/admin/templates')
+    config.add_handler('managetemplates', '/admin/managetemplates/{tid}', handler=AdminController, action='managetemplates')
+    config.add_handler('deletetemplates', '/admin/deletetemplates/{tid}', handler=AdminController, action='deletetemplates')
     
 class AdminController(object):
     """
@@ -81,7 +88,51 @@ class AdminController(object):
     
     @action(renderer='templates/admin/templates.jinja2')
     def templates(self):
-        return dict()
+        service = SettingService()
+        model = service.GetPrintTemplates(self.TenantId)
+        return dict(model=model)
+    
+    @action()
+    def deletetemplates(self):
+        templateIds = self.request.matchdict.get('tid',None)
+        if templateIds:
+            service = SettingService()
+            for templateId in templateIds.split(','):
+                service.DeletePrintTemplate(self.TenantId, templateId)
+        return HTTPFound(location=self.request.route_url('templatesettings'))
+    
+    @action(renderer='templates/admin/managetemplates.jinja2')
+    def managetemplates(self):
+        templateId = self.request.matchdict.get('tid',None)
+        errors = None
+        service = SettingService()
+        try:
+            if templateId:
+                template = service.GetPrintTemplateById(templateId, self.TenantId)
+            else:
+                template = PrintTemplate()
+                
+            if self.request.method == 'POST':
+                template.TenantId = self.TenantId
+                template.Name = self.request.params.get('Name',None)
+                if template.Name:
+                    template.Name = template.Name.strip()
+                template.Content = self.request.params.get('Content',None)
+                if template.Content:
+                    template.Content = template.Content.strip()
+                template.Status = self.request.params.get('Status',True)
+                if template.Status == 'True':
+                    template.Status = True
+                else:
+                    template.Status = False
+                service.SavePrintTemplate(template)
+                
+                return HTTPFound(location=self.request.route_url('templatesettings'))
+        except SettingException,e:
+            log.error(e)
+            errors = e.message
+            
+        return dict(model=template,errors=errors)
     
     @action(renderer='templates/admin/modules.jinja2')
     def modules(self):

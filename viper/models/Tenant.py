@@ -12,12 +12,10 @@ from sqlalchemy import (
 	)
 from sqlalchemy.orm import relationship
 
-from datetime import datetime
 from . import Base
 from ..library.vuid import id_column, UUID
 from .AuditMixin import AuditMixin
 from .User import User
-import formalchemy
 
 class Tenant(AuditMixin, Base):
 	__label__	 = 'Tenant Details'

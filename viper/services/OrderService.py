@@ -37,6 +37,7 @@ class OrderService(object):
 					cus = customerService.GetCustomer(order.CustomerId, tenantId)
 					if cus:
 						order.CustomerName = cus.Contacts[0].FirstName
+						order.CustomerNo   = cus.CustomerNo
 				#fetch the line items here
 				order.LineItems = DBSession.query(LineItem).filter(LineItem.OrderId == order.Id).all()
 				#fetch the payment details
@@ -208,7 +209,7 @@ class OrderService(object):
 		
 		query = DBSession.query(Order.Id, Order.OrderNo, Order.OrderDate, Order.CustomerId, Order.TenantId, Order.CreatedBy, \
 							 Order.CreatedOn, Order.UpdatedBy, Order.UpdatedOn, Order.Status, Order.IpAddress, Order.DueDate,\
-							 CustomerContactDetails.FirstName.label('CustomerName'), osq.c.ItemCount,\
+							 Customer.CustomerNo, CustomerContactDetails.FirstName.label('CustomerName'), osq.c.ItemCount,\
 							 func.ifnull(osq.c.OrderAmount,0).label('OrderAmount'), func.ifnull(psq.c.PaidAmount,0).label('PaidAmount'))
 		query = query.outerjoin(osq, osq.c.OrderId == Order.Id).outerjoin(psq, psq.c.OrderId == Order.Id)
 		query = query.outerjoin(Customer, Customer.Id == Order.CustomerId)
@@ -259,14 +260,17 @@ class OrderService(object):
 		if searchParam.IpAddress:
 			query = query.filter(Order.IpAddress == searchParam.IpAddress)
 
-		if searchParam.FromOrderDate and not searchParam.ToOrderDate:
+
+		if searchParam.FromOrderDate and searchParam.ToOrderDate and searchParam.FromOrderDate == searchParam.ToOrderDate: 
+			query = query.filter(cast(Order.OrderDate, Date) == searchParam.ToOrderDate)
+		elif searchParam.FromOrderDate and not searchParam.ToOrderDate:
 			query = query.filter(cast(Order.OrderDate, Date) > searchParam.FromOrderDate)
-		if not searchParam.FromOrderDate and searchParam.ToOrderDate:
+		elif not searchParam.FromOrderDate and searchParam.ToOrderDate:
 			query = query.filter(cast(Order.OrderDate, Date) < searchParam.ToOrderDate)
-		if searchParam.FromOrderDate and searchParam.ToOrderDate:
+		elif searchParam.FromOrderDate and searchParam.ToOrderDate:
 			query = query.filter(cast(Order.OrderDate, Date) > searchParam.FromOrderDate, \
 									cast(Order.OrderDate, Date) <= searchParam.ToOrderDate)
-
+						
 		if searchParam.MinAmount and not searchParam.MaxAmount:
 			query = query.filter(Order.OrderAmount >= searchParam.MinAmount)
 		if not searchParam.MinAmount and searchParam.MaxAmount:

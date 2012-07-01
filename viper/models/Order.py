@@ -45,6 +45,8 @@ class Order(AuditMixin, Base):
 		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())
 		if hasattr(self, 'CustomerName'): serialized['CustomerName'] = self.CustomerName
 		else: serialized['CustomerName'] = None
+		if hasattr(self, 'CustomerNo'): serialized['CustomerNo'] = self.CustomerNo
+		else: serialized['CustomerNo'] = None
 		return serialized
 
 	def __repr__(self):

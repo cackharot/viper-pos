@@ -22,6 +22,8 @@ from ..models import (
     OrderPayment,
     User,
     Tenant,
+    TenantSetting,
+    PrintTemplate,
     UserRoles,
     Base,
     )
@@ -71,15 +73,15 @@ def Fixtures():
 			u.Status = True
 
 			uc = User.UserContactDetails()
-			u.UserId = TestUserId
-			u.FirstName = u'admin'
-			u.LastName = u'Company'
-			u.Mobile = '12323453'
-			u.Phone = '123435'
-			u.Address = 'Address'
-			u.City = 'City'
-			u.Country = 'Country'
-			u.Zipcode = '1233455'
+			uc.UserId = TestUserId
+			uc.FirstName = u'admin'
+			uc.LastName = u'Company'
+			uc.Mobile = '12323453'
+			uc.Phone = '123435'
+			uc.Address = 'Address'
+			uc.City = 'City'
+			uc.Country = 'Country'
+			uc.Zipcode = '1233455'
 
 			c = Tenant.TenantContactDetails()
 			c.TenantId = t.Id
@@ -138,7 +140,6 @@ def Fixtures():
 
 			cus.Contacts.append(c)
 			DBSession.add(cus)
-		pass
 	pass
 
 def main(argv=sys.argv):
@@ -152,4 +153,3 @@ def main(argv=sys.argv):
     Base.metadata.create_all(engine)
     Fixtures()
     print('Done.')
-    pass

@@ -78,7 +78,7 @@ table#tblTodayOrders tbody tr.active td{
 						<td class="noborder">
 							<ul style="margin: 0pt;">
 								<li>
-									<input title="Enter due amount!" type="text" class="datetime" name="dueDate" id="dueDate" style="width: 90%;"/>
+									<input title="Enter due date" type="text" class="datetime" name="dueDate" id="dueDate" style="width: 90%;"/>
 									<input type="hidden" id="hiddenDuedateSelect"/>
 									<img class="ui-datepicker-trigger" style="margin: 0pt; position: absolute; top: 6px; right: -10px;" 
 										title="Click to select due date!" alt="..." src="/static/images/icons/calendar.png"/>
@@ -91,35 +91,28 @@ table#tblTodayOrders tbody tr.active td{
 			<table class="noborder" style="float:left;margin-bottom:0em;margin-right:2em;">
 				<tbody>
 					<tr>
-						<td class="noborder" style="width:70px;">Search</td>
-						<td class="noborder" style="width:330px;">
+						<td class="noborder" style="width:120px;">Search</td>
+						<td class="noborder" style="width:380px;">
 							<ul style="margin:0em">
 								<li>
-									<input type="text" class="typeahead" data-provide="typeahead" 
-										name="customerName" id="customerName" title="Search customer..."
-										placeholder="Enter customer name or mobile number..." value="" />
+									<input type="text" class="typeahead" data-provide="typeahead" autocomplete="off" 
+										name="customerName" id="customerName" 
+										placeholder="Enter customer number or name or mobile..." value="" />
 									<input type="hidden" id="customerid" name="customerid" value=""/>
+									<input type="hidden" name="searchfield" value="all"></input>
 								</li>
 							</ul>
 					</tr>
 					<tr>
-						<td class="noborder"></td>
+						<td class="noborder">Customer Name:</td>
 						<td class="noborder">
-							<label class="radio inline">
-								<input type="radio" name="searchfield" value="name"></input> Name
-							</label>
-							<label class="radio inline">
-								<input type="radio" name="searchfield" value="mobile" checked="checked"></input> Mobile
-							</label>
-							<label class="radio inline">
-								<input type="radio" name="searchfield" value="customerno"></input> Customer No
-							</label>
+							<span id="invoiceCustomerName"></span>
 						</td>
 					</tr>
 					<tr class="strong">
-						<td class="noborder">Customer</td>
+						<td class="noborder">Customer No:</td>
 						<td class="noborder">
-							<span id="invoiceCustomerName"></span>
+							<span id="invoiceCustomerNo"></span>
 						</td>
 					</tr>
 				</tbody>
@@ -138,42 +131,81 @@ table#tblTodayOrders tbody tr.active td{
 			</ul>
 			<div class="clear"></div>
 		</div>
-		<table class="listing noedit" id="tblOrderLineItems">
-				<thead>
-					<tr>
-						<th style="width:32px" class="noborder"></th>
-						<th style="width:130px;">Barcode</th>
-						<th>Item Name</th>
-						<th class="right" style="width:90px;">MRP</th>
-						<th class="right" style="width:90px;">Price</th>
-						<!--<th class="right" style="width:60px;">Discount</th>-->
-						<th class="right" style="width:60px;">Quantity</th>
-						<th class="right" style="width:90px;">Gross</th>
-					</tr>
-				</thead>
-				<tbody style="max-height: 300px;overflow-y: auto;">
-					<tr><td class="noborder" style="padding:0em;display: none;" colspan="7"></td></tr>
+		<table class="listing noedit" style="margin: 0px; width: 100.5%;">
+			<colgroup>
+				<col class="noborder" style="width: 3%;">
+				<col style="width: 15%;">
+				<col class="right" style="">
+				<col class="right" style="width: 12%;">
+				<col class="right" style="width: 12%;">
+				<col class="right" style="width: 12%;">
+				<col class="right" style="width: 12%;">
+			</colgroup>
+			<thead>
+				<tr>
+					<th class="noborder"></th>
+					<th>Barcode</th>
+					<th>Item Name</th>
+					<th>MRP</th>
+					<th>Price</th>
+					<!--<th class="right" style="width:60px;">Discount</th>-->
+					<th>Quantity</th>
+					<th>Gross</th>
+				</tr>
+			</thead>
+		</table>
+		<div style="max-height: 270px; width: 101.5%; overflow-y: scroll;">
+			<table class="listing noedit" id="tblOrderLineItems" style="margin:0px;">
+				<colgroup>
+					<col class="noborder" style="width: 3%;">
+					<col style="width: 15%;">
+					<col class="right" style="">
+					<col class="right" style="width: 12%;">
+					<col class="right" style="width: 12%;">
+					<col class="right" style="width: 12%;">
+					<col class="right" style="width: 12%;">
+				</colgroup>
+				<tbody>
+					
 				</tbody>
-				<tfoot>
-					<tr>
-						<td colspan="2" class="noborder top"></td>
-						<td><span>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></span></td>
-						<td class="right strong big"><span>Total: </span></td>
-						<td colspan="3" class="right strong totalAmount green">{{ '' | currency(true,false) }}<span id="totalAmount">0.00</span></td>
-					</tr>
-					<tr>
-						<td colspan="2" class="noborder top"></td>
-						<td class="strong"><span>Savings: {{ '' | currency(true,false) }}<span id="savingsAmount">0.00</span></span></td>
-						<td class="right strong big"><span>Paid: </span></td>
-						<td colspan="3" class="right strong paidAmount">{{ '' | currency(true,false) }}<span id="paidAmount">0.00</span></td>
-					</tr>
-					<tr>
-						<td class="noborder top" colspan="3"></td>
-						<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
-						<td colspan="3" class="right strong big dueamount">{{ '' | currency(true,false) }}<span id="balanceAmount">0.00</span></td>
-					</tr>
-				</tfoot>
 			</table>
+		</div>
+		<table class="listing noedit" style="margin-top:0px;width:100.5%">
+			<colgroup>
+				<col class="noborder" style="width: 3%;">
+				<col style="width: 15%;">
+				<col class="right" style="">
+				<col class="right" style="width: 12%;">
+				<col class="right" style="width: 12%;">
+				<col class="right" style="width: 12%;">
+				<col class="right" style="width: 12%;">
+			</colgroup>
+			<tfoot>
+				<tr>
+					<td class="noborder"></td>
+					<td class="noborder"></td>
+					<td>
+						<span>Total Items/Quantity: <span id="totalItemsQuantity">0/0</span></span>
+					</td>
+					<td class="right strong big">
+						<span>Total: </span>
+					</td>
+					<td colspan="3" class="right strong totalAmount green">{{ '' | currency(true,false) }}<span id="totalAmount">0.00</span></td>
+				</tr>
+				<tr>
+					<td class="noborder"></td><td class="noborder"></td>
+					<td class="strong"><span>Savings: {{ '' | currency(true,false) }}<span id="savingsAmount">0.00</span></span></td>
+					<td class="right strong big"><span>Paid: </span></td>
+					<td colspan="3" class="right strong paidAmount">{{ '' | currency(true,false) }}<span id="paidAmount">0.00</span></td>
+				</tr>
+				<tr>
+					<td class="noborder"></td><td class="noborder"></td>
+					<td class="noborder"></td>
+					<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
+					<td colspan="3" class="right strong big paidAmount dueamount">{{ '' | currency(true,false) }}<span id="balanceAmount">0.00</span></td>
+				</tr>
+			</tfoot>
+		</table>
 	</div>
 </div> 
 <div style="display:block;" id="product-container">
@@ -245,9 +277,9 @@ table#tblTodayOrders tbody tr.active td{
 			</span>
 		</li>
 		<li>
-			<span class="_50">Paid Amount: <span class="add-on">Rs.</span></span>
+			<span class="_50">Paid Amount: </span>
 			<span class="_50 strong big red">
-				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span> <input style="width:95%" type="number" name="paidamount" placeholder="<%=Math.round(item.get('orderamount'))%>" value="<%=Math.round(item.get('orderamount'))%>" required autofocus="autofocus"></input>
+				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span><input style="width:95%" type="number" name="paidamount"  value="<%=Math.round(item.get('balanceamount'))%>" required autofocus="autofocus"></input>
 			</span>
 		</li>
 		<li>
@@ -273,7 +305,7 @@ table#tblTodayOrders tbody tr.active td{
 	</script>
 	<script type="text/template" id="tpl-lineitem">
 		<tr data-id="<%= item.get('id') %>">
-			<td class="del"><a data-slno="<%= item.get('slno') %>" href="#" class="del-lineitem remove-item xit">Del</a></td>
+			<td class="del"><a data-slno="<%= item.get('slno') %>" href="#" class="del-lineitem remove-item xit"></a></td>
 			<!--<td class="sl"><%= item.get('slno') %></td>-->
 			<td class="b"><%= item.get('barcode') %></td>
 			<td data-col="name" class="n edit"><%= item.get('name') %></td>

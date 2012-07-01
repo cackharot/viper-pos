@@ -1,5 +1,15 @@
-{% extends "templates/admin/layout.jinja2" %} {% block atopcontent %} {%
-endblock %} {% block acontent %}
+{% extends "templates/admin/layout.jinja2" %} 
+{% block atopcontent %} 
+{%endblock %} 
+{% block acontent %}
+<script>
+	window.swizapp.urls = {
+		edit	: '{{ 'managetemplates'| route_url(tid='')}}',
+		add		: '',
+		delete	: '{{ 'deletetemplates'| route_url(tid='')}}',
+		list	: ''
+	};
+</script>
 <form method="post" name="templates">
 	<table id="listing" class="listing" style="width:65%;float:left">
 		<thead>
@@ -7,26 +17,42 @@ endblock %} {% block acontent %}
 				<th class="xs">
 					<input id="select_all" class="selectAll" type="checkbox" rel="all" name="select_all"/>
 				</th>
-				<th>Name</th>
-				<th class="medium">Updated Date</th>
+				<th class="medium">Name</th>
+				<th>Content</th>
 				<th style="width:75px">Use</th>
 			</tr>
 		</thead>
 		<tbody>
+		{% if model -%}
+			{% for item in model -%}
+				<tr data-id="{{item.Id}}" class="{{ loop.cycle('odd', 'even') }}">
+					<td class="check">
+						<input type="checkbox" rel="item" name="ids" value="{{item.Id}}">
+					</td>
+					<td>{{item.Name}}</td>
+					<td>{{( '%s...' | format(item.Content[:50]) if item.Content else '--') | e }}</td>
+					<td>
+						<input type="checkbox" name="status" checked="{{'checked' if item.Status else ''}}" />
+					</td>
+				</tr>
+			{%- endfor %}
+		{%- else %}
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td colspan="4">
+					<div class="alert info">
+						No Templates available!
+					</div>
+				</td>
 			</tr>
+		{% endif %}
 		</tbody>
 		<tfoot>
 			<tr class="noborder">
 				<td class="listing-options" colspan="4">
-					<button id="createNew" class="btn action create" type="button">
+					<button type="button" id="createNew" class="btn action create" onclick="window.location.href='{{'addnewtemplate' | route_url}}'">
 						<span><span>Create new template</span></span>
 					</button>
-					<button id="deleteSelected" class="btn action delete" type="button">
+					<button id="deleteSelected" class="btn action delete" type="button" onclick="if(confirm('Are you sure to delete the selected templates?')){ do_batch('delete'); };return false;">
 						<span><span>Delete selected</span></span>
 					</button>
 					<button id="save" class="btn action save" type="submit">
@@ -93,14 +119,13 @@ endblock %} {% block acontent %}
 					<option value="tabloid">Tabloid</option>
 					<option value="executive">Executive</option>
 					<option value="folio">Folio</option>
-					<option value="commerical #10 envelope">Commercial #10
-						Envelope</option>
-					<option value="catalog #10 1/2 envelope">Catalog #10 1/2
-						Envelope</option>
+					<option value="commerical #10 envelope">Commercial #10 Envelope</option>
+					<option value="catalog #10 1/2 envelope">Catalog #10 1/2 Envelope</option>
 					<option value="8.5x11">8.5x11</option>
 					<option value="8.5x14">8.5x14</option>
 					<option value="11x17">11x17</option>
-			</select></li>
+				</select>
+			</li>
 			<li>
 				<label for="pdf_orientation">Page orientation</label>
 				<select id="pdf_orientation" name="pdf_orientation">

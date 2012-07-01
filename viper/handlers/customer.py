@@ -53,7 +53,7 @@ class CustomerController(object):
     def search(self):
         try:
             searchValue = self.request.params.get('search')
-            searchField = self.request.params.get('field', 'name')
+            searchField = self.request.params.get('field', 'all')
             result = customerService.SearchCustomers(self.TenantId, 0, 10, searchField, searchValue)
             if result:
                 lst = [dict(id=x.Id, customerno=x.CustomerNo, name=x.Contacts[0].FirstName, mobile=x.Contacts[0].Mobile) for x in result]

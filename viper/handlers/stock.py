@@ -86,11 +86,11 @@ class StockController(object):
 			entity = stockService.GetProduct(productId, self.TenantId)
 			if entity:
 				barcode = self.request.params.get('Barcode', None)
-				if barcode:
+				if barcode and len(barcode)>1:
 					entity.Barcode = barcode
 
 				name = self.request.params.get('Name', None)
-				if name:
+				if name and len(name)>1:
 					entity.Name = name
 
 				mrp = self.request.params.get('MRP', None)

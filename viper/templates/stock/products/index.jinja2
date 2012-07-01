@@ -140,29 +140,6 @@ tr.alert-error td{
 			})
 			$(this).trigger('edit')
 		})
-		
-		/*$('table#prdTable a.pstatus').live('click',function(){
-			var url = $(this).data('url')
-			var st = $(this).data('status')
-			var tr = $(this).closest('tr')
-			var that = $(this)
-			$.post(url,{status:!(st == 'True')},function(data){
-				if(data && data.status == true) {
-					if(st == 'True') {
-						tr.addClass('alert')
-						tr.addClass('alert-error')
-						that.text('Mark Active')
-						that.data('status','False')
-					} else {
-						tr.removeClass('alert')
-						tr.removeClass('alert-error')
-						that.text('Mark Return')
-						that.data('status','True')
-					}
-				}
-			})
-			return true
-		})*/
 	});
 </script>
 {% endblock %}
