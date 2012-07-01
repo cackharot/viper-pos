@@ -456,8 +456,10 @@ div#invoice-container div#recurring-data input { width: auto;}
 #settings-wrapper fieldset      { float:left; width:47%; margin:1em 0; }
 #settings-wrapper fieldset > ul { margin:0; list-style-type:none; }
 #settings-wrapper fieldset.left { clear:left; margin:1em 2em 1em 1em; }
+#settings-wrapper fieldset ul li.left {float:left;margin-right: 25px;}
+#settings-wrapper fieldset ul li.right {float:right;}
 
-#settings-wrapper fieldset > ul li + li { margin-top:0.6em; }
+#settings-wrapper fieldset > ul li + li { margin-top:1em; }
 
 #settings-wrapper textarea   { resize:none; } /* SAFARI HACK */
 #settings-wrapper textarea,
@@ -466,7 +468,7 @@ div#invoice-container div#recurring-data input { width: auto;}
 #settings-wrapper textarea   { border:0 solid #DCDCDC; border-bottom-width:1px; line-height:1.2em; }
 #settings-wrapper textarea,
 #settings-wrapper input[type=text] { padding:2px; }
-#settings-wrapper ul.error_list    { overflow:hidden; }
+#settings-wrapper ul.error_list    {  }
 #settings-wrapper ul.error_list li { float:right; clear:right; margin-bottom:0; }
 
 #settings-wrapper textarea,

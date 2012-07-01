@@ -19,7 +19,6 @@
 				</th>
 				<th class="medium">Name</th>
 				<th>Content</th>
-				<th style="width:75px">Use</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,9 +30,6 @@
 					</td>
 					<td>{{item.Name}}</td>
 					<td>{{( '%s...' | format(item.Content[:50]) if item.Content else '--') | e }}</td>
-					<td>
-						<input type="checkbox" name="status" checked="{{'checked' if item.Status else ''}}" />
-					</td>
 				</tr>
 			{%- endfor %}
 		{%- else %}
@@ -54,9 +50,6 @@
 					</button>
 					<button id="deleteSelected" class="btn action delete" type="button" onclick="if(confirm('Are you sure to delete the selected templates?')){ do_batch('delete'); };return false;">
 						<span><span>Delete selected</span></span>
-					</button>
-					<button id="save" class="btn action save" type="submit">
-						<span><span>Save</span></span>
 					</button>
 				</td>
 			</tr>

@@ -8,15 +8,17 @@
 	        {{ 'Edit Product' if model.Id }}
 	</h2>
 	<form action="{{'saveproduct'|route_url}}" method="post">
-		{% if errors %}
-			<div class="alert error">
-				{{ errors }}
-			</div>
-			<div class="clear"></div>
-		{% endif %}
-		<div id="customer-data" class="global-data block">
-			{% import 'shared/productform.jinja2' as productForm with context %}
-			{{ productForm.render(renderer) }}
+		<div id="settings-wrapper" style="padding: 0pt;">
+			{% if errors %}
+				<div class="alert error">
+					{{ errors }}
+				</div>
+				<div class="clear"></div>
+			{% endif %}
+			<fieldset>
+				{% import 'shared/productform.jinja2' as productForm with context %}
+				{{ productForm.render(renderer) }}
+			</fieldset>
 		</div>
 		<div id="saving-options" class="block">
 			<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>

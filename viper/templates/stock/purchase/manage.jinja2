@@ -42,48 +42,59 @@
 			</tr>
 			<tr class="bold">
 				<td>Total Amount</td>
-				<td class="right">{{totalAmount | currency}}</td>
+				<td class="right">
+					{{''|currency(true,false)}}<span id="totalAmount">{{totalAmount | round(2)}}</span>
+				</td>
 			</tr>
 			<tr>
 				<td>Paid Amount</td>
-				<td class="right">{{paidAmount | currency}}</td>
+				<td class="right">
+					{{''|currency(true,false)}}<span id="paidAmount">{{paidAmount | round(2)}}</span>
+				</td>
 			</tr>
 			<tr class="dueamount">
 				<td>Due Amount</td>
-				<td class="right">{{dueAmount | currency}}</td>
+				<td class="right">
+					{{''|currency(true,false)}}<span id="dueAmount">{{dueAmount | round(2)}}</span>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 	<form id="frmPurchase" action="{{'savepurchase'|route_url}}" method="post">
-		<h3>Purchase Info</h3>
-		{% if errors %}
-			<div class="alert error">
-				{{ errors }}
-			</div>
-			<div class="clear"></div>
-		{% endif %}
-		<div id="customer-data" class="global-data block">
-			<ul>
-				<li>
-				<span class="_50">
-						{{purchaseRenderer.text('PurchaseNo',title='Purchase Invoice Number',size=50,class='error wrong' if	purchaseRenderer.is_error('PurchaseNo'))}} 
-				</span> 
-				<span class="_50">
-						{{purchaseRenderer.select('SupplierId',suppliers,prompt='Choose a supplier',title='Supplier',class='error wrong' if	purchaseRenderer.is_error('SupplierId'),style="width: 387px;")}} </span></li>
-				<li>
-					<span class="_50">
-						{{purchaseRenderer.date('PurchaseDate',title='Purchase Date',class='datetime error' if purchaseRenderer.is_error('PurchaseDate') else 'datetime')}} </span> 
-					<span class="_50">
-						{{purchaseRenderer.date('DueDate',title='Due Date',class='datetime error' if	purchaseRenderer.is_error('DueDate') else 'datetime')}} </span>
-				</li>
-			</ul>
+		<div id="settings-wrapper" style="padding: 0pt;">
+			<h3>Purchase Info</h3>
+			{% if errors %}
+				<div class="alert error">
+					{{ errors }}
+				</div>
+				<div class="clear"></div>
+			{% endif %}
+			<fieldset>
+				<ul>
+					<li class="left">
+						{{renderer.label('PurchaseNo','Purchase Bill Number',class='tip')}}
+						{{purchaseRenderer.text('PurchaseNo',placeholder='Enter purchase bill number',title='Purchase Bill Number',size=20,class='error wrong' if purchaseRenderer.is_error('PurchaseNo'))}} 
+					</li>
+					<li>
+						{{renderer.label('SupplierId','Supplier',class='tip')}}
+						{{purchaseRenderer.select('SupplierId',suppliers,prompt='Choose a supplier',title='Supplier',class='error wrong' if	purchaseRenderer.is_error('SupplierId'),style="width: 300px;")}}
+					</li>
+					<li class="left">
+						{{renderer.label('PurchaseDate','Purchase Date',class='tip')}}
+						{{purchaseRenderer.date('PurchaseDate',title='Purchase Date',class='datetime error' if purchaseRenderer.is_error('PurchaseDate') else 'datetime')}}
+					</li>
+					<li>  
+						{{renderer.label('DueDate','Due Date',class='tip')}}
+						{{purchaseRenderer.date('DueDate',title='Due Date',class='datetime error' if	purchaseRenderer.is_error('DueDate') else 'datetime')}} 
+					</li>
+				</ul>
+			</fieldset>
 		</div>
 		<div id="saving-options" class="block">
 			<input type="hidden" id="pid" name="pid" value="{{model.Id|d('',True)}}" /> 
 			{%	if model.Id %} 
-				<a class="btn action delete" onclick="return confirm('Are you sure?');"
-					href="{{ 'deletepurchase' | route_url(pid=model.Id)}}"
-					confirm="Are you sure?" post="1"> 
+				<a class="btn action delete" onclick="return confirm('Are you sure to delete this purchase?');"
+					href="{{ 'deletepurchase' | route_url(pid=model.Id)}}"> 
 						<span><span>Delete</span></span>
 				</a> 
 			{% endif %}
@@ -96,10 +107,12 @@
 	{%	if model.Id %} 
 	<h3>Line Items</h3>
 	<form id="frmLineItem" method="POST">
-		<div id="product-data" class="global-data block">
-			{% import 'shared/productform.jinja2' as productForm with context %}
-			{{ productForm.render(renderer,True) }} 
-			<input type="hidden"name="ProductId" value="" />
+		<div id="settings-wrapper" style="padding: 0pt;">
+			<fieldset>
+				{% import 'shared/productform.jinja2' as productForm with context %}
+				{{ productForm.render(renderer,True) }} 
+				<input type="hidden"name="ProductId" value="" />
+			</fieldset>
 		</div>
 		<div id="saving-options" class="block">
 			<button class="btn action create" type="submit">
@@ -111,43 +124,92 @@
 		</div>
 	</form>
 	<div class="clear"></div>
-	<table class="listing" id="lineItemTable">
-		<thead>
-			<th class="noborder"></th>
-			<th>Barcode</th>
-			<th>Name</th>
-			<th class="right">MRP</th>
-			<th class="right">Tax</th>
-			<th class="right">Price</th>
-			<th class="right">Discount</th>
-			<th class="right">Quantity</th>
-			<th class="right">Total</th>
-		</thead>
-		<tbody>
-			{% for item in model.LineItems %}
-			<tr>
-				<td><a data-total="{{item.BuyAmount}}"
-					data-quantity="{{item.Quantity}}" class="delitem"
-					href="/stock/deletepurchaselineitem?purchaseId={{model.Id}}&lineItemId={{item.Id}}"
-					title="Delete this item!">Delete</a></td>
-				<td>{{item.Barcode}}</td>
-				<td>{{item.Name}}</td>
-				<td class="right">{{item.MRP}}</td>
-				<td class="right">{{item.Tax}}</td>
-				<td class="right">{{item.BuyPrice}}</td>
-				<td class="right">{{item.Discount}}</td>
-				<td class="right">{{item.Quantity}}</td>
-				<td class="right">{{item.BuyAmount}}</td>
-			</tr>
-			{% endfor %}
-		</tbody>
-	</table>
+	<div style="overflow-y: scroll;">
+		<table class="listing noedit" style="margin:0px;">
+			<colgroup>
+				<col class="noborder" style="width: 6%;">
+				<col style="width: 13%;">
+				<col class="right">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+			</colgroup>
+			<thead>
+				<th class="noborder"></th>
+				<th>Barcode</th>
+				<th>Name</th>
+				<th class="right">MRP</th>
+				<th class="right">Tax</th>
+				<th class="right">Price</th>
+				<th class="right">Discount</th>
+				<th class="right">Quantity</th>
+				<th class="right">Total</th>
+			</thead>
+		</table>
+	</div>
+	<div style="max-height:270px;overflow-y:scroll">
+		<table class="listing noedit" id="lineItemTable" style="margin-top:0px">
+			<colgroup>
+				<col class="noborder" style="width: 6%;">
+				<col style="width: 13%;">
+				<col class="right">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+				<col class="right" style="width: 10%;">
+			</colgroup>
+			<tbody>
+				{% for item in model.LineItems %}
+				<tr>
+					<td><a data-total="{{item.BuyAmount}}"
+						data-quantity="{{item.Quantity}}" class="delitem remove-item xit"
+						href="/stock/deletepurchaselineitem?purchaseId={{model.Id}}&lineItemId={{item.Id}}"
+						title="Delete this item!">Delete</a></td>
+					<td>{{item.Barcode}}</td>
+					<td>{{item.Name}}</td>
+					<td class="right">{{item.MRP}}</td>
+					<td class="right">{{item.Tax}}</td>
+					<td class="right">{{item.BuyPrice}}</td>
+					<td class="right">{{item.Discount}}</td>
+					<td class="right">{{item.Quantity}}</td>
+					<td class="right tbold">{{item.BuyAmount}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
 	{% endif %}
+</div>
+<div id="templatesection" style="display:none;">
+	<script type="text/template" id="tplLineItem">
+		<tr data-id="<%= item.Id %>">
+			<td class="del">
+				<a data-total="<%= item.Total %>"
+					data-quantity="<%= item.Quantity%>" href="/stock/deletepurchaselineitem?purchaseId=<%=purchaseId %>&lineItemId=<%=item.Id%>" 
+					title="Delete this item!" class="delitem remove-item xit">Delete</a>
+			</td>
+			<td class="b"><%= item.Barcode %></td>
+			<td><%= item.Name %></td>
+			<td class="right"><%= item.MRP %></td>
+			<td class="right"><%= item.Tax %></td>
+			<td class="right"><%= item.BuyPrice %></td>
+			<td class="right"><%= item.Discount %></td>
+			<td class="right"><%= item.Quantity %></td>
+			<td class="right tbold"><%= item.Total %></td>
+		</tr>
+	</script> 
 </div>
 {% endblock %} 
 {% block footerscript %}
 <script>
 	$(function(){
+		var tplLineItemCompiled = _.template($('#tplLineItem').html())
+		
 		$('#customer-data input[type=text], #customer-data textarea').SwizappFormTips()
 		$('#product-data input[type=text], #product-data textarea').SwizappFormTips()
 		
@@ -164,13 +226,15 @@
 			$.get(url,null,function(data) {
 				if(data && data.status == true){
 					$tr.remove()
-					var ti = parseInt($('#totalItems').text())
-					var tq = parseFloat($('#totalQuantity').text())
-					var ta = parseFloat($('#totalAmount').text())
+					var ti = parseInt($('#totalItems').text().trim())
+					var tq = parseFloat($('#totalQuantity').text().trim())
+					var ta = parseFloat($('#totalAmount').text().trim())
+					var pa = parseFloat($('#paidAmount').text().trim())
 					
-					$('#totalAmount').text(ta-total)
+					$('#totalAmount').text((ta-total).toFixed(2))
+					$('#dueAmount').text((ta-total-pa).toFixed(2))
 					$('#totalItems').text(ti-1)
-					$('#totalQuantity').text(tq-quantity)
+					$('#totalQuantity').text((tq-quantity).toFixed(2))
 					showMsg('info', data.message)
 				}else{
 					showMsg('error',data.message)
@@ -194,20 +258,20 @@
 				var col = $(this).attr('name')
 			
 				if(col == 'SellPrice') {
-					var mrp = parseFloat($mrpInput.val())
-					var sellPrice = parseFloat($(this).val())
+					var mrp = parseFloat($mrpInput.val() || 0)
+					var sellPrice = parseFloat($(this).val() || 0)
 					var discount = (((mrp-sellPrice)*100.0)/mrp)
 				
 					$discountInput.val(discount.toFixed(2))
 				} else if(col == 'Discount') {
-					var mrp = parseFloat($mrpInput.val())
-					var discount = parseFloat($(this).val())
+					var mrp = parseFloat($mrpInput.val() || 0)
+					var discount = parseFloat($(this).val() || 0)
 					var sellPrice = (mrp - (mrp * (discount/100.0)))
 				
 					$sellpriceInput.val(sellPrice.toFixed(2))
 				} else if(col == 'MRP') {
-					var discount = parseFloat($discountInput.val())
-					var mrp = parseFloat($(this).val())
+					var discount = parseFloat($discountInput.val() || 0)
+					var mrp = parseFloat($(this).val() || 0)
 					var sellPrice = (mrp - (mrp * (discount/100.0)))
 					var buyPrice  = (mrp - (mrp * (8.0/100.0)))
 				
@@ -254,7 +318,7 @@
 				} else {
 					// no item found in db so new its a new item
 					$('form#frmLineItem input[type=text]').val('')
-					$('form#frmLineItem input[name=Barcode]')[0].focus()
+					$('form#frmLineItem input[name=text]').select()
 				}
 			})
 		})
@@ -269,17 +333,21 @@
 			
 			var jdata = $('form#frmLineItem').serializeObject()
 			jdata.Tax = jdata.Tax || 0.0
+			jdata.MRP = parseFloat(jdata.MRP)
+			jdata.Quantity = parseFloat(jdata.Quantity)
+			jdata.SellPrice = parseFloat(jdata.SellPrice)
+			jdata.BuyPrice = parseFloat(jdata.BuyPrice)
 
-			if (!(jdata.Name && jdata.Barcode && jdata.Quantity*1 > 0 
-				&& jdata.MRP*1 > 0 && jdata.BuyPrice*1 < jdata.MRP*1
-				&& jdata.SellPrice*1 > jdata.BuyPrice*1)) {
+			if (!(jdata.Name && jdata.Barcode && jdata.Quantity > 0 
+				&& jdata.MRP > 0 && jdata.BuyPrice < jdata.MRP
+				&& jdata.SellPrice > jdata.BuyPrice)) {
 				showMsg('warn', 'Invalid data')
 				return false
 			}
 			
 			var found = false
 			$('table#lineItemTable tbody tr > td:nth-child(2)').each(function() {
-				if($(this).text() == jdata.Barcode) {
+				if($(this).text().trim() == jdata.Barcode.trim()) {
 					found = true
 					return false
 				}
@@ -309,34 +377,29 @@
 			$.post('/stock/addpurchaselineitem',postdata,function(data){
 				if(data && data.status == true) {
 					//added success
-					var id = data.id;
-					var total = (jdata.Quantity*jdata.BuyPrice).toFixed(2);
-					var tr = '<tr>';
-					tr += '<td><a data-total="' + total + '"';
-					tr += ' data-quantity="'+jdata.Quantity+'" class="delitem" href="/stock/deletepurchaselineitem?purchaseId=' + purchaseId;
-					tr += '&lineItemId='+id +'" title="Delete this item!">Delete</a></td>';
-					tr += '<td>' + jdata.Barcode + '</td>';
-					tr += '<td>' + jdata.Name + '</td>';
-					tr += '<td>' + jdata.MRP + '</td>';
-					tr += '<td>' + jdata.Tax + '</td>';
-					tr += '<td>' + jdata.BuyPrice + '</td>';
-					tr += '<td>' + jdata.Discount + '</td>';
-					tr += '<td>' + jdata.Quantity + '</td>';
-					tr += '<td>' + total + '</td>';
-					tr += '</tr>';
+					jdata.Id = data.id;
+					jdata.Total = jdata.Quantity*jdata.BuyPrice;
+					
+					var tr = tplLineItemCompiled({
+						'purchaseId': purchaseId,
+						'item': jdata
+					})
+										
 					$('table#lineItemTable tbody').prepend(tr)
 					
-					var ti = parseInt($('#totalItems').text())
-					var tq = parseFloat($('#totalQuantity').text())
-					var ta = parseFloat($('#totalAmount').text())
+					var ti = parseInt($('#totalItems').text().trim())
+					var tq = parseFloat($('#totalQuantity').text().trim())
+					var ta = parseFloat($('#totalAmount').text().trim())
+					var pa = parseFloat($('#paidAmount').text().trim())
 					
-					$('#totalAmount').text((ta+total))
+					$('#totalAmount').text((ta+jdata.Total).toFixed(2))
+					$('#dueAmount').text((ta+jdata.Total-pa).toFixed(2))
 					$('#totalItems').text(ti+1)
-					$('#totalQuantity').text((tq+parseFloat(jdata.Quantity)).toFixed(2))
+					$('#totalQuantity').text((tq+jdata.Quantity).toFixed(2))
 					
 					$('form#frmLineItem button[type=reset]').trigger('click')
 					
-					$('form#frmLineItem input[name=Barcode]')[0].focus()
+					$('form#frmLineItem input[name=Barcode]').select()
 					showMsg('info', '<strong>"'+jdata.Barcode+'"</strong> added successfully!')
 				}else{
 					showMsg('error', data.message || 'Error while adding line item!')

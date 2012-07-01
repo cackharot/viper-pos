@@ -28,30 +28,35 @@
      {% endif %}
      -->
 	<form action="{{'savesupplier'|route_url}}" method="post">
-		<div id="customer-data" class="global-data block">
+		<div id="settings-wrapper" style="padding: 0pt;">
 			{% import 'shared/contactform.jinja2' as contactForm with context %}
 			<h3>Agency Info</h3>
-			<ul>
-				<li><span class="_50">
-						{{renderer.text('Name',size=100,class='error wrong' if
-						renderer.is_error('Name'),title='Supplier Name',autofocus=True)}} </span></li>
-				<li><span class="_50">
-						{{renderer.textarea('Description',class='error wrong' if
-						renderer.is_error('Description'),title='Description')}} </span> <span class="_50">
-						{{renderer.textarea('Address',class='error wrong' if
-						renderer.is_error('Address'),title='Address')}} </span></li>
-			</ul>
-			<div class="clear"></div>
-			<h3>Contact Info</h3>
-			{{ contactForm.render(cfr) }}
+			<fieldset>
+				<ul>
+					<li style="display:inline-block">
+						{{renderer.label('Name','Supplier Name',class='tip')}}
+						{{renderer.text('Name',size=100,class='error wrong' if	renderer.is_error('Name'),title='Supplier Name',autofocus=True)}}
+					</li>
+					<li class="left">
+						{{renderer.label('Description','Description',class='tip')}}
+						{{renderer.textarea('Description',cols=35,class='error wrong' if renderer.is_error('Description'),title='Description')}}
+					</li>
+					<li style="display:inline-block">
+						{{renderer.label('Name','Supplier Address',class='tip')}}
+						{{renderer.textarea('Address',cols=35,class='error wrong' if renderer.is_error('Address'),title='Supplier Address')}} 
+					</li>
+				</ul>
+				<div class="clear"></div>
+				<h3>Contact Info</h3>
+				{{ contactForm.render(cfr) }}
+			</fieldset>
 		</div>
 		<div id="saving-options" class="block">
 			<input type="hidden" name="sid" value="{{model.Id|d('',True)}}" />
 			{% if model.Id %} 
 			<a class="btn action delete"
 				onclick="return confirm('Are you sure?');"
-				href="{{ 'deletecustomer' | route_url(cid=model.Id)}}"
-				confirm="Are you sure?" post="1"> <span><span>Delete</span></span>
+				href="{{ 'deletecustomer' | route_url(cid=model.Id)}}"> <span><span>Delete</span></span>
 			</a> 
 			{% endif %}
 			<button class="btn action save" type="submit">
