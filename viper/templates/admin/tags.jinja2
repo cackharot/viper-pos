@@ -1,0 +1,56 @@
+{% extends "templates/admin/layout.jinja2" %}
+{% block atopcontent %}
+{% endblock %} 
+{% block acontent %}
+<fieldset class="left taxes taxseries">
+	<h3>Invoicing taxes</h3>
+	<div id="taxes">
+		<ul class="head">
+			<a class="xit" href="#"></a>
+			<li class="name">
+				<strong>Name</strong>
+			</li>
+			<li class="value text-right">
+				<strong>Value</strong>
+			</li>
+			<li class="active">
+				<strong>Active</strong>
+			</li>
+		</ul>
+		<ul>
+			<a class="remove xit" href="#"></a>
+			<li>
+				<input id="config_taxes_old_1_name" class="name" type="text" value="IVA 16%" name="config[taxes][old_1][name]">
+			</li>
+			<li>
+				<input id="config_taxes_old_1_value" class="value text-right" type="text" value="16.00" name="config[taxes][old_1][value]" size="5">
+			</li>
+			<li>
+				<input id="config_taxes_old_1_active" class="active" type="checkbox" checked="checked" name="config[taxes][old_1][active]">
+			</li>
+			<li>
+				<input id="config_taxes_old_1_id" type="hidden" value="1" name="config[taxes][old_1][id]">
+				<input id="config_taxes_old_1_remove" class="remove" type="hidden" name="config[taxes][old_1][remove]">
+			</li>
+		</ul>
+	</div>
+	<div class="clear"></div>
+	<small>
+		<a id="addNewTax" class="to:taxes" href="#">Add a new tax value</a>
+	</small>
+</fieldset>
+<div id="tags_data" class="block">
+	<h3>Tags</h3>
+	<input id="invoice_tags_input" class="disableHotKeys ac_input" type="text" name="invoice_tags_input" autocomplete="off"/>
+	<input id="invoice_tags" type="hidden" value="" name="invoice_tags"/ >
+	<a class="btn action-clear addTag" href="#">
+		<span><span>Add</span></span>
+	</a>
+	<div id="tagsdiv" class="taglist"> </div>
+</div>
+{% endblock%} 
+{% block afooterscript %}
+<script>
+	
+</script>
+{% endblock%}

@@ -1,0 +1,46 @@
+{% extends "templates/admin/layout.jinja2" %} 
+{% block atopcontent %} 
+{% endblock %} 
+{% block acontent %}
+{% if errors %}
+	<div class="alert error">
+		{{ errors }}
+	</div>
+	<div class="clear"></div>
+{% endif %}
+<form id="template-form" method="post" name="templates">
+	<fieldset>
+		<ul>
+			<li>
+				<label for="Name">Template Name</label>
+				<input type="text" name="Name" id="Name" value="{{model.Name|d('',true)}}"/>
+				<input type="hidden" name="templateId" id="templateId" value="{{model.Id|d('',true)}}"/>
+				<input type="hidden" name="Status" id="Status" value="{{model.Status}}"/>
+			</li>
+			<li>
+				<label for="Content">Content</label>
+				<textarea name="Content" class="full" cols="80" rows="20" id="Content">{{model.Content | d('',true)}}</textarea>
+			</li>
+			<li class="text-right">
+				{% if model.Id %}
+				<a class="btn action delete" onclick="return confirm('Are you sure to delete this template?');" 
+					href="{{ 'deletetemplates' | route_url(tid=model.Id)}}">
+					<span><span>Delete</span></span>
+				</a>
+				{% endif %}
+				<a class="btn action cancel" href="{{'templatesettings' | route_url}}">
+					<span><span>Cancel</span></span>
+				</a>
+				<button class="btn action save" type="submit">
+					<span><span>Save</span></span>
+				</button>
+			</li>
+		</ul>
+	</fieldset>
+</form>
+{% endblock%} 
+{% block afooterscript %}
+<script>
+	
+</script>
+{% endblock%}
