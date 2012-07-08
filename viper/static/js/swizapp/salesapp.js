@@ -627,7 +627,7 @@
 						} else {
 							if (!isNaN(barcode)) {
 								var mrp = parseFloat(barcode)
-								if (mrp <= 1000.00) {
+								if (mrp != 0.0 && mrp <= 1000.00) {
 									var d = {}
 									d.Barcode = mrp.toString()
 									d.MRP = mrp

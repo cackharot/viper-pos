@@ -39,7 +39,7 @@ class StockService(object):
 			if items and len(items) > 0:
 				return items
 			else:
-				items = self.GetProducts(tenantId, 0, 10, 'Barcode', barcode)
+				items, cnt = self.GetProducts(tenantId, 0, 10, 'Barcode', barcode)
 				if items and len(items) > 0:
 					for i in items:
 						OrderCacheService.AddProduct(i)
@@ -53,7 +53,7 @@ class StockService(object):
 
 		if searchField:
 			if searchField == 'Name' and searchValue:
-				query = query.filter(Product.Name.like('%%%s%%' % searchValue)).order_by(Product.Name)
+				query = query.filter(Product.Name.like('%s%%' % searchValue)).order_by(Product.Name)
 			elif searchField == 'Barcode' and searchValue:
 				query = query.filter(Product.Barcode == searchValue)
 			elif searchField == 'MRP' and searchValue:

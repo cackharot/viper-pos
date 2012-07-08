@@ -92,7 +92,7 @@ def saveOrder(request):
 @view_config(route_name='savelineitems', renderer="json")
 def saveOrderlineitems(request):
     orderid = request.matchdict['orderid']
-    lineitems = request.body
+    lineitems = json.loads(request.body)
     if orderid and lineitems:
         orderServiceProxy.SaveOrderLineItems(orderid, lineitems)
         return {'status':'success', 'message':'LineItems Saved Successfully!'}
@@ -116,7 +116,7 @@ def searchItem(request):
         if barcode:
             items = stockService.GetProductsByBarcode(tenantId, barcode)
         elif name:
-            items = stockService.GetProducts(tenantId, 0, 10, 'Name', name)
+            items, cnt = stockService.GetProducts(tenantId, 0, 10, 'Name', name)
         if items and len(items) > 0:
             result = [x.toDict() for x in items]
             return result
