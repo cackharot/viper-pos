@@ -462,7 +462,7 @@
 					items.remove(item)
 					items.refreshUI()
 					this.vent.trigger('updateOrder', this.model.get('orderid'))
-					showMsg('warn', '<span class="label label-info">' + item.get('name') || item.get('barcode') + '</span> removed from the order!')
+					showMsg('warn', '<span class="label label-info">' + (item.get('name') || item.get('barcode')) + '</span> removed from the order!')
 				}
 			}
 		},
@@ -821,7 +821,7 @@
 			});
 		},
 		cancelOrder: function () {
-			if (this.model) {
+			if (this.model && confirm('Are you sure to cancel this invoice?')) {
 				this.model.get('lineItems').reset()
 				this.model.get('payments').reset()
 				this.vent.trigger('updateOrder', this.model.get('orderid'))
@@ -853,7 +853,7 @@
 			$('#checkoutOrderModel').modal('show')
 
 			$('#checkoutOrderModel input[name="paidamount"]').select()
-			$('#checkoutOrderModel #btnPayOrder' ).unbind('click', this.payOrder).click(this.payOrder)
+			$('#checkoutOrderModel #btnPayOrder').unbind('click', this.payOrder).click(this.payOrder)
 		},
 		payOrder: function () {
 			var orderid = this.model.get('orderid')
@@ -1003,49 +1003,42 @@
 			return v.toString(16);
 		});
 	};
-
-	function listen(e) {
-		//console.log(e.type)
-		//console.log(e.keyCode)
-		var isHandled = false;
-		switch (e.keyCode) {
-		case 114:
-			//F3
-			//new order
-			isHandled = true
-			$('#new-order').trigger('click');
-			break;
-		case 115:
-			//F4
-			//cancel order
-			isHandled = true
-			$('#cancel-order').trigger('click');
-			break;
-		case 116:
-			//F5
-			//checkout order
-			isHandled = true
-			$('#checkout-order').trigger('click');
-			break;
-		case 117:
-			// focus barcode
-			isHandled = true
-			$('#barcode').focus();
-			break;
-		case 122:
-			//print order
-			isHandled = true
-			$('#print-order').trigger('click');
-			break;
-		case 123:
-			//preview order
-			isHandled = true
-			$('#preview-order').trigger('click');
-			break;
+	
+	Mousetrap.bind(['f3'],function(e) {
+		e.preventDefault()
+		$('#new-order').trigger('click');
+	});
+	
+	Mousetrap.bind(['f5'],function(e) {
+		e.preventDefault()
+		$('#checkout-order').trigger('click');
+	});
+		
+	Mousetrap.bind(['f4'],function(e) {
+		e.preventDefault()
+		$('#cancel-order').trigger('click');
+	});
+	
+	Mousetrap.bind(['f6'],function(e) {
+		e.preventDefault()
+		$('#barcode').focus();
+	});
+	
+	Mousetrap.bind(['f11'],function(e) {
+		e.preventDefault()
+		$('#print-order').trigger('click');
+	});
+	
+	Mousetrap.bind(['f12'],function(e) {
+		e.preventDefault()
+		$('#preview-order').trigger('click');
+	});
+	
+	Mousetrap.bind('enter',function(e) {
+		if($('#checkoutOrderModel').is(':visible')){
+			e.preventDefault()
+			$('#checkoutOrderModel #btnPayOrder').trigger('click')
 		}
-		if (isHandled) e.preventDefault()
-	}
+	});
 
-	$(document).bind('keypress', listen)
-	//$(document).bind('keyup', listen);
 })(jQuery);

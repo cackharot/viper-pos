@@ -78,7 +78,7 @@ table#tblTodayOrders tbody tr.active td{
 						<td class="noborder">
 							<ul style="margin: 0pt;">
 								<li>
-									<input title="Enter due date" type="text" class="datetime" name="dueDate" id="dueDate" style="width: 90%;"/>
+									<input title="Enter due date" type="text" class="datetime mousetrap" name="dueDate" id="dueDate" style="width: 90%;"/>
 									<input type="hidden" id="hiddenDuedateSelect"/>
 									<img class="ui-datepicker-trigger" style="margin: 0pt; position: absolute; top: 6px; right: -10px;" 
 										title="Click to select due date!" alt="..." src="/static/images/icons/calendar.png"/>
@@ -95,7 +95,7 @@ table#tblTodayOrders tbody tr.active td{
 						<td class="noborder" style="width:380px;">
 							<ul style="margin:0em">
 								<li>
-									<input type="text" class="typeahead" data-provide="typeahead" autocomplete="off" 
+									<input type="text" class="typeahead mousetrap" data-provide="typeahead" autocomplete="off" 
 										name="customerName" id="customerName" 
 										placeholder="Enter customer number or name or mobile..." value="" />
 									<input type="hidden" id="customerid" name="customerid" value=""/>
@@ -121,8 +121,8 @@ table#tblTodayOrders tbody tr.active td{
 			<h2>Line Items</h2>
 			<ul style="width:90%;position:relative;">
 				<li>
-					<span class="_50"><input type="text" title="Barcode" maxlength="20" placeholder="Enter barcode" id="barcode" name="barcode"/></span>
-					<span class="_50"><input type="text" title="Item Name" maxlength="30" placeholder="Enter item name" id="itemName" name="itemName"/></span>
+					<span class="_50"><input type="text" class="mousetrap" title="Barcode" maxlength="20" placeholder="Enter barcode" id="barcode" name="barcode"/></span>
+					<span class="_50"><input type="text" class="mousetrap" title="Item Name" maxlength="30" placeholder="Enter item name" id="itemName" name="itemName"/></span>
 					<span style="position:absolute;right:-75px;top:-5px">
 						<input type="hidden" name="quantity" value="1"/>
 						<button id="add-item" class="btn action primary create"><span><span>Add</span></span></button>
@@ -279,7 +279,7 @@ table#tblTodayOrders tbody tr.active td{
 		<li>
 			<span class="_50">Paid Amount: </span>
 			<span class="_50 strong big red">
-				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span><input style="width:95%" type="number" name="paidamount"  value="<%=Math.round(item.get('balanceamount'))%>" required autofocus="autofocus"></input>
+				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span><input class="mousetrap" style="width:95%" type="number" name="paidamount"  value="<%=Math.round(item.get('balanceamount'))%>" required autofocus="autofocus"></input>
 			</span>
 		</li>
 		<li>
@@ -331,6 +331,7 @@ table#tblTodayOrders tbody tr.active td{
 </div>
 {% endblock content %}
 {% block footerscript %}
+<script src="{{request.static_url('viper:static/js/mousetrap.min.js')}}"></script>
 <script src="{{request.static_url('viper:static/js/swizapp/salesapp.js')}}"></script>
 <script>
 	$(function(){
