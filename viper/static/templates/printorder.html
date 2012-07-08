@@ -1,139 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-	<title>Order #<%=order.get('orderno') %></title>
-	<style>
-		/*@page {
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Order #<%=order.get('orderno') %></title>
+<style>
+/*@page {
 			margin:0px;
 			padding:0px;
 			width:100%;
 		}*/
-		@font-face {
-		    font-family: 'RupeeForadianRegular';
-		    src: url('/static/font/rupee_foradian-webfont.eot');
-		    src: url('/static/font/rupee_foradian-webfont.eot?#iefix') format('embedded-opentype'),
-		         url('/static/font/rupee_foradian-webfont.woff') format('woff'),
-		         url('/static/font/rupee_foradian-webfont.ttf') format('truetype'),
-		         url('/static/font/rupee_foradian-webfont.svg#RupeeForadianRegular') format('svg');
-		    font-weight: normal;
-		    font-style: normal;
-		}		
-		.currency{
-			font-family: "RupeeForadianRegular", 'rupi foradian';
-		}
-		.big{ font-size:16px; }
-		body{
-			font-size:14px;
-			margin:0px auto;
-			padding:0px;
-			color:#000;
-			font-family: "Arial",Verdana;
-		}
-		h1,h2,h3,h4,h5,h6{
-			padding:0px;
-			margin:0px;
-		}
-		h4{
-			font-size:1.6em;
-		}
-		table {
-		  width: 100%;
-		  background-color: transparent;
-		  border-collapse: collapse;
-		  border-spacing: 0;
-		}
-		table tbody + tbody {
- 			border-top: 2px solid #dddddd;
-		}
-		.heading {
-			text-align:center;
-		}
-		#pDebug,#pDebugToolbarHandle { display: none !important;}
-		@media print{
-			#pDebug,#pDebugToolbarHandle { display: none !important; }
-		}
-	</style>
+@font-face {
+	font-family: 'RupeeForadianRegular';
+	src: url('/static/font/rupee_foradian-webfont.eot');
+	src: url('/static/font/rupee_foradian-webfont.eot?#iefix')
+		format('embedded-opentype'),
+		url('/static/font/rupee_foradian-webfont.woff') format('woff'),
+		url('/static/font/rupee_foradian-webfont.ttf') format('truetype'),
+		url('/static/font/rupee_foradian-webfont.svg#RupeeForadianRegular')
+		format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+.currency {
+	font-family: "RupeeForadianRegular", 'rupi foradian';
+}
+
+.big {
+	font-size: 16px;
+}
+
+body {
+	font-size: 13px;
+	margin: 0px auto;
+	padding: 0px;
+	color: #000;
+	font-family: "Arial", Verdana;
+}
+
+h1,h2,h3,h4,h5,h6 {
+	padding: 0px;
+	margin: 0px;
+}
+
+h4 {
+	font-size: 1.6em;
+}
+
+table {
+	background-color: transparent;
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 99.9%;
+}
+
+table tbody+tbody {
+	border-top: 2px solid #dddddd;
+}
+
+.heading {
+	text-align: center;
+}
+
+#pDebug,#pDebugToolbarHandle {
+	display: none !important;
+}
+
+@media print {
+	#pDebug,#pDebugToolbarHandle {
+		display: none !important;
+	}
+}
+</style>
 </head>
 <body>
-	<div>	
-		<% 
-			var qas = order.get('lineItems').getQAS(); 
-			var paidAmt = Math.round(order.getPaidAmount()).toFixed(2);
-			var totalAmt = qas.totalAmount.toFixed(2);
-			var balanceAmt = Math.round((totalAmt - paidAmt)).toFixed(2);
-		%>
+	<div>
+		<% var qas = order.get('lineItems').getQAS(); var paidAmt =
+		order.getPaidAmount().toFixed(2); var totalAmt =
+		qas.totalAmount.toFixed(2); var balanceAmt = (totalAmt -
+		paidAmt).toFixed(2); %>
 		<div class="heading">
-			<h3>Sri Durga Home Needs Super Market</h3>
+			<h3>Sree Durga Home Needs Super Market</h3>
 			<h5>#25, M.G.Road, Pondy-3. Ph: 2337517</h5>
 			<h5>TIN: 34110014710</h5>
-			<h5><%= (balanceAmt > 0) ? 'Credit' : 'Cash' %> Bill</h5>
+			<h5><%= order.get('paymenttype') || ((balanceAmt > 0) ? 'Credit' : 'Cash') %> Bill</h5>
 		</div>
-		<table border="0"> 
+		<table style="float: left;width:auto;">
 			<tbody>
 				<tr>
-					<td width="50px">No# </td>
-					<td width="51%"><b><%=order.get('orderno') %></b></td>
-					<td align="right" width="50px">Date: </td>
-					<td><%=$.format.date(ToLocalDate(order.get('orderdate')), 'dd-MM-yyyy') %></td>
+					<td width="50px">Bill No#</td>
+					<td><b><%=order.get('orderno') %></b></td>
 				</tr>
 				<tr>
-					<td width="50px">Customer: </td>
-					<td width="51%"><%=order.get('customername') || '' %> </td>
-					<td align="right" width="50px">Time:</td>
-					<td><%=$.format.date(ToLocalDate(order.get('orderdate')), 'hh:mm a') %> </td>
+					<td width="50px">Customer:</td>
+					<td><%=order.get('customername') || '' %></td>
 				</tr>
 			</tbody>
 		</table>
-		<table border="0" style="width:99%">
+		<table style="float: right;width:auto;">
+			<tbody>
+				<tr>
+					<td align="right" width="50px">Date:</td>
+					<td><%=$.format.date(ToLocalDate(order.get('orderdate')),
+						'dd-MM-yyyy') %></td>
+				</tr>
+				<tr>
+					<td align="right" width="50px">Time:</td>
+					<td><%=$.format.date(ToLocalDate(order.get('orderdate')),'hh:mm a') %></td>
+				</tr>
+			</tbody>
+		</table>
+		<div style="clear:both;"></div>
+		<table>
 			<thead>
-				<tr style="border-bottom: 1px solid black;border-top: 1px solid black;">
-					<th style="text-align:left;">Name</th>
-					<th style="text-align:right;width:40px;">MRP</th>
-					<th style="text-align:right;width:60px;">Price</th>
-					<th style="text-align:right;width:25px;">Qty</th>
-					<th style="text-align:right;width:40px;">Total</th>
+				<tr
+					style="border-bottom: 1px solid black; border-top: 1px solid black;">
+					<th style="text-align: left;">Name</th>
+					<th style="text-align: right; width: 40px;">MRP</th>
+					<th style="text-align: right; width: 40px;">Price</th>
+					<th style="text-align: right; width: 25px;">Qty</th>
+					<th style="text-align: right; width: 40px;">Total</th>
 				</tr>
 			</thead>
 			<tbody>
 				<% order.get('lineItems').each(function(item) { %>
-					<% 
-						//var barcode = item.get('barcode');
-						//if(barcode.startsWith('.') || barcode.startsWith('0.'))
-						//	return
-					%>
-					<tr>
-						<td style="text-align:left;width:110px;overflow:auto;"><%= item.get('name') %></td>
-						<td style="text-align:right;width:50px;"><%= item.get('mrp') %></td>
-						<td style="text-align:right;width:60px;"><%= item.get('price') %></td>
-						<td style="text-align:right;width:25px;"><%= item.get('quantity') %></td>
-						<td style="text-align:right;width:50px;"><%= item.get('subtotal').toFixed(2) %></td>
-					</tr>
-				<% }); %>	
+				<tr>
+					<td style="text-align: left; overflow: auto;"><%=
+						item.get('name') %></td>
+					<td style="text-align: right;"><%= item.get('mrp') %></td>
+					<td style="text-align: right;"><%= item.get('price') %></td>
+					<td style="text-align: right;"><%= item.get('quantity') %></td>
+					<td style="text-align: right;"><%=
+						item.get('subtotal').toFixed(2) %></td>
+				</tr>
+				<% }); %>
 				<tr style="border-top: 1px solid black;">
-					<td colspan="2" style="text-align:left;">
-						Items/Qty: <%=qas.totalItems%>/<%=qas.totalQuantity%>
+					<td colspan="2" style="text-align: left;">Items/Qty:
+						<%=qas.totalItems%>/<%=qas.totalQuantity%></td>
+					<td colspan="2" style="text-align: right;"><h4>Total:</h4></td>
+					<td style="text-align: right;"><h4>
+							<span class="currency">`</span><%=totalAmt%>
+						</h4></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;">Savings: <b><span
+							class="currency">`</span><%=qas.savings%></b></td>
+					<td></td>
+					<td colspan="2" style="text-align: right;">Paid:</td>
+					<td style="text-align: right;"><span class="currency">`</span><%=paidAmt%></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td colspan="2" style="text-align: right;"><%=(balanceAmt>0)?'Balance':'Change'%> :
 					</td>
-					<td colspan="2" style="text-align:right;"><h4>Total: </h4></td>
-					<td style="text-align:right;"><h4><span class="currency">`</span><%=totalAmt%></h4></td>
+					<td style="text-align: right;"><span class="currency">`</span><%=balanceAmt%></td>
 				</tr>
 				<tr>
-					<td style="text-align:left;">Savings: <b><span class="currency">`</span><%=qas.savings%></b></td>
-					<td></td>
-					<td colspan="2" style="text-align:right;">Paid: </td>
-					<td style="text-align:right;"><span class="currency">`</span><%=paidAmt%></td>
+					<td colspan="5" style="text-align: center;"><b><i>Thank	You! Visit Again!</i></b></td>
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td colspan="2" style="text-align:right;"><%=(balanceAmt>0)?'Balance':'Change'%>: </td>
-					<td style="text-align:right;"><span class="currency">`</span><%=balanceAmt%></td>
-				</tr>
-				<tr>
-					<td colspan="5" style="text-align:center;"><b><i>Thank You! Visit Again!</i></b></td>
-				</tr>
-				<tr>
-					<td colspan="5" style="text-align:center;">Please AVOID CARRY BAGS!</td>
+					<td colspan="5" style="text-align: center;">Please AVOID CARRY BAGS!</td>
 				</tr>
 			</tbody>
 		</table>

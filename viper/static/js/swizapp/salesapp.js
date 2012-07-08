@@ -51,14 +51,15 @@
 	LineItemCollection = Backbone.Collection.extend({
 		model: LineItem,
 		url: '/sales/savelineitems',
+		lineItemTpl: '',
 		initialize: function (models, options) {
 			this.bind("add", this.addLineItemRecord)
 			this.bind("change", this.updateTotal)
 			this.bind("reset", this.resetRecords)
+			this.lineItemTpl = _.template($('#tpl-lineitem').html())
 		},
 		refreshUI: function (callback) {
 			var that = this
-			//$('#tblOrderLineItems tbody').hide()
 			this.resetRecords()
 			var cnt = 1
 			this.each(function (item) {
@@ -68,15 +69,11 @@
 				that.addItemTpl(item)
 			});
 			this.updateTotal()
-			//$('#tblOrderLineItems tbody').show()
 		},
 		addItemTpl: function (item) {
 			var n = item.get('slno')
-			if (!n) item.set({
-				'slno': this.length
-			})
-			var compiled = _.template($('#tpl-lineitem').html())
-			var tr = compiled({
+			if (!n) item.set('slno', this.length)
+			var tr = this.lineItemTpl({
 				'item': item
 			})
 			$('#tblOrderLineItems tbody').prepend(tr)
@@ -122,7 +119,6 @@
 		},
 		resetRecords: function () {
 			$('#tblOrderLineItems tbody tr').remove()
-			$('#tblOrderLineItems tbody').html('<tr><td style="padding:0em;display: none;" class="noborder" colspan="7"></td></tr>')
 			$('#totalAmount').text(0.0)
 			$('#savingsAmount').text(0.0)
 			$('#totalItemsQuantity').text('0/0')
@@ -203,18 +199,22 @@
 	window.OrderListView = Backbone.View.extend({
 		el: $('#orderListDiv'),
 		model: window.TodayOrderList,
+		orderItemTpl: '',
 		initialize: function (options) {
 			this.vent = options.vent
 			this.model = window.TodayOrderList
 
 			_.bindAll(this, "updateorderitem")
 			_.bindAll(this, "loadTodayOrders")
+			_.bindAll(this, "addorderitem")
 
 			this.model.bind('add', this.addorderitem)
 			this.model.bind('remove', this.removeorderitem)
 			this.vent.bind("updateOrder", this.updateorderitem)
 			this.vent.bind("resetUI", this.resetUI)
 			this.vent.bind("loadTodayOrders", this.loadTodayOrders)
+			
+			this.orderItemTpl = _.template($('#tpl-todayorderitem').html());
 
 			this.loadTodayOrders()
 		},
@@ -230,8 +230,7 @@
 		},
 		addorderitem: function (item) {
 			if (!item) return;
-			var compiled = _.template($('#tpl-todayorderitem').html());
-			var $tr = $(compiled({
+			var $tr = $(this.orderItemTpl({
 				'item': item
 			}));
 			$('#tblTodayOrders tbody').prepend($tr)
@@ -350,6 +349,7 @@
 			
 			this.itemNameTypeahead()
 			this.customerNameTypeahead()
+			this.initTemplates()
 		},
 		render: function () {
 			//console.log('updating order')
@@ -462,7 +462,7 @@
 					items.remove(item)
 					items.refreshUI()
 					this.vent.trigger('updateOrder', this.model.get('orderid'))
-					showMsg('warn', '<span class="label label-info">' + item.get('name') + '</span> removed from the order!')
+					showMsg('warn', '<span class="label label-info">' + item.get('name') || item.get('barcode') + '</span> removed from the order!')
 				}
 			}
 		},
@@ -600,8 +600,7 @@
 					remote.searchItem(barcode, function (data) {
 						if (data) {
 							if (data.length > 1) {
-								var compl = _.template($('#tpl-selectitem').html())
-								var tr = compl({'items': data})
+								var tr = that.multipleSelectItemTemplate({'items': data})
 								$('#tblSelectItem tbody').html(tr)
 
 								$('#tblSelectItem tbody td button').each(function () {
@@ -727,12 +726,6 @@
 			});
 		},
 		bindOrder: function(){
-			/*this.model.bind("change:customerid", this.render, this)
-			this.model.bind("change:customername", this.render, this)
-			this.model.bind("change:orderamount", this.render, this)
-			this.model.bind("change:paidamount", this.render, this)
-			this.model.bind("change:balanceamount", this.render, this)
-			this.model.bind("change:isdirty", this.render, this)*/
 			this.model.bind("change", this.render, this)
 		},
 		editOrder: function (orderid) {
@@ -761,7 +754,6 @@
 		fetchAndEditOrder: function (orderid) {
 			var currentOrder = this.model
 			var items = this.model.get('lineItems')
-			//items.hideUI()
 			
 			$.post('/sales/getorder/' + orderid, null, function (data) {
 				if (data) {
@@ -848,29 +840,26 @@
 				return
 			}
 
-			var orderamt = this.model.get('orderamount')
+			var orderamt = this.model.getOrderAmount()
 			var paidamt = this.model.getPaidAmount()
 			var balanceamt = paidamt > orderamt ? 0.0 : (orderamt - paidamt)
 			
 			this.model.set({'balanceamount': balanceamt})
 
-			var cmpl = _.template($('#tpl-chkoutorder').html())
-			var html = cmpl({
+			var html = this.checkouTemplate({
 				'item': this.model
 			})
 			$('#checkoutOrderModel .modal-body').html(html)
-
 			$('#checkoutOrderModel').modal('show')
 
-			$('#btnPayOrder', $('#checkoutOrderModel')).focus()
-			$('#btnPayOrder', $('#checkoutOrderModel')).unbind('click', this.payOrder)
-			$('#btnPayOrder', $('#checkoutOrderModel')).click(this.payOrder)
+			$('#checkoutOrderModel input[name="paidamount"]').select()
+			$('#checkoutOrderModel #btnPayOrder' ).unbind('click', this.payOrder).click(this.payOrder)
 		},
 		payOrder: function () {
 			var orderid = this.model.get('orderid')
-			var paidamount = Math.round(parseFloat($('input[name=paidamount]', $('#checkoutOrderModel')).val()))
-			var paymenttype = $('select[name=paymenttype] option:selected', $('#checkoutOrderModel')).val()
-			var canprint = $('input[name=printTicket]', $('#checkoutOrderModel')).is(':checked')
+			var paidamount = Math.round(parseFloat($('#checkoutOrderModel input[name="paidamount"]').val().trim()))
+			var paymenttype = $('#checkoutOrderModel select[name=paymenttype] option:selected').val().trim()
+			var canprint = $('#checkoutOrderModel input[name=printTicket]').is(':checked')
 			var oa = this.model.getOrderAmount()
 			var pa = this.model.getPaidAmount()
 			var orderamount = Math.round(oa)
@@ -897,6 +886,7 @@
 
 				this.model.get('payments').add(payment)
 				this.model.save()
+				
 				showMsg('success', '<strong>Hooray!</strong> Payment Successfull &amp; <strong>#'+this.model.get('orderno')+'</strong> Invoice is saved.')
 				
 				this.vent.trigger('updateOrder', orderid)
@@ -912,6 +902,14 @@
 			$(this).unbind('click', this.payOrder)
 			$('#checkoutOrderModel').modal('hide')
 		},
+		printTemplate: '',
+		checkouTemplate: '',
+		multipleSelectItemTemplate: '',
+		initTemplates: function() {
+			this.printTemplate = _.template($('#templates script[rel="print"]:first').html())
+			this.checkouTemplate = _.template($('#tpl-chkoutorder').html())
+			this.multipleSelectItemTemplate = _.template($('#tpl-selectitem').html()) 
+		},
 		printOrder: function () {
 			this.showPrintableOrder(function (w) {
 				w.print()
@@ -926,16 +924,13 @@
 				showMsg('warn', 'No active order! Cannot print!')
 				return;
 			}
-			var that = this
-			templateLoader.loadRemoteTemplate("tplPrintOrder", "/static/templates/printorder.html", function (data) {
-				var compiled = _.template(data)
-				var pw = window.open('', 'PrintOrder', 'width=400,height=600,resizeable,scrollbars')
-				pw.document.write(compiled({
-					order: that.model
-				}))
-				pw.document.close()
-				if (callback) callback(pw)
-			});
+			
+			var pw = window.open('', 'PrintOrder', 'width=400,height=600,resizeable,scrollbars')
+			pw.document.write(this.printTemplate({
+				order: this.model
+			}))
+			pw.document.close()
+			if (callback) callback(pw)
 		}
 	});
 
@@ -947,8 +942,6 @@
 		vent: vent
 	})
 
-	templateLoader.clearLocalStorage();
-	
 	$('#dueDate').blur(function(){
 		var tmp = $(this).val()
 		if(tmp && tmp.length>1){

@@ -18,6 +18,7 @@ class PrintTemplate(Base):
     TenantId        = Column(UUID(), ForeignKey('TenantDetails.Id'), nullable=False)
     Name            = Column(Unicode(50), nullable=False)
     Content         = Column(Text, nullable=True)
+    #Default          = Column(Boolean, default=False)
     Status          = Column(Boolean, default=True)
 
     def __init__(self):

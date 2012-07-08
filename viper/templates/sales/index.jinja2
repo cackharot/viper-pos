@@ -322,7 +322,12 @@ table#tblTodayOrders tbody tr.active td{
 			<td class="c"><%= $.format.date(ToLocalDate(item.get('orderdate')),'h:mm a') %></td>
 			<td class="a tright tbold"><%= Math.round(item.get('orderamount')) %></td>
 		</tr>
-	</script>	
+	</script>
+	{% for tpl in templates if templates %}
+		<script type="text/template" rel="print" id="tpl-{{tpl.Id}}">
+			{{tpl.Content | safe}}
+		</script>
+	{% endfor %}	
 </div>
 {% endblock content %}
 {% block footerscript %}

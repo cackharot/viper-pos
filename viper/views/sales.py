@@ -13,6 +13,7 @@ from ..library.ViperLog import log
 
 from ..services.OrderService import OrderService
 from ..services.StockService import StockService
+from ..services.SettingService import SettingService
 
 stockService = StockService()
 orderServiceProxy = OrderService()
@@ -33,7 +34,8 @@ def includeme(config):
 @view_config(route_name='sales', renderer='sales/index.jinja2')
 def salesPage(request):
     d = datetime.utcnow()
-    return { 'date': d.date(), 'time': d.time() }
+    templates = SettingService().GetPrintTemplates(request.user.TenantId)
+    return { 'date': d.date(), 'time': d.time(), 'templates': templates }
 
 @view_config(route_name='todayorders', renderer="json")
 def getTodayOrders(request):

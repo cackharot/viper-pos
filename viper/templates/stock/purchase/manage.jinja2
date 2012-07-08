@@ -177,7 +177,7 @@
 					<td class="right">{{item.BuyPrice}}</td>
 					<td class="right">{{item.Discount}}</td>
 					<td class="right">{{item.Quantity}}</td>
-					<td class="right tbold">{{item.BuyAmount}}</td>
+					<td class="right tbold">{{item.BuyAmount | round(2)}}</td>
 				</tr>
 				{% endfor %}
 			</tbody>
@@ -200,7 +200,7 @@
 			<td class="right"><%= item.BuyPrice %></td>
 			<td class="right"><%= item.Discount %></td>
 			<td class="right"><%= item.Quantity %></td>
-			<td class="right tbold"><%= item.Total %></td>
+			<td class="right tbold"><%= item.Total.toFixed(2) %></td>
 		</tr>
 	</script> 
 </div>

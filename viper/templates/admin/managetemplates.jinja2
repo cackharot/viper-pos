@@ -19,7 +19,11 @@
 			</li>
 			<li>
 				<label for="Content">Content</label>
-				<textarea name="Content" class="full" cols="80" rows="20" id="Content">{{model.Content | d('',true)}}</textarea>
+				<div style="width: 100%; position: relative;">
+					<textarea name="Content" id="Content" cols="80" rows="40">{{model.Content | d('',true) | safe }}</textarea>
+					<iframe name="dynamicframe" src="javascript:'';" style="position: absolute; top: 0pt; right: -103%; height: 100%; width: 100%;">
+					</iframe>
+				</div>
 			</li>
 			<li class="text-right">
 				{% if model.Id %}
@@ -38,9 +42,31 @@
 		</ul>
 	</fieldset>
 </form>
+<div style="display: none;" id="currentTemplateContent">
+
+</div>
 {% endblock%} 
 {% block afooterscript %}
 <script>
-	
+$(function() {
+	init();
+});
+function init() { 
+	update(); 
+}
+
+var old;
+function update()
+{
+	var value = $('#Content').val();
+	var d = dynamicframe.document;
+	if (old != value) {
+		old = value;
+		d.open();
+		d.write(old);
+		d.close();
+	}
+	window.setTimeout(update, 150);
+} 	
 </script>
 {% endblock%}
