@@ -2,7 +2,7 @@
 <ul id="settings-menu" class="content tabs">
 	<li><a href="#tblReturns">Return Products</a></li>
 	<li><a href="#tblLowStock">Low Stock Products</a></li>
-	<li><a href="#tblCreditOrders">Credit Orders</a></li>
+	<li><a href="#tblCreditOrders">Credit Invoices</a></li>
 	<li><a href="#tblCreditPurchases">Credit Purchases</a></li>
 </ul>
 <div id="settings-wrapper" class="content">
@@ -96,7 +96,7 @@
 		<tr>
 			<td><%= item.PurchaseNo%></td>
 			<td><%= item.SupplierName || '---'%></td>
-			<td><%= $.format.date(ToLocalDate(item.PurchaseDate),'dd-MM-yyyy  h:mm a') %></td>
+			<td><%= $.format.date(ToLocalDate(item.PurchaseDate),'dd MMMM, yyyy  hh:mm a') %></td>
 			<td class="tright"><%= item.PurchaseAmount.toFixed(2)%></td>
 			<td class="tright"><%= item.PaidAmount.toFixed(2)%></td>
 		</tr>
@@ -107,7 +107,7 @@
 		<tr>
 			<td><%= item.OrderNo%></td>
 			<td><%= item.CustomerName || '---'%></td>
-			<td><%= $.format.date(ToLocalDate(item.OrderDate),'dd-MM-yyyy  h:mm a') %></td>
+			<td><%= $.format.date(ToLocalDate(item.OrderDate), 'dd MMMM, yyyy  hh:mm a') %></td>
 			<td class="tright"><%= item.OrderAmount.toFixed(2)%></td>
 			<td class="tright"><%= item.PaidAmount.toFixed(2)%></td>
 		</tr>

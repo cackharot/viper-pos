@@ -2,12 +2,18 @@
 <table id="prdTable" class="listing noedit">
 	<thead>
 		<tr class="empty noborder listing-options">
-			<td colspan="10">
+			<td colspan="6">
 				<a class="btn batch delete action-clear"
 					href="#"
 					onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
 					confirm="Are you sure?"> <span><span>Delete</span></span>
 				</a>
+			</td>
+			<td class="right">
+				Total items: 
+			</td>
+			<td class="strong">
+				{{ totalCount }}
 			</td>
 		</tr>
 		<tr class="empty noborder">

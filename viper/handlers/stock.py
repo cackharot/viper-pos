@@ -73,7 +73,10 @@ class StockController(object):
 
 	@action(renderer='templates/stock/products/index.jinja2')
 	def products(self):
-		return self.getproducts()
+		data = self.getproducts()
+		lstSuppliers = self.GetSuppliers()
+		data['suppliers'] = lstSuppliers	
+		return data
 
 	@action(renderer='templates/stock/products/partialItemList.jinja2', xhr=True)
 	def products_xhr(self):
@@ -117,11 +120,13 @@ class StockController(object):
 		pageSize = self.request.params.get('pageSize', 20)
 		searchValue = self.request.params.get('searchValue', None)
 		searchField = self.request.params.get('searchField', None)
+		supplierId = self.request.params.get('supplierId', None)
+		status = self.request.params.get('productStatus', None)
 
-		lstProducts = stockService.GetProducts(self.TenantId, \
-				pageNo, pageSize, searchField, searchValue)
+		lstProducts, totalCount = stockService.GetProducts(self.TenantId, \
+				pageNo, pageSize, searchField, searchValue, status, supplierId)
 
-		return dict(model=lstProducts,searchValue=searchValue,searchField=searchField)
+		return dict(model=lstProducts,totalCount=totalCount,searchValue=searchValue,searchField=searchField)
 
 	@action(renderer='templates/stock/products/manage.jinja2')
 	def manageproduct(self):

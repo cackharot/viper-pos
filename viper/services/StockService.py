@@ -46,7 +46,7 @@ class StockService(object):
 					return items
 		return None
 
-	def GetProducts(self, tenantId, pageNo=0, pageSize=50, searchField=None, searchValue=None):
+	def GetProducts(self, tenantId, pageNo=0, pageSize=50, searchField=None, searchValue=None, status=None, supplierId=None):
 		if not tenantId:
 			return None
 		query = DBSession.query(Product).filter(Product.TenantId == tenantId)
@@ -56,13 +56,23 @@ class StockService(object):
 				query = query.filter(Product.Name.like('%%%s%%' % searchValue)).order_by(Product.Name)
 			elif searchField == 'Barcode' and searchValue:
 				query = query.filter(Product.Barcode == searchValue)
-			elif searchField == 'Status':
-				query = query.filter(Product.Status == searchValue)
+			elif searchField == 'MRP' and searchValue:
+				query = query.filter(Product.MRP == searchValue)
+			elif searchField == 'SellPrice' and searchValue:
+				query = query.filter(Product.SellPrice == searchValue)
 			elif searchField == 'SuppierName' and searchValue:
 				query = query.join(Supplier).filter(Supplier.Name == searchValue)
+				
+		if status:
+			query = query.filter(Product.Status == status)
+				
+		if supplierId:
+			query = query.filter(Product.SupplierId==supplierId)
+			
+		query = query.order_by(desc(Product.UpdatedOn), desc(Product.CreatedOn))
 
-		lstItems = query.order_by(desc(Product.UpdatedOn), desc(Product.CreatedOn)).offset(pageNo).limit(pageSize).all()
-		return lstItems
+		lstItems = query.offset(pageNo).limit(pageSize).all()
+		return lstItems, query.count()
 
 	def GetReturnableProductIds(self, tenantId, pageNo=0, pageSize=50):
 		if not tenantId:

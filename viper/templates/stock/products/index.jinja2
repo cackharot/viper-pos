@@ -8,16 +8,40 @@
 		<div class="searchSection">
 			<ul>
 				<li>
-					<label for="searchValue">Search Value: </label>
-					<input type="text" placeholder="Enter barcode or item name" 
+					<label for="searchValue">Search: </label>
+					<input type="text" placeholder="" autocomplete="off" 
 						name="searchValue" value="{{searchValue| d('',true)}}"/>
 				</li>
-				<li>
-					<label for="searchField">Search Field: </label>
-					<input type="radio" name="searchField" value="Barcode" checked/> Barcode
-					<input type="radio" name="searchField" value="Name"/> Name
-				</li>
 			</ul>
+		</div>
+		<hr class="searchSeparator"/>
+		<div class="searchSection">
+			<ul class="filters">
+				<li>Filter: </li>
+				<li><input type="radio" name="searchField" value="Barcode" checked="checked"/> <span>Barcode</span> |</li>
+				<li><input type="radio" name="searchField" value="Name"/> <span>Name</span> |</li>
+				<li><input type="radio" name="searchField" value="MRP"/> <span>MRP</span> |</li>
+				<li><input type="radio" name="searchField" value="SellPrice"/> <span>SellPrice</span></li>
+			</ul>
+			<ul>
+				<li>
+					<label for="productStatus">Status: </label> 
+					<select	name="productStatus" style="min-width:100px;margin-right:10px;">
+						<option value="">--Select--</option>
+						<option value="1">Active</option>
+						<option value="0">InActive</option>
+					</select>
+				</li>
+				<li>
+					<label for="supplierId">Supplier: </label> 
+					<select	name="supplierId" style="min-width:150px">
+						<option value="">--Select--</option> 
+						{% for item in suppliers if suppliers %}
+						<option value="{{item[0]}}">{{item[1]}}</option> 
+						{% endfor %}
+					</select>
+				</li>
+			</ul>			
 		</div>
 	</div>
 	<span class="buttons">
