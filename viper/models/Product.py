@@ -31,8 +31,8 @@ class Product(AuditMixin, Base):
 	MfgDate 	 = Column(DateTime, nullable=True)
 	ExpiryDate	 = Column(DateTime, nullable=True)
 	SupplierId	 = Column(UUID(), ForeignKey('Supplier.Id'), nullable=True, index=True)
-	CategoryId 	 = Column(Integer, nullable=True)
-	TaxCategoryId = Column(Integer, nullable=True)
+	CategoryId 	 = Column(UUID(), nullable=True)
+	TaxCategoryId= Column(UUID(), nullable=True)
 	Picture 	 = Column(String(255), nullable=True)
 
 	Supplier 	 = relationship("Supplier")
