@@ -38,7 +38,7 @@ class SupplierService(object):
 				query = query.filter(SupplierContactDetails.FirstName.like(searchValue))
 
 		lstSuppliers = query.offset(pageNo).limit(pageSize).all()
-		return lstSuppliers
+		return lstSuppliers, query.count()
 
 	def CheckSupplierExists(self, cid, tenantId, name=None):
 		if name:

@@ -40,7 +40,7 @@
 		list	: '{{ 'suppliers' | route_url }}'
 	};
 </script>
-<div id="customer-container" class="content">
+<div class="content">
 	{% if model != None and (model | count) > 0 %} 
 	<table id="supplierTable" class="listing">
 		<thead>
@@ -115,6 +115,8 @@
 			{% endfor %}
 		</tbody>
 	</table>
+	{% import 'shared/paginate.jinja2' as pager with context %}
+	{{ pager.paginate('suppliers' | route_url, pageno, pagesize, total) }}
 	{% else %}
 		<div class="alert alert-info">
 			No records found!

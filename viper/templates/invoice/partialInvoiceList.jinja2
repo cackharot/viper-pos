@@ -88,6 +88,14 @@
 		{%- endfor %}
 	</tbody>
 </table>
+{% import 'shared/paginate.jinja2' as pager with context %}
+{% call pager.paginate('invoices' | route_url, pageno, pagesize, totalInvoices) %}
+	<input type="hidden" name="customerName" value="{{ customerName }}"/>
+	<input type="hidden" name="customerId" value="{{ customerId }}"/>
+	<input type="hidden" name="fromDate" value="{{ fromDate }}"/>
+	<input type="hidden" name="toDate" value="{{ toDate }}"/>
+	<input type="hidden" name="invoicestatus" value="{{ invoicestatus }}"/>
+{% endcall%}
 {% else %}
 	<div class="alert alert-info">
 		No records found!

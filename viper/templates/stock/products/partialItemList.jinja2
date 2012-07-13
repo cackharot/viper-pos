@@ -61,3 +61,5 @@
 		No products found!
 	</div>
 {% endif %}
+{% import 'shared/paginate.jinja2' as pager with context %}
+{{ pager.paginate('products' | route_url, pageno, pagesize, total) }}

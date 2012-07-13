@@ -63,15 +63,22 @@ class InvoiceController(object):
         searchParam.ToOrderDate = self.getDateFmt(self.request.params.get('toDate',None))
         searchParam.InvoiceStatus = self.request.params.get('invoicestatus',None)
         
-        searchParam.PageSize = self.request.params.get('pageSize',20)
-        searchParam.PageNo = self.request.params.get('pageNo',0)
+        pageNo = int(self.request.params.get('page', 1))
+        pageSize = int(self.request.params.get('pagesize', 10))
+        
+        searchParam.PageNo = (pageNo-1)*pageSize
+        searchParam.PageSize = pageSize
 
         orderService = OrderService()
         invoices, stat  = orderService.SearchOrders(searchParam)
         totalInvoices = stat.ItemsCount
         totalAmount = stat.TotalAmount
         totalDueAmount = stat.TotalAmount - stat.TotalPaidAmount        
-        return dict(model=invoices,totalInvoices=totalInvoices,totalAmount=totalAmount,totalDueAmount=totalDueAmount)
+        return dict(model=invoices,totalInvoices=totalInvoices, \
+                    pageno=pageNo,pagesize=pageSize,\
+                    customerName=searchParam.CustomerName,customerId=searchParam.CustomerId,\
+                    fromDate=searchParam.FromOrderDate,toDate=searchParam.ToOrderDate, \
+                    totalAmount=totalAmount,totalDueAmount=totalDueAmount)
 
 
     #@action(renderer='templates/invoice/payments.jinja2',xhr=True)

@@ -1,0 +1,56 @@
+{% macro paginate(url,pageno=1,pagesize=5,total=0) -%}
+{%	set totalpage = (total/pagesize) | round(0,'ceil') | int %}
+<div id="bd-paginator">
+	{% if totalpage > 1 %}
+	<form method="get" action="{{url}}">
+		<ul class="inline small">
+			<li>
+			{% if pageno > 1 %}
+			<a href="{{url}}?page=1">First</a>
+			{% else %}
+				First
+			{% endif %}
+			|
+			</li>
+			<li>
+			{% if pageno > 1 %}
+			<a href="{{url + '?page=' + ((pageno-1) | string)}}">Prev</a>
+			{% else %}
+				Prev
+			{% endif %}
+			|
+			</li>
+			<li class="small"> PAGE {{pageno}} / {{totalpage}} </li>
+			<li>
+			|
+			{% if pageno < totalpage %}
+			<a href="{{url + '?page=' + ((pageno+1)|string)}}">Next</a>
+			{% else %}
+				Next
+			{% endif %}
+			|
+			</li>
+			<li>
+			{% if pageno < totalpage %}
+			<a href="{{url + '?page=' + (totalpage|string)}}">Last</a>
+			{% else %}
+				Last
+			{% endif %}
+			|
+			</li>
+			<li>
+				go to
+				<input id="page" type="text" size="2" name="page">
+				<button class="btn btn primary" type="submit">
+					<span><span>Go</span></span>
+				</button>
+			</li>
+		</ul>
+		{% if caller %}
+			{{caller()}}
+		{% endif%}
+	</form>
+	{% endif %}
+	<div class="small">Showing {{pageno}} - {{pagesize}} of <strong>{{ total }}</strong> results</div>
+</div>
+{%- endmacro %}

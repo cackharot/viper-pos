@@ -116,17 +116,17 @@ class StockController(object):
 		return dict(status=False)
 
 	def getproducts(self):
-		pageNo = self.request.params.get('pageNo', 0)
-		pageSize = self.request.params.get('pageSize', 20)
+		pageNo = int(self.request.params.get('page', 1))
+		pageSize = int(self.request.params.get('pageSize', 10))
 		searchValue = self.request.params.get('searchValue', None)
 		searchField = self.request.params.get('searchField', None)
 		supplierId = self.request.params.get('supplierId', None)
 		status = self.request.params.get('productStatus', None)
 
 		lstProducts, totalCount = stockService.GetProducts(self.TenantId, \
-				pageNo, pageSize, searchField, searchValue, status, supplierId)
+				(pageNo-1)*pageSize, pageSize, searchField, searchValue, status, supplierId)
 
-		return dict(model=lstProducts,totalCount=totalCount,searchValue=searchValue,searchField=searchField)
+		return dict(model=lstProducts,pageno=pageNo,pagesize=pageSize,total=totalCount,searchValue=searchValue,searchField=searchField)
 
 	@action(renderer='templates/stock/products/manage.jinja2')
 	def manageproduct(self):
@@ -222,8 +222,10 @@ class StockController(object):
 		param.TenantId = self.TenantId
 		param.PurchaseNo = self.request.params.get('billNo', None)
 		param.SupplierId = self.request.params.get('supplierId', None)
-		param.PageSize = self.request.params.get('pageSize', 20)
-		param.PageNo = self.request.params.get('pageNo', 0)
+		pageNo = int(self.request.params.get('page', 1))
+		pageSize = int(self.request.params.get('pageSize', 10))
+		param.PageSize = pageSize
+		param.PageNo = (pageNo-1) * param.PageSize
 		param.FromPurchaseDate = self.getDateFmt(self.request.params.get('fromDate',None))
 		param.ToPurchaseDate = self.getDateFmt(self.request.params.get('toDate',None))
 		param.PurchaseStatus = self.request.params.get('purchasestatus',None)
@@ -236,7 +238,7 @@ class StockController(object):
 		totalPurchases = stat.ItemsCount
 		totalAmount = stat.TotalAmount
 		totalDueAmount = stat.TotalAmount - stat.TotalPaidAmount        
-		return dict(model=lstPurchases,totalPurchases=totalPurchases,totalAmount=totalAmount,totalDueAmount=totalDueAmount)
+		return dict(model=lstPurchases,pageno=pageNo,pagesize=pageSize,totalPurchases=totalPurchases,totalAmount=totalAmount,totalDueAmount=totalDueAmount)
 
 	def GetSuppliers(self):
 		lstSuppliers = SupplierService().GetSuppliers(self.TenantId)

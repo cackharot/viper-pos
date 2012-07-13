@@ -42,15 +42,15 @@ class SupplierController(object):
 
 	@action(renderer='templates/suppliers/index.jinja2')
 	def index(self):
-		pageNo = self.request.params.get('pageNo', 0)
-		pageSize = self.request.params.get('pageSize', 50)
+		pageNo = int(self.request.params.get('page', 1))
+		pageSize = int(self.request.params.get('pagesize', 5))
 		searchValue = self.request.params.get('searchValue', None)
 		searchField = self.request.params.get('searchField', 'name')
 
-		lstSuppliers = supplierService.SearchSupplier(self.TenantId, \
-				pageNo, pageSize, searchField, searchValue)
+		lstSuppliers,total = supplierService.SearchSupplier(self.TenantId, \
+				(pageNo-1)*pageSize, pageSize, searchField, searchValue)
 
-		return dict(model=lstSuppliers)
+		return dict(model=lstSuppliers,total=total,pageno=pageNo,pagesize=pageSize)
 
 	@action(renderer='json')
 	def search(self):

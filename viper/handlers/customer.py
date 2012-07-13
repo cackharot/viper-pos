@@ -39,15 +39,15 @@ class CustomerController(object):
 
     @action(renderer='templates/customers/index.jinja2')
     def index(self):
-        pageNo = self.request.params.get('pageNo', 0)
-        pageSize = self.request.params.get('pageSize', 50)
+        pageNo = int(self.request.params.get('page', 1))
+        pageSize = int(self.request.params.get('pagesize', 5))
         searchValue = self.request.params.get('searchValue', None)
         searchField = self.request.params.get('searchField', 'name')
 
-        lstCustomers = customerService.SearchCustomers(self.TenantId, \
-                pageNo, pageSize, searchField, searchValue)
+        lstCustomers, totalCount = customerService.SearchCustomers(self.TenantId, \
+                (pageNo-1)*pageSize, pageSize, searchField, searchValue)
 
-        return dict(model=lstCustomers, searchValue=searchValue, searchField=searchField)
+        return dict(model=lstCustomers, total=totalCount, pageno=pageNo, pagesize=pageSize, searchValue=searchValue, searchField=searchField)
 
     @action(renderer='json')
     def search(self):

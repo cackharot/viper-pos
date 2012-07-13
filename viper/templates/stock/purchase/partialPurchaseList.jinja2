@@ -77,3 +77,5 @@
 {% else %}
 <div class="alert alert-info">No Purchases found!</div>
 {% endif %}
+{% import 'shared/paginate.jinja2' as pager with context %}
+{{ pager.paginate('purchases' | route_url, pageno, pagesize, totalPurchases) }}

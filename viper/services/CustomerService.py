@@ -56,7 +56,7 @@ class CustomerService(object):
 										CustomerContactDetails.FirstName.like(searchValue)))
 
 		lstCustomers = query.offset(pageNo).limit(pageSize).all()
-		return lstCustomers
+		return lstCustomers, query.count()
 
 	def CheckCustomerExists(self, cid, tenantId, customerNo, mobile=None, email=None):
 		if mobile and email and customerNo:
