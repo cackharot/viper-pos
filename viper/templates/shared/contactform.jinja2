@@ -4,7 +4,7 @@
 			{{renderer.label('FirstName','First Name',class='tip')}}
 			{{renderer.text('FirstName',size=30,class='error wrong' if renderer.is_error('FirstName'),title='First name')}}
 	</li>
-	<li>
+	<li class="right">
 			{{renderer.label('LastName','Last Name',class='tip')}}
 			{{renderer.text('LastName',size=30,class='error wrong' if renderer.is_error('LastName'),title='Last name')}}
 	</li>
@@ -16,19 +16,19 @@
 			{{renderer.label('Phone','Landline',class='tip')}}
 			{{renderer.text('Phone',size=30,class='error wrong' if renderer.is_error('Phone'),title='Landline')}}
 	</li>
-	<li style="display: inline-block;">
+	<li class="right">
 			{{renderer.label('Mobile','Mobile',class='tip')}}
 			{{renderer.text('Mobile',size=30,class='error wrong' if renderer.is_error('Mobile'),title='Mobile')}}
 	</li>
-	<li>
+	<li class="left">
 			{{renderer.label('Country','Country',class='tip')}}
 			{{renderer.text('Country',size=30,class='full error wrong' if renderer.is_error('Country') else 'full',title='Country')}}			
 	</li>
-	<li class="left">
+	<li class="right">
 			{{renderer.label('City','City',class='tip')}}
 			{{renderer.text('City',size=30,class='error wrong' if renderer.is_error('City'),title='City')}}
 	</li>
-	<li style="display: inline-block;"> 
+	<li class="full"> 
 			{{renderer.label('Zipcode','Zipcode',class='tip')}}
 			{{renderer.text('Zipcode',size=30,maxlength=10,class='error wrong' if renderer.is_error('Zipcode'),title='Zipcode')}}
 	</li>

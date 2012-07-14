@@ -1,30 +1,30 @@
 from pyramid.httpexceptions import HTTPFound
 from pyramid_handlers import action
 
-#from ..models.Product import Product
-#from ..models.Customer import Customer
-#from ..models.Order import Order
+from ..models.Product import Product
+from ..models.Customer import Customer
+from ..models.Order import Order
 from ..models.Order import OrderSearchParam
-#from ..models.LineItem import LineItem
-#from ..models.OrderPayment import OrderPayment
+from ..models.LineItem import LineItem
+from ..models.OrderPayment import OrderPayment
 
-#from ..services.SecurityService import SecurityService
+from ..services.SecurityService import SecurityService
 from ..services.OrderService import OrderService
-#from ..services.StockService import StockService
-#from ..services.SupplierService import SupplierService
+from ..services.StockService import StockService
+from ..services.SupplierService import SupplierService
+from ..services.SettingService import SettingService, SettingException
 
-#from ..library.ViperLog import log
-
+from ..library.ViperLog import log
 import json
-from viper.models.Order import Order
+from viper.models.Customer import CustomerContactDetails
 
 def includeme(config):
     config.add_handler('invoice', 'invoice/{action}', InvoiceController)
     config.add_handler('invoicepayments', '/invoice/payments/{invoiceid}', InvoiceController, action='payments')
 
-    config.add_handler('addinvoice', '/invoice/new', InvoiceController, action='newInvoice')
+    config.add_handler('addinvoice', '/invoice/manage', InvoiceController, action='manage')
     config.add_handler('deleteinvoice', '/invoice/delete/{invoiceid}', InvoiceController, action='delete')
-    config.add_handler('editinvoice', '/invoice/edit/{invoiceid}', InvoiceController, action='manage')
+    config.add_handler('editinvoice', '/invoice/manage/{invoiceid}', InvoiceController, action='manage')
     
     config.add_route('saveinvoice', '/invoice/manage')
     config.add_route('searchinvoices', '/invoice/index')
@@ -60,6 +60,9 @@ class InvoiceController(object):
             model = service.GetOrderById(invoiceid, self.TenantId)
         else:
             model = Order()
+            model.Customer = Customer()
+            model.Customer.Contacts.append(CustomerContactDetails())
+
         return dict(model=model)
     
     def getDateFmt(self,value):

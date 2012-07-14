@@ -215,6 +215,9 @@ class OrderService(object):
 		query = query.outerjoin(osq, osq.c.OrderId == Order.Id).outerjoin(psq, psq.c.OrderId == Order.Id)
 		query = query.outerjoin(Customer, Customer.Id == Order.CustomerId)
 		query = query.outerjoin(CustomerContactDetails, Customer.Id == CustomerContactDetails.CustomerId)
+		
+		if searchParam.NotEmpty:
+			query = query.filter(osq.c.ItemCount > 0)
 
 		query = query.filter(Order.TenantId == searchParam.TenantId)
 		query = query.filter(Order.Status == True)

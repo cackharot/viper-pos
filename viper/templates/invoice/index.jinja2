@@ -160,6 +160,8 @@
 					// search returns no value
 					$('#result').html('<div class="error wrong">No items found!</div>')
 				}
+				$(document).trigger('AjaxRefreshEvent')
+				InitLoadPayments()
 			})
 			return false
 		})
@@ -252,41 +254,43 @@
 	      p.parent().hide();
 	    })
 		
-		$('#invoiceTable tbody tr td.payments button').live('click', function(e){
-			e.preventDefault()
-			
-			var $tr = $(this).parent().closest('tr')
-			var invoiceid = $tr.data('id')			
-			
-			if(!invoiceid && !window.swizapp.urls.payments) return false
-			
-			if($tr.next('tr').hasClass('payments-row')) {
-				$tr.next('tr').fadeOut().remove()
-			}else{
-				 var $td = $('<td class="payments-form-container">')
-				 				.attr('colspan', $tr.children('td').length)
-				 				.append('<div class="ajaxBar">');
-        		$tr.after($('<tr class="payments-row" style="display:none;">').append($td).show());
-        				
-				var url = window.swizapp.urls.payments + invoiceid
+		function InitLoadPayments() {
+			$('#invoiceTable tbody tr td.payments button').click(function(e){
+				e.preventDefault()
 				
-				$.post(url,null,function(data){
-					var html = '';
-					var compl = _.template($('#tplPayment').html())
+				var $tr = $(this).parent().closest('tr')
+				var invoiceid = $tr.data('id')			
+				
+				if(!invoiceid && !window.swizapp.urls.payments) return false
+				
+				if($tr.next('tr').hasClass('payments-row')) {
+					$tr.next('tr').fadeOut().remove()
+				}else{
+					 var $td = $('<td class="payments-form-container">')
+					 				.attr('colspan', $tr.children('td').length)
+					 				.append('<div class="ajaxBar">');
+	        		$tr.after($('<tr class="payments-row" style="display:none;">').append($td).show());
+	        				
+					var url = window.swizapp.urls.payments + invoiceid
 					
-					if(data && data.payments) {
-						html = compl({'items': data.payments})
-					}else{
-						html = compl({'items': []})
-					}
-					
-					$td.html(html).fadeIn()
-					
-					$('input.datetime', $td).datepicker({ dateFormat: 'dd-mm-yy' })
-					//$('input[type=text], textarea', $td).SwizappFormTips()
-				},'json')
-			} 
-		})
+					$.post(url,null,function(data){
+						var html = '';
+						var compl = _.template($('#tplPayment').html())
+						
+						if(data && data.payments) {
+							html = compl({'items': data.payments})
+						}else{
+							html = compl({'items': []})
+						}
+						
+						$td.html(html).fadeIn()
+						
+						$('input.datetime', $td).datepicker({ dateFormat: 'dd-mm-yy' })
+					},'json')
+				} 
+			})
+		}
+		InitLoadPayments()
 	});
 </script>
 {% endblock %}

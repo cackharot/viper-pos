@@ -4,7 +4,7 @@
 		{{renderer.label('Barcode','Barcode',class='tip')}}
 		{{renderer.text('Barcode',title='Barcode',placeholder='Enter Barcode',size=30,class='error wrong' if renderer.is_error('Barcode'),autofocus=True,autocomplete="off")}}
 	</li>
-	<li>
+	<li style="display: inline-block;">
 		{{renderer.label('Name','Product Name',class='tip')}}
 		{{renderer.text('Name',title='Product Name',placeholder='Enter Product Name',size=30,class='error wrong' if renderer.is_error('Name'),autocomplete="off")}}
 	</li>

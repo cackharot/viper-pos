@@ -33,26 +33,27 @@
 	-->
 	<form action="{{'savecustomer'|route_url}}" method="post">
 		<div id="settings-wrapper">
-			<h3>Customer Info</h3>
-			<fieldset>
+			<fieldset style="width:25%">
+				<h3>Customer Info</h3>
 				<ul>
-					<li>
-						<span class="_75">
-							{{renderer.label('CustomerNo','Customer Number',class='tip')}}
-							{{renderer.text('CustomerNo',placeholder='Enter unique customer number',size=20,class='full error wrong' if renderer.is_error('CustomerNo') else 'full',title='Customer Number')}}
-						</span>
+					<li class="left">
+						{{renderer.label('CustomerNo','Customer Number',class='tip')}}
+						{{renderer.text('CustomerNo',placeholder='Enter unique customer number',size=20,class='full error wrong' if renderer.is_error('CustomerNo') else 'full',title='Customer Number')}}
 					</li>
 				</ul>
-				<div class="clear"></div>
+			</fieldset>
+			<fieldset>
 				<h3>Contact Info</h3>
 				{% import 'shared/contactform.jinja2' as contactForm with context %}
 				{{ contactForm.render(cfr) }}
-				<div class="clear"></div>
 			</fieldset>
 		</div>
 		<div class="clear"></div>
 		<div id="saving-options" class="block">
 			<input type="hidden" name="cid" value="{{model.Id|d('',True)}}"/>
+			<button class="btn action primary save" type="submit">
+				<span><span>Save</span></span>
+			</button>
 			{% if model.Id %}
 			<a class="btn action delete" onclick="return confirm('Are you sure?');" 
 				href="{{ 'deletecustomer' | route_url(cid=model.Id)}}"
@@ -60,9 +61,6 @@
 				<span><span>Delete</span></span>
 			</a>
 			{% endif %}
-			<button class="btn action primary save" type="submit">
-				<span><span>Save</span></span>
-			</button>
 		</div>
 	</form>
 </div>

@@ -16,11 +16,31 @@
 <a id="new-invoice-button" href="{{'addinvoice'|route_url}}"><span>New Invoice</span></a>
 {% endblock %} 
 {% block content %}
-<div id="invoice-container" class="content">
-    <h2> {{ 'New Invoice' if not model.Id }}
-	        {{ 'Edit Invoice' if model.Id }}
+<div id="invoice-container" class="content" style="position: relative;">
+    <h2>
+   		{{ 'New Invoice' if not model.Id }}
+        {{ 'Edit Invoice' if model.Id }}
+        {% set totalAmount = model.GetTotalAmount() %}
+		{% set paidAmount = model.GetPaidAmount() %}
+		{% set dueAmount =  model.GetBalanceAmount() %}
+		
+        {% if model.Id %}
+			{% if (model.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
+				<span style="float: right;" class="status overdue"> Overdue </span>
+			{% elif ( totalAmount == 0 or dueAmount > 0) %}
+				<span style="float: right;" class="status opened"> Opened </span>
+			{% else %}
+				<span style="float: right;" class="status closed"> Closed </span>
+			{% endif %}
+		{% endif %}
 	</h2>
 	<form action="{{'saveinvoice'|route_url}}" method="post">
+		<div style="position: absolute; top: -4px; right: 100px;">
+			<button id="save-order" title="Save Invoice" class="btn action save"><span><span>Save</span></span></button>
+	   		<button type="button" id="checkout-order" title="Pay Invoice" class="btn action payment"><span><span>Payments (F5)</span></span></button>
+	   		<button type="button" id="print-order" title="Print Invoice" class="btn action print"><span><span>Print (F11)</span></span></button>
+	   		<button type="button" id="preview-order" title="Preview Invoice" class="btn action pdf"><span><span>Preview (F12)</span></span></button>
+		</div>
 		<div id="settings-wrapper" style="padding: 0pt;">
 			{% if errors %}
 				<div class="alert error">
@@ -28,57 +48,72 @@
 				</div>
 				<div class="clear"></div>
 			{% endif %}
-			<div class="global-data block" style="float: left; padding-bottom: 0pt;">
+			<div class="global-data block" style="float: left; padding-bottom: 0pt; margin-right: 90px;">
 				<h3>Invoice Details</h3>
-				<fieldset>
-					<table>
-						<tr>
-							<th style="width:250px;">Invoice No# </th>
-							<td style="width:350px;">
-								{{model.OrderNo}}
-								<input type="hidden" name="InvoiceId" value="{{model.Id}}"/>
-							</td>
-						</tr>
-						<tr>
-							<th>Invoice Date</th>
-							<td>
-								<input type="text" class="datetime" name="InvoiceDate" value="{{model.OrderDate | datetimeformat}}"/>
-							</td>
-						</tr>
-						<tr>
-							<th>Due Date</th>
-							<td>
-								<input type="text" class="datetime" name="DueDate" value="{{model.DueDate | datetimeformat }}"/>
-							</td>
-						</tr>
-					</table>
-				</fieldset>
+				<table>
+					<tr>
+						<th style="width:150px;">Invoice No# </th>
+						<td style="width:250px;">
+							{{model.OrderNo}}
+							<input type="hidden" name="invoiceid" value="{{model.Id}}"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Invoice Date</th>
+						<td>
+							<input type="text" class="datetime" name="InvoiceDate" value="{{model.OrderDate | datetimeformat}}"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Due Date</th>
+						<td>
+							<input type="text" class="datetime" name="DueDate" value="{{model.DueDate | datetimeformat }}"/>
+						</td>
+					</tr>
+				</table>
 			</div>
 			<div class="global-data block" style="padding-bottom: 0pt;">
 				<h3>Customer Info</h3>
-				<fieldset>
-					<table>
-						<tr>
-							<th>Customer No# </th>
-							<td>
-								{{model.Customer.CustomerNo}}
-								<input type="hidden" name="CustomerId" value="{{model.Customer.Id}}"/>
-							</td>
-						</tr>
-						<tr>
-							<th>Customer Name </th>
-							<td>{{ model.Customer.Contacts[0].FirstName }}</td>
-						</tr>
-						<tr>
-							 <th>Mobile</th>
-							 <td>{{ model.Customer.Contacts[0].Mobile }}</td>
-						</tr>
-					</table>
-				</fieldset>
+				<table>
+					<tr>
+						<th style="width:150px;">Customer No# </th>
+						<td style="width:250px;">
+							<input type="text" class="typeahead" name="CustomerNo" value="{{model.Customer.CustomerNo | d('',true)}}"/>
+							<input type="hidden" name="CustomerId" value="{{model.Customer.Id}}"/>
+						</td>
+					</tr>
+					<tr>
+						<th>Customer Name </th>
+						<td>
+							<input type="text" class="typeahead" name="CustomerName" value="{{ model.Customer.Contacts[0].FirstName }}"/>
+						</td>
+					</tr>
+					<tr>
+						 <th>Mobile</th>
+						 <td>
+						 	<input type="text" class="typeahead" name="CustomerName" value="{{ model.Customer.Contacts[0].Mobile }}"/>
+						 </td>
+					</tr>
+				</table>
 			</div>
 			<div class="clear"></div>
 			<div id="lineItems" class="global-data">
 				<h3>Line Items</h3>
+				<table style="width:98%">
+					<tr>
+						<td>
+							<input type="text" class="mousetrap" title="Barcode" maxlength="20" placeholder="Enter barcode" id="barcode" name="barcode"/>
+						</td>
+						<td style="text-align: right;">
+							<input type="text" class="mousetrap" title="Item Name" maxlength="30" placeholder="Enter item name" id="itemName" name="itemName"/>
+						</td>
+						<td style="text-align: right;">
+							<input type="hidden" name="quantity" value="1"/>
+							<button type="button" id="add-item" class="btn action primary create"><span><span>Add</span></span></button>
+						</td>
+					</tr>
+				</td>
+				<div class="clear"></div>
 				<table class="listing noedit" style="margin: 0px; width: 98.5%;">
 					<colgroup>
 						<col class="noborder" style="width: 3%;">
@@ -165,19 +200,6 @@
 					</tfoot>
 				</table>
 			</div>
-		</div>
-		<div id="saving-options" class="block" style="margin-right: 18px;">
-			<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>
-			{% if model.Id %} 
-			<a class="btn action delete"
-				onclick="return confirm('Are you sure?');"
-				href="{{ 'deleteproduct' | route_url(pid=model.Id)}}"
-				confirm="Are you sure?" post="1"> <span><span>Delete</span></span>
-			</a> 
-			{% endif %}
-			<button class="btn action save" type="submit">
-				<span><span>Save</span></span>
-			</button>
 		</div>
 	 </form>
 </div>

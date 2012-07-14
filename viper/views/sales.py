@@ -45,6 +45,7 @@ def getTodayOrders(request):
     searchParam.ToOrderDate = d
     searchParam.TenantId = request.user.TenantId
     searchParam.LoadStats = False
+    searchParam.NotEmpty = False
     entities = orderServiceProxy.SearchOrders(searchParam)
 
     if entities:

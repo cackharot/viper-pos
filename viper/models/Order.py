@@ -83,6 +83,7 @@ class OrderSearchParam(object):
 		self.OrderId = None
 		self.OrderNo = None
 		self.LoadStats = True
+		self.NotEmpty = True
 		self.CustomerId = None
 		self.CustomerName = None
 		self.FromOrderDate = None

@@ -33,7 +33,7 @@
 			<th>Customer</th>
 			<th>Invoice Date</th>
 			<th>Due Date</th>
-			<!--<th>Total Items</th>-->
+			<th>Total Items</th>
 			<th>Status</th>
 			<th class="gross_amount">Total</th>
 			<th class="due_amount"> Due</th>
@@ -59,9 +59,9 @@
 				<td>
 					{{item.DueDate | datetimeformat('%d %b, %Y') | d('--',true)}}
 				</td>
-				<!--<td>
-					{{item.ItemCount}}
-				</td>-->
+				<td>
+					{{item.ItemCount | d('0',true)}}
+				</td>
 				<td>
 					{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 						<span class="status overdue"> Overdue </span>
