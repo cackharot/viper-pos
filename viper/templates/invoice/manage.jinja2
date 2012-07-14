@@ -1,0 +1,191 @@
+{% extends "templates/layout.jinja2" %}
+{% block head %}
+<style>
+	.totalAmount{
+		font-size: 3em;
+    	line-height: 50px;
+	}
+	.paidAmount{
+		font-size: 2em;
+    	line-height: 50px;
+	}
+	#totalItemsQuantity{font-weight:bold;font-size:1.24em;}
+</style>
+{% endblock %}
+{% block specialNav %}
+<a id="new-invoice-button" href="{{'addinvoice'|route_url}}"><span>New Invoice</span></a>
+{% endblock %} 
+{% block content %}
+<div id="invoice-container" class="content">
+    <h2> {{ 'New Invoice' if not model.Id }}
+	        {{ 'Edit Invoice' if model.Id }}
+	</h2>
+	<form action="{{'saveinvoice'|route_url}}" method="post">
+		<div id="settings-wrapper" style="padding: 0pt;">
+			{% if errors %}
+				<div class="alert error">
+					{{ errors }}
+				</div>
+				<div class="clear"></div>
+			{% endif %}
+			<div class="global-data block" style="float: left; padding-bottom: 0pt;">
+				<h3>Invoice Details</h3>
+				<fieldset>
+					<table>
+						<tr>
+							<th style="width:250px;">Invoice No# </th>
+							<td style="width:350px;">
+								{{model.OrderNo}}
+								<input type="hidden" name="InvoiceId" value="{{model.Id}}"/>
+							</td>
+						</tr>
+						<tr>
+							<th>Invoice Date</th>
+							<td>
+								<input type="text" class="datetime" name="InvoiceDate" value="{{model.OrderDate | datetimeformat}}"/>
+							</td>
+						</tr>
+						<tr>
+							<th>Due Date</th>
+							<td>
+								<input type="text" class="datetime" name="DueDate" value="{{model.DueDate | datetimeformat }}"/>
+							</td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div class="global-data block" style="padding-bottom: 0pt;">
+				<h3>Customer Info</h3>
+				<fieldset>
+					<table>
+						<tr>
+							<th>Customer No# </th>
+							<td>
+								{{model.Customer.CustomerNo}}
+								<input type="hidden" name="CustomerId" value="{{model.Customer.Id}}"/>
+							</td>
+						</tr>
+						<tr>
+							<th>Customer Name </th>
+							<td>{{ model.Customer.Contacts[0].FirstName }}</td>
+						</tr>
+						<tr>
+							 <th>Mobile</th>
+							 <td>{{ model.Customer.Contacts[0].Mobile }}</td>
+						</tr>
+					</table>
+				</fieldset>
+			</div>
+			<div class="clear"></div>
+			<div id="lineItems" class="global-data">
+				<h3>Line Items</h3>
+				<table class="listing noedit" style="margin: 0px; width: 98.5%;">
+					<colgroup>
+						<col class="noborder" style="width: 3%;">
+						<col style="width: 15%;">
+						<col class="tright">
+						<col class="tright" style="width: 12%;">
+						<col class="tright" style="width: 12%;">
+						<col class="tright" style="width: 12%;">
+						<col class="tright" style="width: 12%;">
+					</colgroup>
+					<thead>
+						<tr>
+							<th class="noborder"></th>
+							<th>Barcode</th>
+							<th>Item Name</th>
+							<th class="tright">MRP</th>
+							<th class="tright">Price</th>
+							<th class="tright">Quantity</th>
+							<th class="tright">Gross</th>
+						</tr>
+					</thead>
+				</table>
+				<div style="max-height: 270px; width: 99.5%; overflow-y: scroll;">
+					<table class="listing noedit" id="tblOrderLineItems" style="margin:0px;">
+						<colgroup>
+							<col class="noborder" style="width: 3%;">
+							<col style="width: 15%;">
+							<col class="tright">
+							<col class="tright" style="width: 12%;">
+							<col class="tright" style="width: 12%;">
+							<col class="tright" style="width: 12%;">
+							<col class="tright" style="width: 12%;">
+						</colgroup>
+						<tbody>
+							{% for item in model.LineItems if model.LineItems %}
+								<tr data-id="{{ item.Id }}">
+									<td class="del"><a data-slno="{{ loop.count }}" href="#" class="del-lineitem remove-item xit"></a></td>
+									<td class="b">{{item.Barcode}}</td>
+									<td data-col="name" class="n edit">{{item.Name}}</td>
+									<td data-col="mrp" class="m edit tright">{{item.MRP}}</td>
+									<td data-col="price" class="p edit tright">{{item.SellPrice}}</td>
+									<!--<td data-col="discount" class="d edit tright">{{item.Discount}}</td>-->
+									<td data-col="quantity" class="q edit tright">{{item.Quantity}}</td>
+									<td class="st tright tbold">{{item.Amount}}</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<table class="listing noedit" style="margin-top:0px;width:98.5%">
+					<colgroup>
+						<col class="noborder" style="width: 3%;">
+						<col style="width: 15%;">
+						<col class="right">
+						<col class="right" style="width: 12%;">
+						<col class="right" style="width: 12%;">
+						<col class="right" style="width: 12%;">
+						<col class="right" style="width: 12%;">
+					</colgroup>
+					<tfoot>
+						<tr>
+							<td class="noborder"></td>
+							<td class="noborder"></td>
+							<td>
+								<span>Total Items/Quantity: <span id="totalItemsQuantity">{{model.LineItems | count}}/{{ model.GetTotalQuantity() }}</span></span>
+							</td>
+							<td class="right strong big">
+								<span>Total: </span>
+							</td>
+							<td colspan="3" class="right strong totalAmount green"><span id="totalAmount"> {{ model.GetTotalAmount() | currency }} </span></td>
+						</tr>
+						<tr>
+							<td class="noborder"></td><td class="noborder"></td>
+							<td class="strong"><span>Savings: <span id="savingsAmount">{{ model.GetSavingsAmount() | currency }}</span></span></td>
+							<td class="right strong big"><span>Paid: </span></td>
+							<td colspan="3" class="right strong paidAmount"><span id="paidAmount">{{ model.GetPaidAmount() | currency }}</span></td>
+						</tr>
+						<tr>
+							<td class="noborder"></td><td class="noborder"></td>
+							<td class="noborder"></td>
+							<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
+							<td colspan="3" class="right strong big paidAmount dueamount"><span id="balanceAmount">{{ model.GetBalanceAmount() | currency }}</span></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+		<div id="saving-options" class="block" style="margin-right: 18px;">
+			<input type="hidden" name="pid" value="{{model.Id|d('',True)}}"/>
+			{% if model.Id %} 
+			<a class="btn action delete"
+				onclick="return confirm('Are you sure?');"
+				href="{{ 'deleteproduct' | route_url(pid=model.Id)}}"
+				confirm="Are you sure?" post="1"> <span><span>Delete</span></span>
+			</a> 
+			{% endif %}
+			<button class="btn action save" type="submit">
+				<span><span>Save</span></span>
+			</button>
+		</div>
+	 </form>
+</div>
+{% endblock %}
+{% block footerscript %}
+<script>
+	$(function(){
+		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+	});
+</script>
+{% endblock %}

@@ -40,6 +40,30 @@ class Order(AuditMixin, Base):
 		self.LineItems = []
 		self.Payments = []
 		pass
+	
+	def GetTotalQuantity(self):
+		if self.LineItems:
+			return sum([x.Quantity for x in self.LineItems])
+		else:
+			return 0
+		
+	def GetTotalAmount(self):
+		if self.LineItems:
+			return sum([x.Amount for x in self.LineItems])
+		else:
+			return 0
+		
+	def GetPaidAmount(self):
+		if self.Payments:
+			return sum([x.PaidAmount for x in self.Payments])
+		else:
+			return 0
+		
+	def GetBalanceAmount(self):
+		return self.GetTotalAmount() - self.GetPaidAmount()
+	
+	def GetSavingsAmount(self):
+		return self.GetTotalAmount() - sum([x.MRP*x.Quantity for x in self.LineItems])
 
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name)) for column_name in self.__table__.c.keys())

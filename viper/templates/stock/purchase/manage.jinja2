@@ -83,7 +83,7 @@
 						{{renderer.label('PurchaseDate','Purchase Date',class='tip')}}
 						{{purchaseRenderer.date('PurchaseDate',title='Purchase Date',class='datetime error' if purchaseRenderer.is_error('PurchaseDate') else 'datetime')}}
 					</li>
-					<li>  
+					<li style="display: inline-block;">
 						{{renderer.label('DueDate','Due Date',class='tip')}}
 						{{purchaseRenderer.date('DueDate',title='Due Date',class='datetime error' if	purchaseRenderer.is_error('DueDate') else 'datetime')}} 
 					</li>

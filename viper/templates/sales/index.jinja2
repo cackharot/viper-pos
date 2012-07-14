@@ -1,6 +1,16 @@
 {% extends "templates/layout.jinja2" %}
 {% block head %}
 <style>
+	.totalAmount{
+		font-size: 3em;
+    	line-height: 50px;
+	}
+	.paidAmount{
+		font-size: 2em;
+    	line-height: 50px;
+	}
+</style>
+<style>
 table#tblTodayOrders tbody tr{
 	cursor:pointer;
 	-moz-user-select: none;
@@ -349,16 +359,6 @@ table#tblTodayOrders tbody tr.active td{
 		$('#barcode').focus()
 	});
 </script>
-<style>
-	.totalAmount{
-		font-size: 3em;
-    	line-height: 50px;
-	}
-	.paidAmount{
-		font-size: 2em;
-    	line-height: 50px;
-	}
-</style>	 
 {% endblock %}
 
 

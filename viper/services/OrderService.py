@@ -36,6 +36,7 @@ class OrderService(object):
 				if order.CustomerId:
 					cus = customerService.GetCustomer(order.CustomerId, tenantId)
 					if cus:
+						order.Customer = cus
 						order.CustomerName = cus.Contacts[0].FirstName
 						order.CustomerNo   = cus.CustomerNo
 				#fetch the line items here

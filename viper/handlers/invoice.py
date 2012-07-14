@@ -16,6 +16,7 @@ from ..services.OrderService import OrderService
 #from ..library.ViperLog import log
 
 import json
+from viper.models.Order import Order
 
 def includeme(config):
     config.add_handler('invoice', 'invoice/{action}', InvoiceController)
@@ -23,8 +24,9 @@ def includeme(config):
 
     config.add_handler('addinvoice', '/invoice/new', InvoiceController, action='newInvoice')
     config.add_handler('deleteinvoice', '/invoice/delete/{invoiceid}', InvoiceController, action='delete')
-    config.add_handler('editinvoice', '/invoice/edit/{invoiceid}', InvoiceController, action='edit')
+    config.add_handler('editinvoice', '/invoice/edit/{invoiceid}', InvoiceController, action='manage')
     
+    config.add_route('saveinvoice', '/invoice/manage')
     config.add_route('searchinvoices', '/invoice/index')
     config.add_route('invoices', '/invoice/index')
     config.add_route('searchinvoices_xhr', '/invoice/searchinvoices_xhr', xhr=True)
@@ -48,6 +50,17 @@ class InvoiceController(object):
     def searchinvoices_xhr(self):
         invoices = self.getInvoices()
         return invoices
+    
+    @action(renderer='templates/invoice/manage.jinja2')
+    def manage(self):
+        invoiceid = self.request.matchdict.get('invoiceid',None)
+        model = None
+        if invoiceid:
+            service = OrderService()
+            model = service.GetOrderById(invoiceid, self.TenantId)
+        else:
+            model = Order()
+        return dict(model=model)
     
     def getDateFmt(self,value):
         from ..library.filters import todatetime

@@ -51,6 +51,6 @@
 		{% endif%}
 	</form>
 	{% endif %}
-	<div class="small">Showing {{pageno}} - {{pagesize}} of <strong>{{ total }}</strong> results</div>
+	<div class="small">Showing {{pageno}} - {{pagesize if total > pagesize else total}} of <strong>{{ total }}</strong> results</div>
 </div>
 {%- endmacro %}

@@ -1,13 +1,13 @@
 {% if model != None and (model | count) > 0 %} 
-<table id="invoiceTable" class="listing noedit">
+<table id="invoiceTable" class="listing">
 	<thead>
 		<tr class="empty noborder listing-options">
 			<td colspan="5">
-				<a class="btn batch delete action-clear"
+				<!-- <a class="btn batch delete action-clear"
 					href="#"
 					onclick="if(confirm('Are you sure?')){ do_batch('delete'); };return false;"
 					confirm="Are you sure?"> <span><span>Delete</span></span>
-				</a>
+				</a>-->
 				<a class="btn batch print action-clear" href="#" onclick=";return false;" rel="print:html">
 					<span><span>Print</span></span>
 				</a>

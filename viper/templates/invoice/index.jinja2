@@ -67,9 +67,9 @@
 		currency: '{{ 0 | currency }}'
 	};
 	window.swizapp.urls = {
-		edit	: '{{ 'editproduct'| route_url(pid='')}}',
-		add		: '{{ 'addproduct' | route_url }}',
-		delete	: '{{ 'deleteinvoice'| route_url(invoiceid='')}}',
+		edit	: '{{ 'editinvoice' | route_url(invoiceid='')}}',
+		add		: '',
+		delete	: '{{ 'deleteinvoice' | route_url(invoiceid='')}}',
 		list	: '{{ 'invoices' | route_url }}',
 		payments: '{{'invoicepayments' | route_url(invoiceid='')}}',
 		savepayments: '{{ 'saveinvoicepayments' | route_url}}'
