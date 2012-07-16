@@ -33,6 +33,9 @@ class Customer(AuditMixin, Base):
 	def toDict(self):
 		serialized = dict((column_name, getattr(self, column_name))
                           for column_name in self.__table__.c.keys())
+		if self.Contacts and len(self.Contacts) > 0:
+			serialized['Contact'] = self.Contacts[0].toDict()
+			
 		return serialized
 
 	def __repr__(self):

@@ -1,8 +1,9 @@
 from pyramid.httpexceptions import HTTPFound
 from pyramid_handlers import action
+from pyramid.view import view_defaults
 
 from ..models.Product import Product
-from ..models.Customer import Customer
+from ..models.Customer import Customer, CustomerContactDetails
 from ..models.Order import Order
 from ..models.Order import OrderSearchParam
 from ..models.LineItem import LineItem
@@ -10,22 +11,30 @@ from ..models.OrderPayment import OrderPayment
 
 from ..services.SecurityService import SecurityService
 from ..services.OrderService import OrderService
+from ..services.CustomerService import CustomerService
 from ..services.StockService import StockService
 from ..services.SupplierService import SupplierService
 from ..services.SettingService import SettingService, SettingException
 
 from ..library.ViperLog import log
 import json
-from viper.models.Customer import CustomerContactDetails
+import uuid
+from datetime import datetime
+
 
 def includeme(config):
-    config.add_handler('invoice', 'invoice/{action}', InvoiceController)
+    config.add_handler('invoicecreate', 'invoice/rest',      InvoiceController, action='create', request_method='POST')    
+    config.add_handler('invoicefetch',  'invoice/rest/{id}', InvoiceController, action='fetch',  request_method='GET')
+    config.add_handler('invoiceupdate', 'invoice/rest/{id}', InvoiceController, action='update', request_method='PUT')
+    config.add_handler('invoicedelete', 'invoice/rest/{id}', InvoiceController, action='delete', request_method='DELETE')
+    
+    config.add_handler('invoicehandler', 'invoice/{action}', InvoiceController)
     config.add_handler('invoicepayments', '/invoice/payments/{invoiceid}', InvoiceController, action='payments')
 
     config.add_handler('addinvoice', '/invoice/manage', InvoiceController, action='manage')
     config.add_handler('deleteinvoice', '/invoice/delete/{invoiceid}', InvoiceController, action='delete')
     config.add_handler('editinvoice', '/invoice/manage/{invoiceid}', InvoiceController, action='manage')
-    
+       
     config.add_route('saveinvoice', '/invoice/manage')
     config.add_route('searchinvoices', '/invoice/index')
     config.add_route('invoices', '/invoice/index')
@@ -40,6 +49,53 @@ class InvoiceController(object):
         self.request = request
         self.TenantId = self.request.user.TenantId
         self.UserId = self.request.user.Id
+        
+    @action(renderer='json')    
+    def fetch(self):
+        invoiceid = self.request.matchdict.get('id',None)
+        if invoiceid:
+            service = OrderService()
+            model = service.GetOrderById(invoiceid, self.TenantId)
+            if model:
+                return model.toDict()
+        return dict()
+    
+    @action(renderer='json')
+    def create(self):
+        orderService = OrderService()
+        #model = orderService.NewOrder(self.TenantId, self.UserId)
+        customerService = CustomerService()
+        defaultCustomer = customerService.GetDefaultCustomer(self.TenantId)
+
+        model = Order()
+        model.Id = uuid.uuid4()
+        model.TenantId = self.TenantId
+        model.Customer = defaultCustomer
+        model.OrderNo = orderService.GenerateOrderNo(self.TenantId) #generate unique order no
+        model.OrderDate = model.CreatedOn = datetime.utcnow()
+        model.IpAddress = None
+        model.CreatedBy = self.UserId
+        model.Status = True
+        
+        model.LineItems = []
+        model.Payments = []
+        
+        return model.toDict()
+    
+    @action(renderer='json')
+    def update(self):
+        order = json.loads(self.request.body)
+        log.info(order)
+        if order:
+            order['ipaddress'] = self.request.remote_addr
+            #service = OrderService()
+            #service.SaveOrder(order, self.TenantId, self.UserId)
+            return {'status':'success', 'message':'Invoice Saved Successfully!'}
+        return {'status':'error', 'message':'Invalid data!'}
+    
+    @action(renderer='json')
+    def delete(self):
+        return dict()    
 
     @action(renderer='templates/invoice/index.jinja2')
     def index(self):
@@ -62,8 +118,10 @@ class InvoiceController(object):
             model = Order()
             model.Customer = Customer()
             model.Customer.Contacts.append(CustomerContactDetails())
+            
+        templates = SettingService().GetPrintTemplates(self.TenantId)
 
-        return dict(model=model)
+        return dict(model=model,templates=templates)
     
     def getDateFmt(self,value):
         from ..library.filters import todatetime

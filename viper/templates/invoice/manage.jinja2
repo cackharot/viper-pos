@@ -36,10 +36,10 @@
 	</h2>
 	<form action="{{'saveinvoice'|route_url}}" method="post">
 		<div style="position: absolute; top: -4px; right: 100px;">
-			<button id="save-order" title="Save Invoice" class="btn action save"><span><span>Save</span></span></button>
-	   		<button type="button" id="checkout-order" title="Pay Invoice" class="btn action payment"><span><span>Payments (F5)</span></span></button>
-	   		<button type="button" id="print-order" title="Print Invoice" class="btn action print"><span><span>Print (F11)</span></span></button>
-	   		<button type="button" id="preview-order" title="Preview Invoice" class="btn action pdf"><span><span>Preview (F12)</span></span></button>
+			<button type="button" id="save-invoice" title="Save Invoice" class="btn action save"><span><span>Save</span></span></button>
+	   		<button type="button" id="payments-invoice" title="Pay Invoice" class="btn action payment"><span><span>Payments (F5)</span></span></button>
+	   		<button type="button" id="print-invoice" title="Print Invoice" class="btn action print"><span><span>Print (F11)</span></span></button>
+	   		<button type="button" id="preview-invoice" title="Preview Invoice" class="btn action pdf"><span><span>Preview (F12)</span></span></button>
 		</div>
 		<div id="settings-wrapper" style="padding: 0pt;">
 			{% if errors %}
@@ -48,50 +48,50 @@
 				</div>
 				<div class="clear"></div>
 			{% endif %}
-			<div class="global-data block" style="float: left; padding-bottom: 0pt; margin-right: 90px;">
+			<div class="global-data block" id="invoiceDetails" style="float: left; padding-bottom: 0pt; margin-right: 90px;">
 				<h3>Invoice Details</h3>
 				<table>
 					<tr>
 						<th style="width:150px;">Invoice No# </th>
 						<td style="width:250px;">
-							{{model.OrderNo}}
-							<input type="hidden" name="invoiceid" value="{{model.Id}}"/>
+							<span data-rv-text="model.OrderNo"></span>
+							<input type="hidden" name="invoiceid" id="invoiceid" value="{{model.Id | d('',true)}}"/>
 						</td>
 					</tr>
 					<tr>
 						<th>Invoice Date</th>
 						<td>
-							<input type="text" class="datetime" name="InvoiceDate" value="{{model.OrderDate | datetimeformat}}"/>
+							<input type="text" class="datetime" name="InvoiceDate" data-rv-value="model.OrderDate | date" value=""/>
 						</td>
 					</tr>
 					<tr>
 						<th>Due Date</th>
 						<td>
-							<input type="text" class="datetime" name="DueDate" value="{{model.DueDate | datetimeformat }}"/>
+							<input type="text" class="datetime" name="DueDate" data-rv-value="model.DueDate | date" value=""/>
 						</td>
 					</tr>
 				</table>
 			</div>
-			<div class="global-data block" style="padding-bottom: 0pt;">
+			<div class="global-data block" id="customerDetails" style="padding-bottom: 0pt;">
 				<h3>Customer Info</h3><a href="#" title="Search Customers...">Search</a>
 				<table>
 					<tr>
 						<th style="width:150px;">Customer No# </th>
 						<td style="width:250px;">
-							<input type="text" class="typeahead" name="CustomerNo" value="{{model.Customer.CustomerNo | d('',true)}}"/>
-							<input type="hidden" name="CustomerId" value="{{model.Customer.Id}}"/>
+							<input type="text" class="typeahead"  data-rv-value="model.CustomerNo" name="CustomerNo" value=""/>
+							<input type="hidden" name="CustomerId" data-rv-value="model.Id" value=""/>
 						</td>
 					</tr>
 					<tr>
 						<th>Customer Name </th>
 						<td>
-							<input type="text" class="typeahead" name="CustomerName" value="{{ model.Customer.Contacts[0].FirstName }}"/>
+							<input type="text" class="typeahead" name="CustomerName"  data-rv-value="model.Contact.FirstName" value=""/>
 						</td>
 					</tr>
 					<tr>
 						 <th>Mobile</th>
 						 <td>
-						 	<input type="text" class="typeahead" name="CustomerName" value="{{ model.Customer.Contacts[0].Mobile }}"/>
+						 	<input type="text" class="typeahead" name="CustomerMobile" data-rv-value="model.Contact.Mobile" value=""/>
 						 </td>
 					</tr>
 				</table>
@@ -102,7 +102,7 @@
 				<table style="width:98%">
 					<tr>
 						<td>
-							<input type="text" class="mousetrap" title="Barcode" maxlength="20" placeholder="Enter barcode" id="barcode" name="barcode"/>
+							<input type="text" class="mousetrap" title="Barcode" maxlength="20" placeholder="Enter barcode" id="barcode" name="barcode" autofocus/>
 						</td>
 						<td style="text-align: right;">
 							<input type="text" class="mousetrap" title="Item Name" maxlength="30" placeholder="Enter item name" id="itemName" name="itemName"/>
@@ -126,7 +126,7 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th class="noborder"></th>
+							<th class="noborder"><a href="#" id="clear-lineitems" class="remove-item xit"></a></th>
 							<th>Barcode</th>
 							<th>Item Name</th>
 							<th class="tright">MRP</th>
@@ -137,7 +137,7 @@
 					</thead>
 				</table>
 				<div style="max-height: 270px; width: 99.5%; overflow-y: scroll;">
-					<table class="listing noedit" id="tblOrderLineItems" style="margin:0px;">
+					<table class="listing noedit" id="tblInvoiceLineItems" style="margin:0px;">
 						<colgroup>
 							<col class="noborder" style="width: 3%;">
 							<col style="width: 15%;">
@@ -148,22 +148,11 @@
 							<col class="tright" style="width: 12%;">
 						</colgroup>
 						<tbody>
-							{% for item in model.LineItems if model.LineItems %}
-								<tr data-id="{{ item.Id }}">
-									<td class="del"><a data-slno="{{ loop.count }}" href="#" class="del-lineitem remove-item xit"></a></td>
-									<td class="b">{{item.Barcode}}</td>
-									<td data-col="name" class="n edit">{{item.Name}}</td>
-									<td data-col="mrp" class="m edit tright">{{item.MRP}}</td>
-									<td data-col="price" class="p edit tright">{{item.SellPrice}}</td>
-									<!--<td data-col="discount" class="d edit tright">{{item.Discount}}</td>-->
-									<td data-col="quantity" class="q edit tright">{{item.Quantity}}</td>
-									<td class="st tright tbold">{{item.Amount}}</td>
-								</tr>
-							{% endfor %}
+							
 						</tbody>
 					</table>
 				</div>
-				<table class="listing noedit" style="margin-top:0px;width:98.5%">
+				<table class="listing noedit" style="margin-top:0px;width:98.5%" id="invoiceAmountDetails">
 					<colgroup>
 						<col class="noborder" style="width: 3%;">
 						<col style="width: 15%;">
@@ -178,24 +167,46 @@
 							<td class="noborder"></td>
 							<td class="noborder"></td>
 							<td>
-								<span>Total Items/Quantity: <span id="totalItemsQuantity">{{model.LineItems | count}}/{{ model.GetTotalQuantity() }}</span></span>
+								<span>Total Items/Quantity: 
+									<span id="totalItemsQuantity">
+										<span data-rv-text="model.TotalItems"></span>
+										/
+										<span data-rv-text="model.TotalQuantity"></span>
+									</span>
+								</span>
 							</td>
 							<td class="right strong big">
 								<span>Total: </span>
 							</td>
-							<td colspan="3" class="right strong totalAmount green"><span id="totalAmount"> {{ model.GetTotalAmount() | currency }} </span></td>
+							<td colspan="3" class="right strong totalAmount green">
+								<span id="totalAmount" data-rv-html="model.TotalAmount | currency"></span>
+							</td>
 						</tr>
 						<tr>
-							<td class="noborder"></td><td class="noborder"></td>
-							<td class="strong"><span>Savings: <span id="savingsAmount">{{ model.GetSavingsAmount() | currency }}</span></span></td>
-							<td class="right strong big"><span>Paid: </span></td>
-							<td colspan="3" class="right strong paidAmount"><span id="paidAmount">{{ model.GetPaidAmount() | currency }}</span></td>
-						</tr>
-						<tr>
-							<td class="noborder"></td><td class="noborder"></td>
 							<td class="noborder"></td>
-							<td class="right strong big"><span id="lblBalanceAmount">Balance: </span></td>
-							<td colspan="3" class="right strong big paidAmount dueamount"><span id="balanceAmount">{{ model.GetBalanceAmount() | currency }}</span></td>
+							<td class="noborder"></td>
+							<td class="strong">
+								<span>
+									Savings: <span id="savingsAmount" data-rv-html="model.SavingsAmount | currency"></span>
+								</span>
+							</td>
+							<td class="right strong big">
+								<span>Paid: </span>
+							</td>
+							<td colspan="3" class="right strong paidAmount">
+								<span id="paidAmount" data-rv-html="model.PaidAmount | currency"></span>
+							</td>
+						</tr>
+						<tr>
+							<td class="noborder"></td>
+							<td class="noborder"></td>
+							<td class="noborder"></td>
+							<td class="right strong big">
+								<span id="lblBalanceAmount">Balance: </span>
+							</td>
+							<td colspan="3" class="right strong big paidAmount dueamount">
+								<span id="balanceAmount" data-rv-html="model.BalanceAmount | currency"></span>
+							</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -203,11 +214,149 @@
 		</div>
 	 </form>
 </div>
+<div style="display:block;" id="product-container">
+	<div class="content modal fade" id="selectItemModal">
+	  <div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Multiple Items found</h3>
+	  </div>
+	  <div class="modal-body global-data">
+		<table class="listing noedit" id="tblSelectItem">
+			<thead>
+				<th>Barcode</th>
+				<th>Item Name</th>
+				<th class="tright">MRP</th>
+				<th class="tright">Price</th>
+				<th>Created Date</th>
+				<th class="noborder"></th>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	  </div>
+	  <div class="modal-footer">
+		<a href="#" data-dismiss="modal" class="btn action cancel"><span><span>Close</span></span></a>
+	  </div>
+	</div>
+	<div class="content modal fade" id="checkoutOrderModel">
+	  <div class="modal-header">
+		<button class="close" data-dismiss="modal">×</button>
+		<h3>Invoice Payments</h3>
+	  </div>
+	  <div class="modal-body global-data">
+		
+	  </div>
+	  <div class="modal-footer">
+		<a href="#" data-dismiss="modal" class="btn action cancel"><span><span>Close</span></span></a>
+		<a href="#" class="btn primary action save" id="btnPayOrder"><span><span>Pay</span></span></a>		
+	  </div>
+	</div>
+</div>
+<div id="templates" style="display:none">
+	<script type="text/template" id="tpl-chkoutorder">
+	<ul style="width:90%;margin-bottom:10px;">
+		<li>
+			<span class="_50">Invoice No#</span>
+			<span class="_50 strong">
+				<strong><%= item.get('OrderNo')%></strong>
+			</span>
+		</li>
+		<li>
+			<span class="_50">Total Amount: </span>
+			<span class="_50 strong big green">
+				{{ '' | currency(true,false) }} <%= Math.round(item.GetTotalAmount()).toFixed(2)%>
+			</span>
+		</li>
+		<li class="strong">
+			<span class="_50">Customer:</span>
+			<span class="_50"><%=item.get('Customer').get('Contact').get('FirstName').toUpperCase()%></span>
+		</li>
+		<li>
+			<span class="_50">Payment Type: </span>
+			<span class="_50">
+				<select class="dropdown" name="paymenttype" style="width: 99%;">
+					<option>Cash</option>
+					<option>Credit</option>
+					<option>Card</option>
+					<option>Cheque</option>
+				</select>
+			</span>
+		</li>
+		<li>
+			<span class="_50">Paid Amount: </span>
+			<span class="_50 strong big red">
+				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span>
+				<input class="mousetrap" style="width:95%" type="number" name="paidamount"  value="<%=Math.round(item.get('balanceamount'))%>" required autofocus="autofocus">
+				</input>
+			</span>
+		</li>
+		<li>
+			<span class="_50">Print Ticket:</span> 
+			<span class="_50">
+				<input type="checkbox" name="printTicket" checked="checked"></input>
+			</span>
+		</li>
+	</ul>
+	</script>
+	<script type="text/template" id="tpl-selectitem">
+		<% 	var cnt=0;
+			_.each(items, function(item) { %>
+		<tr>
+			<td><%= item.Barcode %></td>
+			<td><%= item.Name %></td>
+			<td class="tright"><%= item.MRP.toFixed(2) %></td>
+			<td class="tright"><%= item.SellPrice.toFixed(2) %></td>
+			<td><%= $.format.date(ToLocalDate(item.CreatedOn),'dd-MM-yyyy h:mm a') %></td>
+			<td class="tcenter"><button class="btn btn-mini btn-info" data-id="<%= cnt++ %>"><span><span>Select</span></span></button></td>
+		</tr>
+		<% }); %>
+	</script>
+	<script type="text/template" id="tpl-lineitem">
+		<tr data-id="<%= item.Id %>">
+			<td class="del">
+				<a href="#" class="del-lineitem remove-item xit"></a>
+			</td>
+			<td class="b" data-rv-text="model.Barcode">
+			</td>
+			<td data-col="name" class="n edit">
+				<input type="text" name="lineitemName" data-rv-value="model.Name" value="" autocomplete="off"/>
+			</td>
+			<td data-col="mrp" class="m edit tright">
+				<input type="text" name="itemMRP" data-rv-value="model.MRP | fixed" value="" autocomplete="off" />
+			</td>
+			<td data-col="price" class="p edit tright">
+				<input type="text" name="itemSellPrice" data-rv-value="model.SellPrice | fixed" value="" autocomplete="off" />
+			</td>
+			<td data-col="quantity" class="q edit tright">
+				<input type="text" name="itemQuantity" data-rv-value="model.Quantity" value="" autocomplete="off" />
+			</td>
+			<td class="st tright tbold" data-rv-text="model.Amount | fixed">				
+			</td>
+		</tr>
+	</script>
+	{% for tpl in templates if templates %}
+		<script type="text/template" rel="print" id="tpl-{{tpl.Id}}">
+			{{tpl.Content | safe}}
+		</script>
+	{% endfor %}	
+</div>
 {% endblock %}
 {% block footerscript %}
+<script src="{{request.static_url('viper:static/js/mousetrap.min.js')}}"></script>
+<script src="{{request.static_url('viper:static/js/backbone-relational.js')}}"></script>
+<script src="{{request.static_url('viper:static/js/moment.js')}}"></script>
+<script src="{{request.static_url('viper:static/js/rivets.js')}}"></script>
+<script src="{{request.static_url('viper:static/js/swizapp/invoice.js')}}"></script>
 <script>
 	$(function(){
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+		
+		$('#tblInvoiceLineItems input, #barcode, #itemName').live('focus',function(){
+			$(this).select()
+		}).live('blur',function(){
+		})
+		
+		$('form').submit(function(){ return false; });
 	});
 </script>
 {% endblock %}

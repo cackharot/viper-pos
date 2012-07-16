@@ -1,7 +1,7 @@
-import json
+#import json
 import uuid
-import random
-from datetime import datetime, date
+#import random
+from datetime import datetime
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import desc, func, cast, Date, or_
@@ -53,19 +53,20 @@ class OrderService(object):
 		if not tenantId or not userId:
 			return None
 
-		cus = customerService.GetDefaultCustomer(tenantId)
+		defaultCustomer = customerService.GetDefaultCustomer(tenantId)
 
 		o = Order()
 		o.Id = uuid.uuid4()
 		o.TenantId = tenantId
-		if cus and cus.Id and cus.Contacts:
-			o.CustomerId = cus.Id
-			o.CustomerName = cus.Contacts[0].FirstName
+		o.Customer = defaultCustomer
+		if defaultCustomer and defaultCustomer.Id and defaultCustomer.Contacts:
+			o.CustomerId = defaultCustomer.Id
+			o.CustomerName = defaultCustomer.Contacts[0].FirstName
 		o.OrderNo = self.GenerateOrderNo(tenantId) #generate unique order no
 		o.OrderDate = datetime.utcnow()
 		o.IpAddress = None
 		o.CreatedBy = userId
-		o.CreatedOn = o.OrderDate = datetime.utcnow()
+		o.CreatedOn = datetime.utcnow()
 		o.Status = True
 		DBSession.add(o) #add to db
 		return o

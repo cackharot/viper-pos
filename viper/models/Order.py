@@ -71,10 +71,20 @@ class Order(AuditMixin, Base):
 		else: serialized['CustomerName'] = None
 		if hasattr(self, 'CustomerNo'): serialized['CustomerNo'] = self.CustomerNo
 		else: serialized['CustomerNo'] = None
+		
+		if self.Customer:
+			serialized['Customer'] = self.Customer.toDict()
+		
+		if self.LineItems and len(self.LineItems) > 0:
+			serialized['LineItems'] = [x.toDict() for x in self.LineItems]
+			
+		if self.Payments and len(self.Payments) > 0:
+			serialized['Payments'] = [x.toDict() for x in self.Payments]
+		
 		return serialized
 
 	def __repr__(self):
-		return u"Order(%s, %s)" % (self.Id, self.OrderNo)
+		return u"Order(%s,%s, %s)" % (self.Id, self.TenantId, self.OrderNo)
 	pass
 
 class OrderSearchParam(object):

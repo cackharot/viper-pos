@@ -95,13 +95,13 @@
 			<input type="hidden" name="paymentId" value="<%=item.Id%>"/>
 			<input type="hidden" name="remove" class="remove" value="0"/>
 		</li>
-		<li><input type="text" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>"/></li>
-		<li><input type="text" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>"/></li>
+		<li><input type="text" title="Paid Date" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>"/></li>
+		<li><input type="text" title="Paid Amount" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>"/></li>
 	</ul>
   </li>
 </ul>
 </script>
-	<script type="text/template" id="tplPayment">
+<script type="text/template" id="tplPayment">
 <form class="payments-form" method="post" action="{{ 'saveinvoicepayments' | route_url}}">
 <% _.each(items,function(item){ %>
 <ul class="payments" data-id="<%=item.Id%>">
@@ -134,7 +134,7 @@
 	<button type="submit" class="btn action save"><span><span>Save</span></span></button>
 </div>
 </form>
-	</script>
+</script>
 </div>  
 {% endblock %}
 {% block footerscript %}

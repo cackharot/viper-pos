@@ -22,6 +22,7 @@ class OrderPayment(AuditMixin, Base):
 	PaymentDate = Column(DateTime, nullable=True)
 	PaymentType = Column(Unicode(10) , default=u'Cash')
 	PaidAmount = Column(Float, default=0.0)
+	Description = Column(Unicode(255), nullable=True)
 
 	def __init__(self):
 		self.Id = self.OrderId = None
@@ -29,6 +30,7 @@ class OrderPayment(AuditMixin, Base):
 		self.PaymentType = u'Cash'
 		d = datetime.utcnow()
 		self.PaymentDate = d
+		self.Description = None
 		pass
 
 	def toDict(self):

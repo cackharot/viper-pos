@@ -107,6 +107,7 @@
 				
 				html.oneTime(5000, function(){
 				  $(this).slideUp(500);
+				  $(document).trigger('NotificationRemoveEvent');
 				});
 			});
 		}).bind('NotificationRemoveEvent', function() {
