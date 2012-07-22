@@ -63,19 +63,19 @@ class InvoiceController(object):
     @action(renderer='json')
     def create(self):
         orderService = OrderService()
-        #model = orderService.NewOrder(self.TenantId, self.UserId)
-        customerService = CustomerService()
-        defaultCustomer = customerService.GetDefaultCustomer(self.TenantId)
+        model = orderService.NewOrder(self.TenantId, self.UserId)
+        #customerService = CustomerService()
+        #defaultCustomer = customerService.GetDefaultCustomer(self.TenantId)
 
-        model = Order()
-        model.Id = uuid.uuid4()
-        model.TenantId = self.TenantId
-        model.Customer = defaultCustomer
-        model.OrderNo = orderService.GenerateOrderNo(self.TenantId) #generate unique order no
-        model.OrderDate = model.CreatedOn = datetime.utcnow()
-        model.IpAddress = None
-        model.CreatedBy = self.UserId
-        model.Status = True
+        #model = Order()
+        #model.Id = uuid.uuid4()
+        #model.TenantId = self.TenantId
+        #model.Customer = defaultCustomer
+        #model.OrderNo = orderService.GenerateOrderNo(self.TenantId) #generate unique order no
+        #model.OrderDate = model.CreatedOn = datetime.utcnow()
+        #model.IpAddress = None
+        #model.CreatedBy = self.UserId
+        #model.Status = True
         
         model.LineItems = []
         model.Payments = []
@@ -87,9 +87,9 @@ class InvoiceController(object):
         order = json.loads(self.request.body)
         log.info(order)
         if order:
-            order['ipaddress'] = self.request.remote_addr
-            #service = OrderService()
-            #service.SaveOrder(order, self.TenantId, self.UserId)
+            order['IpAddress'] = self.request.remote_addr
+            service = OrderService()
+            service.SaveOrder(order, self.TenantId, self.UserId)
             return {'status':'success', 'message':'Invoice Saved Successfully!'}
         return {'status':'error', 'message':'Invalid data!'}
     
@@ -192,3 +192,19 @@ class InvoiceController(object):
             orderService = OrderService()
             orderService.DeleteOrder(self.TenantId, orderids)
         return HTTPFound(location=self.request.route_url('invoices'))
+    
+    @action(renderer="json")
+    def searchitem(self):
+        tenantId = self.TenantId
+        barcode = self.request.params.get('barcode')
+        name = self.request.params.get('name')
+        if barcode or name:
+            stockService = StockService()
+            if barcode:
+                items = stockService.GetProductsByBarcode(tenantId, barcode)
+            elif name:
+                items, cnt = stockService.GetProducts(tenantId, 0, 10, 'Name', name)
+            if items and len(items) > 0:
+                result = [x.toDict() for x in items]
+                return result
+        return None

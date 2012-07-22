@@ -33,9 +33,10 @@ def includeme(config):
 
 @view_config(route_name='sales', renderer='sales/index.jinja2')
 def salesPage(request):
-    d = datetime.utcnow()
-    templates = SettingService().GetPrintTemplates(request.user.TenantId)
-    return { 'date': d.date(), 'time': d.time(), 'templates': templates }
+    #d = datetime.utcnow()
+    #templates = SettingService().GetPrintTemplates(request.user.TenantId)
+    return HTTPFound(location='/invoice/manage')
+    #return { 'date': d.date(), 'time': d.time(), 'templates': templates }
 
 @view_config(route_name='todayorders', renderer="json")
 def getTodayOrders(request):

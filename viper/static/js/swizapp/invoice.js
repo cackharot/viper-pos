@@ -31,6 +31,10 @@
 		},
 		initialize: function(options){
 			rivets.bind($('#customerDetails')[0], { model: this });
+			var model = this
+			$('.customerContactDetails').each(function(x,item){
+				rivets.bind(item, { model: model.get('Contact') });
+			})
 		},
 	});
 	
@@ -207,6 +211,8 @@
 			
 			this.model.bind('add',this.addLineItemToDOM, this)
 			this.model.bind('remove',this.removeLineItemFromDOM, this)
+			
+			this.itemNameTypeahead()
 		},
 		addLineItemToDOM: function(item){
 			var data = item.toJSON()
@@ -231,7 +237,7 @@
 				var found = this.findAndUpdateItem(barcode, quantity)
 				if (!found) {
 					var that = this
-					$.post('/sales/searchitem', {'barcode': barcode }, function (data) {
+					$.post('/invoice/searchitem', {'barcode': barcode }, function (data) {
 						if (data) {
 							if (data.length > 1) {
 								var tr = that.multipleSelectItemTemplate({'items': data})
@@ -289,6 +295,44 @@
 				showMsg('warn', '<strong>Enter a valid barcode!</strong>')
 				$('#barcode').focus()
 			}
+		},
+		itemNameTypeahead: function () {
+			var that = this
+			$('input#itemName').typeahead({
+				idField: 'Barcode',
+				idControl: $('input#barcode'),
+				onSelected: function (item) {
+					var quantity = 1.0;
+					var found = that.findAndUpdateItem(item.Barcode, quantity)
+					if (!found) {
+						item.Quantity = 1;
+						that.addItemToUI(item, that);
+					}
+					$('input#itemName').select()
+				},
+				formatter: function (displayValue, item) {
+					return '<div style="width:220px;display:block;height:21px;"><span style="float:left;">' + displayValue + '</span><span style="float:right;margin-left:15px;font-style:italic">' + item.MRP.toFixed(2) + '</span></div>';
+				},
+				ajax: {
+					url: "/invoice/searchitem",
+					timeout: 500,
+					displayField: "Name",
+					triggerLength: 1,
+					method: 'post',
+					dataType: 'json',
+					loadingClass: "loading-circle icon-refresh",
+					preDispatch: function (query) {
+						return {
+							name: query,
+						}
+					},
+					preProcess: function (data) {
+						if (!data) return false
+						if (data.success === false)	return false
+						return data
+					}
+				}
+			});
 		},
 		deleteLineItem: function(e){
 			e.preventDefault()			
@@ -354,6 +398,7 @@
 			this.vent = options.vent
 			
 			_.bindAll(this, "payOrder")
+			_.bindAll(this, "updateInvocieCustomer")
 						
 			var invoiceid = $('#invoiceid').val()
 						
@@ -371,6 +416,20 @@
 			
 			rivets.bind($('#invoiceDetails')[0], { model: this.model });
 			rivets.bind($('#invoiceAmountDetails')[0], { model: this.model });
+			
+			this.vent.bind('updateCustomer', this.updateInvocieCustomer)
+		},
+		updateInvocieCustomer: function(cus){
+			if(cus){
+				this.model.set('CustomerId', cus.id)
+				this.model.set('CustomerNo', cus.no)
+				this.model.set('CustomerName', cus.name)
+				
+				this.model.get('Customer').set('Id', cus.id)
+				this.model.get('Customer').set('CustomerNo', cus.no)
+				this.model.get('Customer').get('Contact').set('FirstName', cus.name)
+				this.model.get('Customer').get('Contact').set('Mobile', cus.mobile)
+			}
 		},
 		editInvoice: function(invoiceid) {
 			if(invoiceid) {
@@ -424,7 +483,7 @@
 			
 			var cpayment = new OrderPayment()
 			cpayment.set({
-				'PaymentDate': new Date(),
+				'PaymentDate': new Date().toJSON(),
 				'PaymentType': 'Cash',
 				'PaidAmount': balanceamt
 			})
@@ -492,7 +551,7 @@
 					'OrderId': orderid,
 					'PaidAmount': paidamount,
 					'PaymentType': paymenttype,
-					'PaymentDate': new Date().toUTCString(),
+					'PaymentDate': new Date().toJSON(),
 					'Description': ''
 				})
 
@@ -514,6 +573,10 @@
 			$(this).unbind('click', this.payOrder)
 			$('#checkoutOrderModel').modal('hide')
 		},
+	});
+	
+	rivets.register('select',function(el, value) {
+	  	$(el).val(value)
 	});
 	
 	rivets.configure({
@@ -561,6 +624,9 @@
             //return !value ? '' : moment(value).format('MMMM DD, YYYY');
             return !value ? '' : $.format.date(value, 'dd-MM-yyyy');
         },
+        time: function(value){
+        	return !value ? '' : $.format.date(value, 'hh:mm a');
+        },
         round: function(value) {
         	return Math.round(value);
         },
@@ -582,6 +648,54 @@
 	
 	var salesappview = new InvoiceAppView({
 		vent: vent
+	})
+	
+	var timeoutId = 0
+	$('#customerSearchModal input[name=searchText]').keypress(function() {
+		clearTimeout(timeoutId)
+		timeoutId = setTimeout(getFilteredResult, 500)
+	})
+	
+	function getFilteredResult() {
+		var val = $('#customerSearchModal input[name=searchText]').val().trim()
+		if(val && val.length > 0){
+			$.post('/customers/search',{ 'search' : val }, function(data) {
+				
+				if(data && data.mylist && !data.error){
+					var tplCustomer = _.template($('#tplCustomer').html())
+					$('#customerSearchModal table tbody').empty()
+					
+					_.each(data.mylist,function(c) {
+						var tr = tplCustomer({'item':c})
+						$('#customerSearchModal table tbody').append(tr)
+					})
+				}else{
+					var html = '<tr><td colspan="5"><div class="info">No customers found!</div></td></tr>'
+					$('#customerSearchModal table tbody').html(html)
+				}		
+			},'json')
+		}else{	
+			var html = '<tr><td colspan="5"><div class="info">No customers found!</div></td></tr>'
+			$('#customerSearchModal table tbody').html(html)
+		}
+	}
+	
+	$('#customerSearchModal table tbody tr .select').live('click', function(){
+		var tr = $(this).parent().parent()
+		var id = tr.data('id')
+		var no = tr.data('no')
+		var name = tr.data('name')
+		var mobile = tr.data('mobile')
+		
+		var c = { id: id, no:no, name:name, mobile:mobile }
+		vent.trigger('updateCustomer', c)
+				
+		$('#customerSearchModal').modal('hide')
+	})
+	
+	$('#searchCustomer').click(function(){		
+		$('#customerSearchModal').modal('show')
+		$('#customerSearchModal input[name=searchText]')[0].focus()
 	})
 	
 	Mousetrap.bind(['f2'],function(e) {

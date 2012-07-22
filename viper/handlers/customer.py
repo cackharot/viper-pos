@@ -40,7 +40,7 @@ class CustomerController(object):
     @action(renderer='templates/customers/index.jinja2')
     def index(self):
         pageNo = int(self.request.params.get('page', 1))
-        pageSize = int(self.request.params.get('pagesize', 5))
+        pageSize = int(self.request.params.get('pagesize', 10))
         searchValue = self.request.params.get('searchValue', None)
         searchField = self.request.params.get('searchField', 'name')
 
@@ -54,9 +54,9 @@ class CustomerController(object):
         try:
             searchValue = self.request.params.get('search')
             searchField = self.request.params.get('field', 'all')
-            result = customerService.SearchCustomers(self.TenantId, 0, 10, searchField, searchValue)
+            result, cnt = customerService.SearchCustomers(self.TenantId, 0, 10, searchField, searchValue)
             if result:
-                lst = [dict(id=x.Id, customerno=x.CustomerNo, name=x.Contacts[0].FirstName, mobile=x.Contacts[0].Mobile) for x in result]
+                lst = [dict(id=x.Id, customerno=x.CustomerNo, name=x.Contacts[0].FirstName, mobile=x.Contacts[0].Mobile, address=x.Contacts[0].Address) for x in result]
                 return dict(mylist=lst)
             return dict(error='Not found!')
         except Exception, e:

@@ -2,6 +2,7 @@
 import uuid
 #import random
 from datetime import datetime
+import dateutil.parser
 
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy import desc, func, cast, Date, or_
@@ -61,6 +62,7 @@ class OrderService(object):
 		o.Customer = defaultCustomer
 		if defaultCustomer and defaultCustomer.Id and defaultCustomer.Contacts:
 			o.CustomerId = defaultCustomer.Id
+			o.CustomerNo = defaultCustomer.CustomerNo
 			o.CustomerName = defaultCustomer.Contacts[0].FirstName
 		o.OrderNo = self.GenerateOrderNo(tenantId) #generate unique order no
 		o.OrderDate = datetime.utcnow()
@@ -76,28 +78,30 @@ class OrderService(object):
 			Saves the order details in db
 		"""
 		if order:
-			if order["orderid"]:
-				orderid = order["orderid"]
+			if order["Id"]:
+				orderid = order["Id"]
 				o = self.GetOrderById(orderid, tenantId)
 				if o:
 					#o.TenantId = tenantId
-					o.CustomerId = order["customerid"]
-					o.OrderAmount = order["orderamount"]
-					o.PaidAmount = order["paidamount"]
-					o.IpAddress = order['ipaddress']
-					if order['duedate'] and len(order['duedate']) > 0:
-						o.DueDate = datetime.strptime(order['duedate'],'%Y-%m-%d')
+					o.CustomerId = order["CustomerId"]
+					o.OrderAmount = order["OrderAmount"]
+					o.PaidAmount = order["PaidAmount"]
+					o.IpAddress = order['IpAddress']
+					if order['DueDate'] and len(order['DueDate']) > 0:
+						o.DueDate = dateutil.parser.parse(order['DueDate'])
+					if order['OrderDate'] and len(order['OrderDate']) > 0:
+						o.OrderDate = dateutil.parser.parse(order['OrderDate'])
 					o.UpdatedBy = userId
 					o.UpdatedOn = datetime.utcnow()
 
-					lineitems = order["lineItems"]
+					lineitems = order["LineItems"]
 					if lineitems:
 						DBSession.query(LineItem).filter(LineItem.OrderId == orderid).delete()
 						self.SaveOrderLineItems(o.Id, lineitems)
 					else:
 						DBSession.query(LineItem).filter(LineItem.OrderId == orderid).delete()
 
-					payments = order["payments"]
+					payments = order["Payments"]
 					if payments:
 						DBSession.query(OrderPayment).filter(OrderPayment.OrderId == orderid).delete()
 						self.SaveOrderPayments(o.Id, payments, userId)
@@ -110,14 +114,14 @@ class OrderService(object):
 			for x in lineitems:
 				item = LineItem()
 				item.OrderId = orderid
-				if x.has_key('productid'):
-					item.ProductId = x['productid']
-				item.Name = x["name"]
-				item.Barcode = x["barcode"]
-				item.MRP = x["mrp"]
-				item.Discount = x["discount"]
-				item.SellPrice = x["price"]
-				item.Quantity = x["quantity"]
+				if x.has_key('ProductId'):
+					item.ProductId = x['ProductId']
+				item.Name = x["Name"]
+				item.Barcode = x["Barcode"]
+				item.MRP = x["MRP"]
+				item.Discount = x["Discount"]
+				item.SellPrice = x["SellPrice"]
+				item.Quantity = x["Quantity"]
 				DBSession.add(item)
 
 		pass
@@ -128,13 +132,14 @@ class OrderService(object):
 		"""
 		if orderid and payments:
 			for x in payments:
-				if x["paidamount"] <= 0:
-					continue
 				item = OrderPayment()
 				item.OrderId = orderid
-				item.PaidAmount = x["paidamount"]
-				item.PaymentType = x["paymenttype"]
-				item.PaymentDate = datetime.utcnow()
+				item.PaidAmount = x["PaidAmount"]
+				item.PaymentType = x["PaymentType"]
+				if x['PaymentDate'] and len(x['PaymentDate']) > 0:
+					item.PaymentDate = dateutil.parser.parse(x['PaymentDate'])
+				else:
+					item.PaymentDate = datetime.utcnow()
 				item.CreatedBy = userId
 				item.CreatedOn = datetime.utcnow()
 				DBSession.add(item)
@@ -170,7 +175,7 @@ class OrderService(object):
 					
 				payment.PaidAmount = details['paidAmount']
 				payment.PaymentType= details['paymentType']
-				payment.PaymentDate= datetime.strptime(details['paymentDate'].strip(),'%d-%m-%Y')
+				payment.PaymentDate= dateutil.parser.parse(details['paymentDate'].strip())
 				payment.Status     = True
 				DBSession.add(payment)
 

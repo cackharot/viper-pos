@@ -43,7 +43,7 @@ class CustomerService(object):
 							.join(CustomerContactDetails)
 
 		if searchValue and searchValue != '':
-			searchValue = '%%%s%%' % searchValue
+			searchValue = '%s%%' % searchValue
 			if searchField == 'name':
 				query = query.filter(CustomerContactDetails.FirstName.like(searchValue))
 			elif searchField == 'mobile':
