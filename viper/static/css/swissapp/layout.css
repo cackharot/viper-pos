@@ -572,3 +572,20 @@ td.tright .inline-form input
 }
 
 #bd-paginator div.small { margin-top:10px; }
+
+.modal table {
+	border:0px;
+}
+
+.modal td {
+	border:0px;
+}
+
+.modal input[type=text],
+.modal input[type=number]{
+	width:100px;
+}
+
+#currentPayment{
+	color:red;
+}

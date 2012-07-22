@@ -103,6 +103,16 @@
 				return m + x.get('PaidAmount');
 			}, 0);
 		},
+		removeById: function(paymentId){
+			var item = this.find(function(x) {
+				return x.get('Id') == paymentId
+			})
+			
+			if(item)
+				this.remove(item)
+				
+			return item != undefined
+		}
 	});
 
 	Order = Backbone.RelationalModel.extend({
@@ -207,7 +217,7 @@
 			rivets.bind(h, { model: item });
 		},
 		removeLineItemFromDOM: function(item){
-			$("tr[data-id='" + item.get('Id') + "']", $('#tblInvoiceLineItems tbody')).remove()
+			$("#tblInvoiceLineItems tbody tr[data-id='" + item.get('Id') + "']").remove()
 		},
 		render: function(){
 			return this
@@ -332,6 +342,7 @@
 		el: $("#invoice-container"),
 		printTemplate   : _.template($('#templates script[rel="print"]:first').html()),
 		checkouTemplate : _.template($('#tpl-chkoutorder').html()),
+		tplPayment      : _.template($('#tplAddPayment').html()),
 		model: new Order(),
 		events: {
 			"click #print-invoice": "printInvoice",
@@ -341,6 +352,8 @@
 		},
 		initialize: function (options) {
 			this.vent = options.vent
+			
+			_.bindAll(this, "payOrder")
 						
 			var invoiceid = $('#invoiceid').val()
 						
@@ -396,7 +409,7 @@
 		},
 		paymentsInvoice: function() {
 			if (this.model.get('LineItems').length < 1) {
-				showMsg('warn', '<strong>Oops!</strong> Invoice contains no items. Cannot <strong>process payment.</strong>', false)
+				showMsg('warn', '<strong>Oops!</strong> Invoice contains no items. Cannot <strong>proceed to payment.</strong>', false)
 				return
 			}
 			
@@ -409,48 +422,81 @@
 			var paidamt = this.model.GetPaidAmount()
 			var balanceamt = paidamt > orderamt ? 0.0 : (orderamt - paidamt)
 			
-			this.model.set({'balanceamount': balanceamt})
-
-			var html = this.checkouTemplate({
-				'item': this.model
+			var cpayment = new OrderPayment()
+			cpayment.set({
+				'PaymentDate': new Date(),
+				'PaymentType': 'Cash',
+				'PaidAmount': balanceamt
 			})
 			
+			this.model.set('CurrentPayment', cpayment)
+
+			var html = $(this.checkouTemplate({
+				'item': this.model,
+			}))[0]
+			
 			$('#checkoutOrderModel .modal-body').html(html)
+			
+			rivets.bind(html, {
+				'invoice': this.model,
+				'CurrentPayment': cpayment,
+			})
+			
+			var tplPayment = this.tplPayment			
+			this.model.get('Payments').each(function(x) {
+				var ul = $(tplPayment({ 'item': x }))[0]
+				$('#checkoutOrderModel #pastPayments').append(ul)
+				rivets.bind(ul, { 'item': x })	
+			})
+			
+			var that = this
+			$('#checkoutOrderModel a.remove').click(function(){
+				var paymentId = $(this).attr('id')
+				that.model.get('Payments').removeById(paymentId)
+				return false
+			})
+			
+			$('#checkoutOrderModel input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
+			
 			$('#checkoutOrderModel').modal('show')
 
-			$('#checkoutOrderModel input[name="paidamount"]').select()
+			$('#checkoutOrderModel input[name=paidAmount]').select()
 			$('#checkoutOrderModel #btnPayOrder').unbind('click', this.payOrder).click(this.payOrder)
 		},
 		payOrder: function () {
-			var orderid = this.model.get('Id')
-			var paidamount = Math.round(parseFloat($('#checkoutOrderModel input[name="paidamount"]').val().trim()))
-			var paymenttype = $('#checkoutOrderModel select[name=paymenttype] option:selected').val().trim()
 			var canprint = $('#checkoutOrderModel input[name=printTicket]').is(':checked')
-			var oa = this.model.getOrderAmount()
-			var pa = this.model.getPaidAmount()
+			
+			var orderid = this.model.get('Id')
+			
+			var paidamount = Math.round(parseFloat(this.model.get('CurrentPayment').get('PaidAmount')))			
+			var paymenttype = $('#checkoutOrderModel #currentPayment select[name=paymentType] option:selected').val()
+			
+			var oa = this.model.get('TotalAmount')
+			var pa = this.model.GetPaidAmount()
 			var orderamount = Math.round(oa)
 			var prevpaidamt = Math.round(pa)
-
-			if ((paymenttype == 'Cash' && (prevpaidamt + paidamount >= orderamount)) || (paymenttype == 'Credit' && paidamount < orderamount) || (paymenttype == 'Card' && paidamount > 0.0) || (paymenttype == 'Cheque' && paidamount > 0.0)) {
+						
+			if ((paymenttype == 'Cash' && (prevpaidamt + paidamount >= orderamount)) 
+				|| (paymenttype == 'Credit' && paidamount < orderamount) 
+				|| (paymenttype == 'Card' && paidamount > 0.0) 
+				|| (paymenttype == 'Cheque' && paidamount > 0.0)) {
 				
 				if(paidamount > 0 && oa > orderamount) {
 					paidamount += (oa-orderamount);//round off the less than 0.5 paise
 				}
 				
-				this.model.set({
-					'paidamount': prevpaidamt + paidamount,
-					'isloaded': true,
-					'isdirty': false,
-				})
+				this.model.set('isloaded', true)
 
 				var payment = new OrderPayment({
-					'orderid': orderid,
-					'paidamount': paidamount,
-					'paymenttype': paymenttype,
-					'paymentdate': new Date().toUTCString(),
+					'Id': uuid(),
+					'OrderId': orderid,
+					'PaidAmount': paidamount,
+					'PaymentType': paymenttype,
+					'PaymentDate': new Date().toUTCString(),
+					'Description': ''
 				})
 
-				this.model.get('payments').add(payment)
+				this.model.get('Payments').add(payment)
 				this.model.save()
 				
 				showMsg('success', '<strong>Hooray!</strong> Payment Successfull &amp; <strong>#'+this.model.get('orderno')+'</strong> Invoice is saved.')
@@ -458,7 +504,7 @@
 				this.vent.trigger('updateOrder', orderid)
 				
 				if(canprint)
-					this.printOrder()
+					this.printInvoice()
 			} else if (paymenttype == 'Credit' && paidamount >= orderamount) {
 				showMsg('warn', '<strong>Oops!</strong> Wrong Payment Type. Please choose <span class="label label-info">Cash</span> as payment type if the paid amount is greater than order amount.')
 			} else {
@@ -511,8 +557,9 @@
         currency: function(value){
           return '<span class="currency">`</span> ' + (parseFloat(value) || 0.0).toFixed(2);
         },
-        date: function(value){
-          return !value ? '' : moment(value).format('MMMM DD, YYYY');
+        date: function(value,format){
+            //return !value ? '' : moment(value).format('MMMM DD, YYYY');
+            return !value ? '' : $.format.date(value, 'dd-MM-yyyy');
         },
         round: function(value) {
         	return Math.round(value);
@@ -521,6 +568,12 @@
         	if(!prec)
         		prec = 2;
         	return value ? parseFloat(value).toFixed(prec) : 0.0;
+        },
+        upper: function(value) {
+    		return value ? value.toUpperCase() : value;
+        },
+        lower: function(value) {
+    		return value ? value.toLowerCase() : value;
         }
       }
     });

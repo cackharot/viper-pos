@@ -179,7 +179,7 @@
 								<span>Total: </span>
 							</td>
 							<td colspan="3" class="right strong totalAmount green">
-								<span id="totalAmount" data-rv-html="model.TotalAmount | currency"></span>
+								<span id="totalAmount" data-rv-html="model.TotalAmount | round | currency"></span>
 							</td>
 						</tr>
 						<tr>
@@ -187,14 +187,14 @@
 							<td class="noborder"></td>
 							<td class="strong">
 								<span>
-									Savings: <span id="savingsAmount" data-rv-html="model.SavingsAmount | currency"></span>
+									Savings: <span id="savingsAmount" data-rv-html="model.SavingsAmount | round | currency"></span>
 								</span>
 							</td>
 							<td class="right strong big">
 								<span>Paid: </span>
 							</td>
 							<td colspan="3" class="right strong paidAmount">
-								<span id="paidAmount" data-rv-html="model.PaidAmount | currency"></span>
+								<span id="paidAmount" data-rv-html="model.PaidAmount | round | currency"></span>
 							</td>
 						</tr>
 						<tr>
@@ -205,7 +205,7 @@
 								<span id="lblBalanceAmount">Balance: </span>
 							</td>
 							<td colspan="3" class="right strong big paidAmount dueamount">
-								<span id="balanceAmount" data-rv-html="model.BalanceAmount | currency"></span>
+								<span id="balanceAmount" data-rv-html="model.BalanceAmount | round | currency"></span>
 							</td>
 						</tr>
 					</tfoot>
@@ -214,7 +214,7 @@
 		</div>
 	 </form>
 </div>
-<div style="display:block;" id="product-container">
+<div style="display:block;">
 	<div class="content modal fade" id="selectItemModal">
 	  <div class="modal-header">
 		<button class="close" data-dismiss="modal">×</button>
@@ -243,10 +243,16 @@
 		<button class="close" data-dismiss="modal">×</button>
 		<h3>Invoice Payments</h3>
 	  </div>
-	  <div class="modal-body global-data">
+	  <div class="modal-body">
 		
 	  </div>
 	  <div class="modal-footer">
+		<div style="float: left;">
+			<span>Print Ticket:</span> 
+			<span>
+				<input type="checkbox" name="printTicket" checked="checked" />
+			</span>
+		</div>
 		<a href="#" data-dismiss="modal" class="btn action cancel"><span><span>Close</span></span></a>
 		<a href="#" class="btn primary action save" id="btnPayOrder"><span><span>Pay</span></span></a>		
 	  </div>
@@ -254,49 +260,78 @@
 </div>
 <div id="templates" style="display:none">
 	<script type="text/template" id="tpl-chkoutorder">
-	<ul style="width:90%;margin-bottom:10px;">
+	<form class="payments-form" style="padding:0em;" onsubmit="return false;">
+	<table>
+		<tr>
+			<td>Invoice No#</span>
+			<td class="strong">
+				<span data-rv-text="invoice.OrderNo"></span>
+			</td>
+			<td>Customer:</td>
+			<td class="strong">
+				<span data-rv-text="invoice.Customer.Contact.FirstName | upper"></span>
+			</td>
+			<td>Total Amount: </td>
+			<td class="strong big green">
+				<span data-rv-html="invoice.TotalAmount | round | currency"></span>
+			</td>
+		</tr>
+	</table>
+	<div id="pastPayments">
+		<ul class="payments strong">
+			<li>
+				<ul>
+					<li style="width:80px;">Type</li><li style="width:105px;">Date</li><li style="width:105px;">Amount</li>
+				</ul>
+			</li>
+		</ul>
+	</div>
+	<ul class="payments" id="currentPayment">
+	<li>
+	<ul>
 		<li>
-			<span class="_50">Invoice No#</span>
-			<span class="_50 strong">
-				<strong><%= item.get('OrderNo')%></strong>
-			</span>
+			<select class="dropdown" name="paymentType">
+				<option>Cash</option>
+				<option>Credit</option>
+				<option>Card</option>
+				<option>Cheque</option>
+			</select>
 		</li>
 		<li>
-			<span class="_50">Total Amount: </span>
-			<span class="_50 strong big green">
-				{{ '' | currency(true,false) }} <%= Math.round(item.GetTotalAmount()).toFixed(2)%>
-			</span>
+			<input type="text" title="Paid Date" class="datetime" name="paymentDate" data-rv-value="CurrentPayment.PaymentDate | date" autocomplete="off" />
 		</li>
-		<li class="strong">
-			<span class="_50">Customer:</span>
-			<span class="_50"><%=item.get('Customer').get('Contact').get('FirstName').toUpperCase()%></span>
-		</li>
-		<li>
-			<span class="_50">Payment Type: </span>
-			<span class="_50">
-				<select class="dropdown" name="paymenttype" style="width: 99%;">
-					<option>Cash</option>
-					<option>Credit</option>
-					<option>Card</option>
-					<option>Cheque</option>
-				</select>
-			</span>
-		</li>
-		<li>
-			<span class="_50">Paid Amount: </span>
-			<span class="_50 strong big red">
-				<span style="float: left; line-height: 20px;">{{ '' | currency(true,false) }}</span>
-				<input class="mousetrap" style="width:95%" type="number" name="paidamount"  value="<%=Math.round(item.get('balanceamount'))%>" required autofocus="autofocus">
-				</input>
-			</span>
-		</li>
-		<li>
-			<span class="_50">Print Ticket:</span> 
-			<span class="_50">
-				<input type="checkbox" name="printTicket" checked="checked"></input>
-			</span>
+		<li class="strong big red">
+			<span>{{ '' | currency(true,false) }}</span>
+			<input class="mousetrap" type="number" name="paidAmount"  data-rv-value="CurrentPayment.PaidAmount | round" autofocus autocomplete="off" />
 		</li>
 	</ul>
+	</li>
+	</ul>
+	</table>
+	</script>
+	<script type="text/template" id="tplAddPayment">
+<ul class="payments">
+  <li>
+	<ul style="margin-left: 0.8em;">
+		<a data-rv-id="item.Id" class="remove xit" href="#"><input type="hidden" name="paymentId" data-rv-value="item.Id"/></a>
+		<li>
+			<select class="dropdown" name="paymentType">
+				<option data-rv-selected="item.PaymentType=='Cash'">Cash</option>
+				<option data-rv-selected="item.PaymentType=='Credit'">Credit</option>
+				<option data-rv-selected="item.PaymentType=='Card'">Card</option>
+				<option data-rv-selected="item.PaymentType=='Cheque'">Cheque</option>
+			</select>
+		</li>
+		<li>
+			<input type="text" title="Paid Date" class="datetime" name="paymentDate" data-rv-value="item.PaymentDate | date" autocomplete="off" />
+		</li>
+		<li>
+			<span>{{ '' | currency(true,false) }}</span>
+			<input type="number" title="Paid Amount" name="paidAmount" data-rv-value="item.PaidAmount | round" autocomplete="off" />
+		</li>
+	</ul>
+  </li>
+</ul>
 	</script>
 	<script type="text/template" id="tpl-selectitem">
 		<% 	var cnt=0;

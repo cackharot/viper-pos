@@ -32,7 +32,7 @@ def includeme(config):
     config.add_handler('invoicepayments', '/invoice/payments/{invoiceid}', InvoiceController, action='payments')
 
     config.add_handler('addinvoice', '/invoice/manage', InvoiceController, action='manage')
-    config.add_handler('deleteinvoice', '/invoice/delete/{invoiceid}', InvoiceController, action='delete')
+    config.add_handler('deleteinvoice', '/invoice/delete/{invoiceid}', InvoiceController, action='deleteInvoice')
     config.add_handler('editinvoice', '/invoice/manage/{invoiceid}', InvoiceController, action='manage')
        
     config.add_route('saveinvoice', '/invoice/manage')
@@ -185,7 +185,7 @@ class InvoiceController(object):
         return dict(status=False, message='Error while saving payment details!')
 
     @action()
-    def delete(self):
+    def deleteInvoice(self):
         ids = self.request.matchdict['invoiceid']
         if ids:
             orderids = ids.split(',')
