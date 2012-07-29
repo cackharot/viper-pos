@@ -95,8 +95,8 @@
 			<input type="hidden" name="paymentId" value="<%=item.Id%>"/>
 			<input type="hidden" name="remove" class="remove" value="0"/>
 		</li>
-		<li><input type="text" title="Paid Date" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>"/></li>
-		<li><input type="text" title="Paid Amount" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>"/></li>
+		<li><input type="text" title="Paid Date" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>" autocomplete="off"/></li>
+		<li><input type="text" title="Paid Amount" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>" autocomplete="off"/></li>
 	</ul>
   </li>
 </ul>
@@ -117,8 +117,8 @@
 			<input type="hidden" name="paymentId" value="<%=item.Id%>"/>
 			<input type="hidden" name="remove" class="remove" value="0"/>
 		</li>
-		<li><input type="text" title="Paid Date" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>"/></li>
-		<li><input type="text" title="Paid Amount" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>"/></li>
+		<li><input type="text" title="Paid Date" class="datetime" name="paymentDate" value="<%=$.format.date(ToLocalDate(item.PaymentDate), 'dd-MM-yyyy')%>" autocomplete="off"/></li>
+		<li><input type="text" title="Paid Amount" class="amount" name="paidAmount" value="<%=item.PaidAmount.toFixed(2)%>" autocomplete="off"/></li>
 	</ul>
   </li>
 </ul>
