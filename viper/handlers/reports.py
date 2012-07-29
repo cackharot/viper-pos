@@ -149,8 +149,6 @@ class ReportController(object):
 
 		stockService = StockService()
 		items, stat = stockService.SearchPurchases(param)
-		log.info(items)
-		log.info(stat)
 		if items and len(items) > 0:
 			return dict(status=True, total=stat.ItemsCount,
 								items=[dict(PurchaseNo=x.PurchaseNo,
@@ -175,7 +173,7 @@ class ReportController(object):
 		if items and len(items) > 0:
 			return dict(status=True, total=stat.ItemsCount,
 								items=[dict(OrderNo=x.OrderNo,
-								CustomerName=x.CustomerName,
+								CustomerName=x.Customer.Contacts[0].FirstName,
 								OrderDate=x.OrderDate,
 								OrderAmount=(x.OrderAmount),
 								PaidAmount=(x.PaidAmount)) for x in items])
