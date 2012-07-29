@@ -274,6 +274,7 @@
 	  </div>
 	</div>
 	<div class="content modal fade" id="checkoutOrderModel">
+	  <form name="invoicePaymentsForm" id="invoicePaymentsForm" class="payments-form" style="padding:0em;">
 	  <div class="modal-header">
 		<button class="close" data-dismiss="modal">×</button>
 		<h3>Invoice Payments</h3>
@@ -289,13 +290,14 @@
 			</span>
 		</div>
 		<a href="#" data-dismiss="modal" class="btn action cancel"><span><span>Close</span></span></a>
-		<a href="#" class="btn primary action save" id="btnPayOrder"><span><span>Pay</span></span></a>		
+		<button type="submit" name="btnPayOrder" class="btn primary action save" id="btnPayOrder"><span><span>Pay</span></span></button>		
 	  </div>
+	  </form>
 	</div>
 </div>
 <div id="templates" style="display:none">
 	<script type="text/template" id="tpl-chkoutorder">
-	<form class="payments-form" style="padding:0em;" onsubmit="return false;">
+<div>
 	<table>
 		<tr>
 			<td>Invoice No#</span>
@@ -342,7 +344,7 @@
 	</ul>
 	</li>
 	</ul>
-	</table>
+</div>
 	</script>
 	<script type="text/template" id="tplAddPayment">
 <ul class="payments">
@@ -429,7 +431,7 @@
 <script src="{{request.static_url('viper:static/js/rivets.js')}}"></script>
 <script src="{{request.static_url('viper:static/js/swizapp/invoice.js')}}"></script>
 <script>
-	$(function(){
+	$(function(){		
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
 		
 		$('#tblInvoiceLineItems input, #barcode, #itemName').live('focus',function(){

@@ -45,7 +45,7 @@ a.xit:hover { background-position:-10px center; }
 
 #hd-top-logo span{
     color: #222;
-    font: 12px Tahoma,Helvetica,Arial,Sans-Serif;
+	font: 12px Tahoma,Helvetica,Arial,Sans-Serif;
     text-align: center;
     /*text-shadow: 0 2px 3px #555555;*/
 }
@@ -456,7 +456,7 @@ div#invoice-container div#recurring-data input { width: auto;}
 #settings-wrapper fieldset      { float:left; width:47%; margin:1em 0; }
 #settings-wrapper fieldset > ul { margin:0; list-style-type:none; }
 #settings-wrapper fieldset.left { clear:left; margin:1em 2em 1em 1em; }
-#settings-wrapper fieldset ul li.left {float:left;margin-right: 25px;}
+#settings-wrapper fieldset ul li.left {clear:left;float:left;margin-right: 25px;}
 #settings-wrapper fieldset ul li.right {float:right;}
 #settings-wrapper fieldset ul li.full {display:inline-block;}
 

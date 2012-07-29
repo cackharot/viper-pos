@@ -27,7 +27,7 @@ class Order(AuditMixin, Base):
 	DueDate = Column(DateTime, nullable=True)
 	IpAddress = Column(String(30), nullable=True)
 	
-	Customer = relationship('Customer', cascade="all, delete, delete-orphan")
+	Customer = relationship('Customer', uselist=False)
 
 	def __init__(self):
 		self.Id = self.TenantId = self.CustomerId = None

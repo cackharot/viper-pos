@@ -207,8 +207,15 @@
 </div>
 {% endblock %} 
 {% block footerscript %}
+<script src="{{request.static_url('viper:static/js/mousetrap.min.js')}}"></script>
 <script>
 	$(function(){
+	
+		Mousetrap.bind(['f6','f1'],function(e) {
+			e.preventDefault()
+			$('#Barcode').select();
+		});
+		
 		var tplLineItemCompiled = _.template($('#tplLineItem').html())
 		
 		$('input.datetime').datepicker({ dateFormat: 'dd-mm-yy' })
@@ -258,9 +265,11 @@
 				if(col == 'SellPrice') {
 					var mrp = parseFloat($mrpInput.val() || 0)
 					var sellPrice = parseFloat($(this).val() || 0)
-					var discount = (((mrp-sellPrice)*100.0)/mrp)
-				
-					$discountInput.val(discount.toFixed(2))
+					
+					if(mrp > 0.0){
+						var discount = (((mrp-sellPrice)*100.0)/mrp)
+						$discountInput.val(discount.toFixed(2))
+					}
 				} else if(col == 'Discount') {
 					var mrp = parseFloat($mrpInput.val() || 0)
 					var discount = parseFloat($(this).val() || 0)
@@ -279,7 +288,7 @@
 			})
 		})
 		
-		$('form#frmLineItem input[name=Barcode]').blur(function(e){
+		$barcodeInput.blur(function(e){
 			var barcode = $(this).val()
 			if(barcode == '' || barcode.length == 0) {
 				e.preventDefault()
@@ -293,44 +302,48 @@
 					}
 					
 					$('form#frmLineItem input[name=ProductId]').val(data.Id)
-					$('form#frmLineItem input[name=Name]').val(data.Name)
+					$nameInput.val(data.Name)
 					
-					$('form#frmLineItem input[name=MRP]').val(data.MRP)
-					$('form#frmLineItem input[name=MRP]').data('MRP',data.MRP)
+					$mrpInput.val(data.MRP)
+					$mrpInput.data('MRP',data.MRP)
 					
-					$('form#frmLineItem input[name=BuyPrice]').val(data.BuyPrice)
-					$('form#frmLineItem input[name=BuyPrice]').data('BuyPrice',data.BuyPrice)
+					$buypriceInput.val(data.BuyPrice)
+					$buypriceInput.data('BuyPrice',data.BuyPrice)
 					
-					$('form#frmLineItem input[name=SellPrice]').val(data.SellPrice)
-					$('form#frmLineItem input[name=SellPrice]').data('SellPrice',data.SellPrice)
+					$sellpriceInput.val(data.SellPrice)
+					$sellpriceInput.data('SellPrice',data.SellPrice)
 					
-					$('form#frmLineItem input[name=Discount]').val(data.Discount)
+					$discountInput.val(data.Discount)
 					
 					if(data.MfgDate)
 						$('form#frmLineItem input[name=MfgDate]').val($.format.date(data.MfgDate,'dd-MM-yyyy'))
 					if(data.ExpiryDate)
 						$('form#frmLineItem input[name=ExpiryDate]').val($.format.date(data.ExpiryDate,'dd-MM-yyyy'))
 						
-					$('form#frmLineItem select[name=CategoryId]').val(data.CategoryId)
-					$('form#frmLineItem select[name=TaxCategoryId]').val(data.TaxCategoryId)
+					//$('form#frmLineItem select[name=CategoryId]').val(data.CategoryId)
+					//$('form#frmLineItem select[name=TaxCategoryId]').val(data.TaxCategoryId)
 				} else {
 					// no item found in db so new its a new item
-					$('form#frmLineItem input[type=text]').val('')
-					$('form#frmLineItem input[name=Name]').select()
+					$mrpInput.val(0.0)
+					$sellpriceInput.val(0.0)
+					$buypriceInput.val(0.0)
+					$discountInput.val(0.0)
+					$nameInput.val('')
+					//$nameInput.focus()
 				}
 			})
 		})
 		
 		function validateitemdata(jdata) {
-			if (!jdata.Name) {
-				showMsg('error', 'Item Name is invalid!')
-				return false
-			}
-			
 			if (!jdata.Barcode) {
 				showMsg('error', 'Barcode is invalid!')
 				return false
 			}
+			
+			if (!jdata.Name) {
+				showMsg('error', 'Item Name is invalid!')
+				return false
+			}			
 			
 			if(jdata.Quantity <= 0) {
 				showMsg('error', 'Quantity should be greater than zero!')
@@ -432,6 +445,7 @@
 					showMsg('error', data.message || 'Error while adding line item!')
 				}
 			},'json')
+			
 			return false
 		});
 	});

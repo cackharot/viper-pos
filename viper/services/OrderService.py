@@ -299,6 +299,19 @@ class OrderService(object):
 		tmp = DBSession.query(func.max(Order.OrderNo)).filter(Order.TenantId == tenantId).scalar()
 		if tmp != None: return int(tmp) + 1
 		else: return 1000
-
+		
+	def UpdateOrderPayments(self,orderid,tenantId,userId):
+		if orderid:
+			order = DBSession.query(Order).get(orderid)
+			if order:
+				payments = self.GetOrderPayments(orderid, tenantId)
+				if payments:
+					order.PaidAmount = sum([x.PaidAmount for x in payments])
+				else:
+					order.PaidAmount = 0.0
+					
+				order.UpdatedBy = userId
+				order.UpdatedOn = datetime.utcnow()
+				DBSession.add(order)
 	pass
 

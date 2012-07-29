@@ -183,11 +183,6 @@ def Fixtures():
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Order #<%=order.get('OrderNo') %></title>
 <style>
-/*@page {
-            margin:0px;
-            padding:0px;
-            width:100%;
-        }*/
 @font-face {
     font-family: 'RupeeForadianRegular';
     src: url('/static/font/rupee_foradian-webfont.eot');
@@ -255,10 +250,13 @@ table tbody+tbody {
 <body>
     <div>
 <% 
+var subTotal = order.GetTotalAmount().toFixed(2);
 var paidAmt = Math.round(order.GetPaidAmount()).toFixed(2); 
 var totalAmt = Math.round(order.GetTotalAmount()).toFixed(2); 
 var balanceAmt = Math.round(order.GetBalanceAmount()).toFixed(2); 
 var savingsAmt = Math.round(order.GetSavingsAmount()).toFixed(2);
+
+var roundOff = (totalAmt - subTotal).toFixed(2);
 %>
         <div class="heading">
             <h3>Sree Durga Home Needs Super Market</h3>
@@ -274,7 +272,7 @@ var savingsAmt = Math.round(order.GetSavingsAmount()).toFixed(2);
                 </tr>
                 <tr>
                     <td width="50px">Customer:</td>
-                    <td><%=order.get('Customer').get('Contact').get('FirstName') || '' %></td>
+                    <td><%=order.get('Customer').get('Contact').get('FirstName') || '' %> [<%=order.get('Customer').get('CustomerNo')%>]</td>
                 </tr>
             </tbody>
         </table>
@@ -318,18 +316,35 @@ var savingsAmt = Math.round(order.GetSavingsAmount()).toFixed(2);
                 <tr style="border-top: 1px solid black;">
                     <td colspan="2" style="text-align: left;">Items/Qty:
                         <%= order.GetTotalItems() %>/<%=order.GetTotalQuantity() %></td>
-                    <td colspan="2" style="text-align: right;"><h4>Total:</h4></td>
-                    <td style="text-align: right;"><h4>
-                            <span class="currency">`</span><%=totalAmt%>
-                        </h4></td>
+                    <td colspan="2" style="text-align: right;"><h5>Sub Total:</h5></td>
+                    <td style="text-align: right;">
+                        <h5><span class="currency">`</span> <%=subTotal%></h5>
+                    </td>
                 </tr>
                 <tr>
                     <td style="text-align: left;">Savings: <b><span
                             class="currency">`</span><%=savingsAmt%></b></td>
                     <td></td>
-                    <td colspan="2" style="text-align: right;">Paid:</td>
-                    <td style="text-align: right;"><span class="currency">`</span><%=paidAmt%></td>
+                    <td colspan="2" style="text-align: right;">Round Off:</td>
+                    <td style="text-align: right;">
+                        <span class="currency">`</span> <%=roundOff%>
+                    </td>
                 </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td colspan="2" style="text-align: right;"><h4>Total:</h4></td>
+                    <td style="text-align: right;">
+                        <h4><span class="currency">`</span><%=totalAmt%>
+                        </h4>
+                    </td>
+                </tr>
+<tr>
+    <td></td>
+    <td></td>
+    <td colspan="2" style="text-align: right;">Paid:</td>
+    <td style="text-align: right;"><span class="currency">`</span><%=paidAmt%></td>
+</tr>
                 <tr>
                     <td></td>
                     <td></td>

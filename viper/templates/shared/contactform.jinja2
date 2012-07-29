@@ -4,19 +4,19 @@
 			{{renderer.label('FirstName','First Name',class='tip')}}
 			{{renderer.text('FirstName',size=30,class='error wrong' if renderer.is_error('FirstName'),title='First name')}}
 	</li>
-	<li class="right">
+	<li style="float: left;">
 			{{renderer.label('LastName','Last Name',class='tip')}}
 			{{renderer.text('LastName',size=30,class='error wrong' if renderer.is_error('LastName'),title='Last name')}}
 	</li>
-	<li style="display: inline-block;">
+	<li style="float: left;">
 			{{renderer.label('Email','Email',class='tip')}}
-			{{renderer.text('Email',size=250,maxlength=255,class='full error wrong' if renderer.is_error('Email') else 'full',title='Email')}}
+			{{renderer.text('Email',size=65,maxlength=255,class='full error wrong' if renderer.is_error('Email') else 'full',title='Email')}}
 	</li>
 	<li class="left">
 			{{renderer.label('Phone','Landline',class='tip')}}
 			{{renderer.text('Phone',size=30,class='error wrong' if renderer.is_error('Phone'),title='Landline')}}
 	</li>
-	<li class="right">
+	<li style="float: left;">
 			{{renderer.label('Mobile','Mobile',class='tip')}}
 			{{renderer.text('Mobile',size=30,class='error wrong' if renderer.is_error('Mobile'),title='Mobile')}}
 	</li>
@@ -24,17 +24,17 @@
 			{{renderer.label('Country','Country',class='tip')}}
 			{{renderer.text('Country',size=30,class='full error wrong' if renderer.is_error('Country') else 'full',title='Country')}}			
 	</li>
-	<li class="right">
+	<li style="float: left;">
 			{{renderer.label('City','City',class='tip')}}
 			{{renderer.text('City',size=30,class='error wrong' if renderer.is_error('City'),title='City')}}
 	</li>
-	<li class="full"> 
+	<li class="left">
 			{{renderer.label('Zipcode','Zipcode',class='tip')}}
 			{{renderer.text('Zipcode',size=30,maxlength=10,class='error wrong' if renderer.is_error('Zipcode'),title='Zipcode')}}
 	</li>
-	<li>
+	<li class="left">
 			{{renderer.label('Address','Address',class='tip')}}
-			{{renderer.textarea('Address',cols="4",class='error wrong' if renderer.is_error('Address'),title='Address')}}
+			{{renderer.textarea('Address',cols="65",class='error wrong' if renderer.is_error('Address'),title='Address')}}
 	</li>
 </ul>
 {% if caller %}

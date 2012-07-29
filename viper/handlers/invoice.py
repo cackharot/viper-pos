@@ -2,6 +2,8 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid_handlers import action
 from pyramid.view import view_defaults
 
+import transaction
+
 from ..models.Product import Product
 from ..models.Customer import Customer, CustomerContactDetails
 from ..models.Order import Order
@@ -168,6 +170,10 @@ class InvoiceController(object):
                         orderService.DeleteOrderPayment(item['paymentId'])
                     else:    
                         orderService.UpdateOrderPayment(orderid, item['paymentId'], item, self.UserId)
+                
+                #update order payments in order table
+                transaction.commit()
+                orderService.UpdateOrderPayments(orderid,self.TenantId,self.UserId)
 
                 return dict(status=True, message='Payment details saved successfully!')
         return dict(status=False, message='Error while saving payment details!')

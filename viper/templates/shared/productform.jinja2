@@ -4,23 +4,31 @@
 		{{renderer.label('Barcode','Barcode',class='tip')}}
 		{{renderer.text('Barcode',title='Barcode',placeholder='Enter Barcode',size=30,class='error wrong' if renderer.is_error('Barcode'),autofocus=True,autocomplete="off")}}
 	</li>
-	<li style="display: inline-block;">
+	<li style="float: left;">
 		{{renderer.label('Name','Product Name',class='tip')}}
 		{{renderer.text('Name',title='Product Name',placeholder='Enter Product Name',size=30,class='error wrong' if renderer.is_error('Name'),autocomplete="off")}}
 	</li>
 	<li class="left">
 		{{renderer.label('CategoryId','Category',class='tip')}}
+		<input type="text" name="CategoryName" value="Default" disabled="disabled" style="width: 238px;"/>
+		<input type="hidden" name="CategoryId" value="2512571362BE49278623B784C49CB01A"/>
+		<!-- 
 		{{renderer.select('CategoryId',[['2512571362BE49278623B784C49CB01A','Default']],style="width: 238px;",prompt='Choose a category',class='error wrong' if renderer.is_error('CategoryId'))}}
+		-->
 	</li>
-	<li style="display:inline-block">
+	<li style="float: left;">
 		{{renderer.label('TaxCategoryId','Tax Category',class='tip')}}
+		<input type="text" name="TaxCategoryName" value="Tax 12.5%" disabled="disabled" style="width: 238px;"/>
+		<input type="hidden" name="TaxCategoryId" value="8CD9785EF59C40138C9CFDDE4B144738"/>
+		<!--
 		{{renderer.select('TaxCategoryId',[['8CD9785EF59C40138C9CFDDE4B144738','Tax 12.5%']],style="width: 238px;",prompt='Choose a Tax category',class='error wrong' if renderer.is_error('TaxCategoryId'))}}
+		-->
 	</li>
 	<li class="left">
 		{{renderer.label('MRP','MRP',class='tip')}}
 		{{renderer.text('MRP',size=30,title='MRP',class='error wrong' if renderer.is_error('MRP'),autocomplete="off")}}
 	</li>
-	<li style="display:inline-block">
+	<li style="float: left;">
 		{{renderer.label('Discount','Discount',class='tip')}}
 		{{renderer.text('Discount',size=30,title='Discount',class='error wrong' if renderer.is_error('Discount'),autocomplete="off")}}
 	</li>
@@ -28,7 +36,7 @@
 		{{renderer.label('BuyPrice','BuyPrice',class='tip')}}
 		{{renderer.text('BuyPrice',size=30,title='Buy Price',class='error wrong' if renderer.is_error('BuyPrice'),autocomplete="off")}}
 	</li>
-	<li style="display:inline-block">
+	<li style="float: left;">
 		{{renderer.label('SellPrice','SellPrice',class='tip')}}
 		{{renderer.text('SellPrice',size=30,title='Sell Price',class='error wrong' if renderer.is_error('SellPrice'),autocomplete="off")}}
 	</li>
@@ -49,7 +57,7 @@
 		{{renderer.label('MfgDate','Mfg Date',class='tip')}}
 		{{renderer.date('MfgDate',size=30,title='Mfg Date',class='datetime',autocomplete="off")}}
 	</li>
-	<li style="display:inline-block">
+	<li style="float: left;">
 		{{renderer.label('ExpiryDate','Expiry Date',class='tip')}}
 		{{renderer.date('ExpiryDate',size=30,title='Expire Date',class='datetime',autocomplete="off")}}
 	</li>

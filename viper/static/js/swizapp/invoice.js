@@ -509,9 +509,10 @@
 			})
 			
 			var that = this
-			$('#checkoutOrderModel a.remove').click(function(){
+			$('#checkoutOrderModel #pastPayments a.remove').click(function(){
 				var paymentId = $(this).attr('id')
 				that.model.get('Payments').removeById(paymentId)
+				$(this).parent().remove()
 				return false
 			})
 			
@@ -520,7 +521,7 @@
 			$('#checkoutOrderModel').modal('show')
 
 			$('#checkoutOrderModel input[name=paidAmount]').select()
-			$('#checkoutOrderModel #btnPayOrder').unbind('click', this.payOrder).click(this.payOrder)
+			$('#checkoutOrderModel #invoicePaymentsForm').unbind('submit', this.payOrder).bind('submit',this.payOrder)
 		},
 		payOrder: function () {
 			var canprint = $('#checkoutOrderModel input[name=printTicket]').is(':checked')
@@ -570,8 +571,9 @@
 				showMsg('warn', 'Paid amount should be greater than or equal to <strong>' + orderamount + '</strong>. Please choose <span class="label label-info">Credit</span> as payment type if the paid amount is lesser than order amount.')
 			}
 			
-			$(this).unbind('click', this.payOrder)
+			$('#invoicePaymentsForm').unbind('submit', this.payOrder)
 			$('#checkoutOrderModel').modal('hide')
+			return false
 		},
 	});
 	
@@ -736,6 +738,7 @@
 	Mousetrap.bind('enter',function(e) {
 		if($('#checkoutOrderModel').is(':visible')){
 			e.preventDefault()
+			$('#checkoutOrderModel #btnPayOrder').focus()
 			$('#checkoutOrderModel #btnPayOrder').trigger('click')
 		}
 	});
