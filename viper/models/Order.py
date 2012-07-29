@@ -1,19 +1,17 @@
 from sqlalchemy import (
-	Table,
 	Column,
-	Boolean,
 	DateTime,
 	Integer,
 	Float,
 	String,
-	Unicode,
-	MetaData,
 	ForeignKey,
 	)
+
+from sqlalchemy.orm import relationship
+
 from datetime import datetime
 from . import Base
 from ..library.vuid import id_column, UUID
-from ..library.helpers import jsonHandler
 from .AuditMixin import AuditMixin
 
 class Order(AuditMixin, Base):
@@ -21,12 +19,15 @@ class Order(AuditMixin, Base):
 	Id = id_column()
 	TenantId = Column(UUID(), ForeignKey('TenantDetails.Id'), nullable=False, index=True)
 	OrderNo = Column(Integer, index=True)
-	CustomerId = Column(UUID(), index=True, nullable=False)
+	CustomerId = Column(UUID(),ForeignKey('Customers.Id'),index=True, nullable=False)
 	OrderAmount = Column(Float, default=0)
 	PaidAmount = Column(Float, default=0)
+	LineItemsCount = Column(Integer,default=0)
 	OrderDate = Column(DateTime)
 	DueDate = Column(DateTime, nullable=True)
 	IpAddress = Column(String(30), nullable=True)
+	
+	Customer = relationship('Customer', cascade="all, delete, delete-orphan")
 
 	def __init__(self):
 		self.Id = self.TenantId = self.CustomerId = None

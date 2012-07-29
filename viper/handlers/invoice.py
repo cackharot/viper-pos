@@ -64,19 +64,6 @@ class InvoiceController(object):
     def create(self):
         orderService = OrderService()
         model = orderService.NewOrder(self.TenantId, self.UserId)
-        #customerService = CustomerService()
-        #defaultCustomer = customerService.GetDefaultCustomer(self.TenantId)
-
-        #model = Order()
-        #model.Id = uuid.uuid4()
-        #model.TenantId = self.TenantId
-        #model.Customer = defaultCustomer
-        #model.OrderNo = orderService.GenerateOrderNo(self.TenantId) #generate unique order no
-        #model.OrderDate = model.CreatedOn = datetime.utcnow()
-        #model.IpAddress = None
-        #model.CreatedBy = self.UserId
-        #model.Status = True
-        
         model.LineItems = []
         model.Payments = []
         
@@ -85,7 +72,7 @@ class InvoiceController(object):
     @action(renderer='json')
     def update(self):
         order = json.loads(self.request.body)
-        log.info(order)
+        #log.info(order)
         if order:
             order['IpAddress'] = self.request.remote_addr
             service = OrderService()
@@ -142,12 +129,13 @@ class InvoiceController(object):
         
         searchParam.PageNo = (pageNo-1)*pageSize
         searchParam.PageSize = pageSize
+        searchParam.NotEmpty = False
 
         orderService = OrderService()
         invoices, stat  = orderService.SearchOrders(searchParam)
-        totalInvoices = stat.ItemsCount
-        totalAmount = stat.TotalAmount
-        totalDueAmount = stat.TotalAmount - stat.TotalPaidAmount        
+        totalInvoices = stat.ItemsCount or 0
+        totalAmount = stat.TotalAmount or 0.0
+        totalDueAmount = totalAmount - (stat.TotalPaidAmount or 0.0)        
         return dict(model=invoices,totalInvoices=totalInvoices, \
                     pageno=pageNo,pagesize=pageSize,\
                     customerName=searchParam.CustomerName,customerId=searchParam.CustomerId,\

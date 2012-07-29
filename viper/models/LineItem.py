@@ -17,7 +17,7 @@ from ..library.vuid import id_column, UUID
 class LineItem(Base):
 	__tablename__ = 'LineItems'
 	Id = id_column()
-	OrderId = Column(UUID(), nullable=False)
+	OrderId = Column(UUID(),ForeignKey('Orders.Id'), nullable=False)
 	ProductId = Column(UUID(), nullable=True)
 	Barcode = Column(String(20), nullable=False)
 	Name = Column(Unicode(50), nullable=False)

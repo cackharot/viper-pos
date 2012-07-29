@@ -31,33 +31,26 @@ class ReportService(object):
 			Calculates invoice totals, amounts, due, etc.,
 		"""
 		if tenantId:
-			osq = DBSession.query(LineItem.OrderId, func.ROUND(func.sum(LineItem.Quantity * LineItem.SellPrice),2).label('OrderAmount'))
-			osq = osq.join(Order, Order.Id == LineItem.OrderId).group_by(LineItem.OrderId).subquery()
-	
-			psq = DBSession.query(OrderPayment.OrderId, func.ROUND(func.sum(OrderPayment.PaidAmount),2).label('PaidAmount'))
-			psq = psq.join(Order, Order.Id == OrderPayment.OrderId).group_by(OrderPayment.OrderId).subquery()
-	
 			query = DBSession.query(func.count(Order.Id).label('Count'), \
-								 func.ifnull(func.sum(osq.c.OrderAmount),0).label('TotalAmount'), \
-								 func.ifnull(func.sum(func.IF(psq.c.PaidAmount>=osq.c.OrderAmount,osq.c.OrderAmount,psq.c.PaidAmount)),0).label('PaidAmount'))
-			query = query.outerjoin(osq, osq.c.OrderId == Order.Id).outerjoin(psq, psq.c.OrderId == Order.Id)
+								 func.ifnull(func.sum(Order.OrderAmount),0).label('TotalAmount'), \
+								 func.ifnull(func.sum(func.IF(Order.PaidAmount>=Order.OrderAmount,Order.OrderAmount,Order.PaidAmount)),0).label('PaidAmount'))
 			
 			query = query.filter(Order.TenantId == tenantId, Order.Status == True)
 			
 			if param:
-				query = self.applySearchParam(query,osq,psq,param)
+				query = self.applySearchParam(query,param)
 			
 			totals = query.first()
 			
 			if totals:
-				oq = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate<func.now()).subquery()
+				oq = query.filter((Order.OrderAmount - Order.PaidAmount) > 0.5, Order.DueDate<func.now()).subquery()
 				totals.Overdues = DBSession.query(oq.c.Count,\
 												(oq.c.TotalAmount-oq.c.PaidAmount).label('OverdueAmount')).first() 
 			
 			return totals
 		return None
 	
-	def applySearchParam(self, query, osq, psq, searchParam):
+	def applySearchParam(self, query, searchParam):
 		if searchParam.CustomerId:
 			query = query.filter(Order.CustomerId == searchParam.CustomerId)
 		if searchParam.CustomerName:
@@ -81,12 +74,12 @@ class ReportService(object):
 			query = query.filter(Order.OrderAmount >= searchParam.MinAmount, \
 									Order.OrderAmount <= searchParam.MaxAmount)			
 			
-		if searchParam.Status == 'opened':
-			query = query.filter(or_(osq.c.OrderAmount > psq.c.PaidAmount, osq.c.OrderAmount==0, osq.c.OrderAmount == None))
-		elif searchParam.Status == 'closed':
-			query = query.filter(osq.c.OrderAmount <= psq.c.PaidAmount, osq.c.OrderAmount!=0)
-		elif searchParam.Status == 'overdue':
-			query = query.filter(osq.c.OrderAmount > psq.c.PaidAmount, Order.DueDate < func.now())
+		if searchParam.InvoiceStatus == 'opened':
+			query = query.filter(or_((Order.OrderAmount - Order.PaidAmount) > 0.5, Order.OrderAmount==0))
+		elif searchParam.InvoiceStatus == 'closed':
+			query = query.filter(Order.OrderAmount != 0, (Order.PaidAmount - Order.OrderAmount) > 0.001)
+		elif searchParam.InvoiceStatus == 'overdue':
+			query = query.filter((Order.OrderAmount - Order.PaidAmount) > 0.5, Order.DueDate < func.now())
 		return query
 	
 	def GetPurchaseTotals(self, tenantId, param=None):

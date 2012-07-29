@@ -1,22 +1,16 @@
 from sqlalchemy import (
-	Table,
 	Column,
 	Boolean,
 	DateTime,
-	Integer,
-	Float,
 	String,
-	Unicode,
-	MetaData,
-	ForeignKey,
 	)
 
 from sqlalchemy import func
 
 class AuditMixin(object):
-	CreatedBy = Column(String(50), nullable=False, default=func.now())
-	CreatedOn = Column(DateTime, nullable=False)
+	CreatedBy = Column(String(50), nullable=False)
+	CreatedOn = Column(DateTime, nullable=False, default=func.now())
 	UpdatedBy = Column(String(50), nullable=True)
 	UpdatedOn = Column(DateTime, nullable=True)
-	Status = Column(Boolean, nullable=False, default=True)
+	Status    = Column(Boolean, nullable=False, default=True)
 	pass

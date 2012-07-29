@@ -42,16 +42,16 @@
 	</thead>
 	<tbody>
 		{% for item in model -%}
-			{% set dueAmount = (item.OrderAmount - item.PaidAmount) %}
+			{% set dueAmount = ((item.OrderAmount if item.OrderAmount else 0.0) - (item.PaidAmount if item.PaidAmount else 0.0) ) %}
 			<tr class="{{ loop.cycle('odd', 'even') }}" data-invoiceno="{{item.OrderNo}}" data-id="{{item.Id}}">
 			    <td class="check">
 	                      <input type="checkbox" rel="item" name="ids" value="{{item.Id}}">
 	            </td>
 				<td>
-					{{item.OrderNo}}
+					{{item.OrderNo}} 
 				</td>
 				<td>
-					{{item.CustomerName | d('--',true)}}
+					{{item.Customer.Contacts[0].FirstName}}
 				</td>
 				<td>
 					{{item.OrderDate | datetimeformat}}
@@ -60,15 +60,15 @@
 					{{item.DueDate | datetimeformat('%d %b, %Y') | d('--',true)}}
 				</td>
 				<td>
-					{{item.ItemCount | d('0',true)}}
+					{{item.LineItemsCount | d('0',true)}}
 				</td>
 				<td>
 					{% if (item.DueDate | comptoday) == 1 and dueAmount > 0.0 %}
 						<span class="status overdue"> Overdue </span>
-					{% elif (dueAmount > 0.0) or item.OrderAmount == 0 %}
-						<span class="status opened"> Opened </span>
 					{% elif (item.ItemCount == 0) %}
 						<span class="status draft"> Draft </span>
+					{% elif (dueAmount > 0.0) or item.OrderAmount == 0 %}
+						<span class="status opened"> Opened </span>
 					{% else %}
 						<span class="status closed"> Closed </span>
 					{% endif %}
@@ -76,7 +76,7 @@
 				<td class="right">
 					{{item.OrderAmount | currency }}
 				</td>
-				<td class="right {{ 'dueamount' if dueAmount > 0.00 }}"  title="Paid Amount: {{item.PaidAmount|currency(false)}}">
+				<td class="right {{ 'dueamount' if dueAmount > 0.00 }}"  title="Paid Amount: {{item.PaidAmount}}">
 					{{ (dueAmount if dueAmount > 0.0 else 0.0) | currency}}
 				</td>
 				<td class="action payments">

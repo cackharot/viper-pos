@@ -695,12 +695,17 @@
 	
 	$('#searchCustomer').click(function(){		
 		$('#customerSearchModal').modal('show')
-		$('#customerSearchModal input[name=searchText]')[0].focus()
+		$('#customerSearchModal input[name=searchText]').focus()
 	})
 	
 	Mousetrap.bind(['f2'],function(e) {
 		e.preventDefault()
 		// quick search customer
+		$('#searchCustomer').trigger('click');
+	});
+	
+	Mousetrap.bind(['f3'],function(e) {
+		window.location = '/invoice/manage';
 	});
 	
 	Mousetrap.bind(['f5'],function(e) {

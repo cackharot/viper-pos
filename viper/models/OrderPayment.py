@@ -18,7 +18,7 @@ from .AuditMixin import AuditMixin
 class OrderPayment(AuditMixin, Base):
 	__tablename__ = 'OrderPayments'
 	Id = id_column()
-	OrderId = Column(UUID(), nullable=False)
+	OrderId = Column(UUID(),ForeignKey('Orders.Id'), nullable=False)
 	PaymentDate = Column(DateTime, nullable=True)
 	PaymentType = Column(Unicode(10) , default=u'Cash')
 	PaidAmount = Column(Float, default=0.0)
