@@ -115,7 +115,7 @@
 						</td>
 						<td style="text-align: right;">
 							<input type="hidden" name="quantity" value="1"/>
-							<button type="button" id="add-item" class="btn action primary create"><span><span>Add</span></span></button>
+							<button type="submit" id="add-item" class="btn action primary create"><span><span>Add</span></span></button>
 						</td>
 					</tr>
 				</td>
@@ -436,8 +436,7 @@
 		
 		$('#tblInvoiceLineItems input, #barcode, #itemName').live('focus',function(){
 			$(this).select()
-		}).live('blur',function(){
-		})
+		});
 		
 		$('form').submit(function(){ return false; });
 	});

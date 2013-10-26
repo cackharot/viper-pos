@@ -43,6 +43,7 @@ class SearchParam(object):
 	PurchaseDate	= None
 	InvoiceDate		= None
 	Credit			= False
+	InvoiceStatus   = None
 	
 	def __init__(self):
 		pass

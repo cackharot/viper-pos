@@ -203,8 +203,8 @@
 			"click #add-item": "addLineItem",
 			"click a.del-lineitem": "deleteLineItem",
 			"click #clear-lineitems": "clearLineItems",
-			"keypress input[name=barcode]": "key_addlineitem",
-			"keypress input[name=itemName]": "key_addlineitem",
+			"keypress #barcode": "key_addlineitem",
+			"keypress #itemName": "key_addlineitem",
 		},
 		initialize: function(options){
 			this.vent = options.vent
@@ -229,7 +229,7 @@
 			return this
 		},
 		addLineItem: function(e){
-			var $txtBarcode = $('input[name=barcode]')
+			var $txtBarcode = $('#barcode')
 			var barcode = $txtBarcode.val()
 			var quantity = 1.0
 			
@@ -352,10 +352,12 @@
 			this.invoice.updateTotals()
 			return false
 		},
-		key_addlineitem: function (e) {
+		key_addlineitem: function (e) {		    
 			if (e.keyCode == 13) { // enter key pressed
 				this.addLineItem() 
-			} else if( e.keyCode == 107 ) { // '+' key pressed
+				e.preventDefault()
+				e.stopPropagation()
+			} else if( e.charCode == 43 ) { // '+' key pressed
 				this.addLineItem()
 				e.preventDefault()
 				e.stopPropagation()
@@ -736,8 +738,9 @@
 	});
 	
 	Mousetrap.bind('enter',function(e) {
-		if($('#checkoutOrderModel').is(':visible')){
-			e.preventDefault()
+		if($('#checkoutOrderModel').is(':visible')
+		    && $('#checkoutOrderModel').css('opacity') != '0'){
+		    e.preventDefault()
 			$('#checkoutOrderModel #btnPayOrder').focus()
 			$('#checkoutOrderModel #btnPayOrder').trigger('click')
 		}
